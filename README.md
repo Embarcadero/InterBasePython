@@ -21,7 +21,7 @@ native (old-style) client API of the database engine. Notably:
 
 Install (32-bit or 64-bit version of python 3.* required)
 
-`pip install git+ssh://git@github.com/Embarcadero/PythonInterbase.git`
+`pip install git+ssh://git@github.com/Embarcadero/InterBasePython.git`
 
 To create a test DB:
 
