@@ -1,0 +1,18 @@
+Metadata-Version: 1.1
+Name: idb
+Version: 1.5.0
+Summary: InterBase RDBMS bindings for Python.
+Home-page: https://github.com/Embarcadero/PythonInterBase
+Author: 
+Author-email:
+License: BSD
+Description: idb package is a set of InterBase RDBMS bindings for python.
+             It works on Python 3.x.
+        
+Keywords: InterBase
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Database
