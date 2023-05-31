@@ -2,7 +2,7 @@ Metadata-Version: 1.1
 Name: idb
 Version: 1.5.0
 Summary: InterBase RDBMS bindings for Python.
-Home-page: https://github.com/Embarcadero/PythonInterBase
+Home-page: https://github.com/Embarcadero/InterBasePython
 Author: 
 Author-email:
 License: BSD

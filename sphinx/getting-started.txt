@@ -17,17 +17,17 @@ install IDB properly.
 Installation using pip
 ========================
 
-  $ pip install git+ssh://git@github.com/Embarcadero/PythonInterBase.git
+  $ pip install git+ssh://git@github.com/Embarcadero/InterBasePython.git
 
 Installation from source
 ========================
 
 Download the source tarball, uncompress it, then run the install command::
 
-  $ git clone https://github.com/Embarcadero/PythonInterBase.git
+  $ git clone https://github.com/Embarcadero/InterBasePython.git
   $ python setup.py install
 
-.. _setuptools: https://github.com/Embarcadero/PythonInterBase
+.. _setuptools: https://github.com/Embarcadero/InterBasePython
 .. _PYPI: http://pypi.python.org
 .. _ctypes: http://docs.python.org/library/ctypes.html
 
