@@ -69,10 +69,13 @@ class TestServices(IDBTestBase):
 
         self.assertEqual(svc.get_service_manager_version(), 2)
         if platform == 'win32':
+            # InterBase Server and Embedded (ToGo) on Windows
             self.assertRegex(svc.get_server_version(), r"^W[IE]-V[\d\.]+")
         elif platform == 'darwin':
-            self.assertIn('DW-V', svc.get_server_version())
+            # InterBase Server and Embedded (ToGo) on macOS (ARM64 and x86_64 respectively)
+            self.assertRegex(svc.get_server_version(), r"^D[DMWE]-V[\d\.]+")
         elif platform == 'linux':
+            # InterBase Server and Embedded (ToGo) on Linux
             self.assertRegex(svc.get_server_version(), r"^L[IE]-V[\d\.]+")
         else:
             self.fail("Platform is not supported.")

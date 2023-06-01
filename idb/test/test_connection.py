@@ -68,10 +68,13 @@ class TestConnection(IDBTestBase):
                             server_public_file=IBTEST_SERVER_PUBLIC_FILE)
         ) as con:
             if platform == 'win32':
+                # InterBase Server and Embedded (ToGo) on Windows
                 self.assertRegex(con.server_version, r"^W[IE]-V[\d\.]+")
             elif platform == 'darwin':
-                self.assertIn('DW-V', con.server_version)
+                # InterBase Server and Embedded (ToGo) on macOS (ARM64 and x86_64 respectively)
+                self.assertRegex(con.server_version, r"^D[DMWE]-V[\d\.]+")
             elif platform == 'linux':
+                # InterBase Server and Embedded (ToGo) on Linux
                 self.assertRegex(con.server_version, r"^L[IE]-V[\d\.]+")
             else:
                 self.fail("Platform is not supported.")
