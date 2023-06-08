@@ -1,7 +1,8 @@
-# [InterBase Driver for Python, supporting 32-bit and 64-bit](https://docwiki.embarcadero.com/InterBase/2020/en/Main_Page) - [Based On FDB](http://www.firebirdsql.org/en/devel-python-driver/)
+# [InterBase Driver for Python, supporting 32-bit and 64-bit](https://docwiki.embarcadero.com/InterBase/2020/en/Main_Page)
 
 [InterBase Documentation](https://docwiki.embarcadero.com/InterBase/2020/en/Main_Page) \* 
 [IDB Source](https://github.com/Embarcadero/InterBasePython) \* 
+[Based On FDB](http://www.firebirdsql.org/en/devel-python-driver/)
 
 Changes implemented are based on this blog post
 
