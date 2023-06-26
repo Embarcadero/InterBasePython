@@ -1,4 +1,4 @@
-# [InterBase Driver for Python, supporting 32-bit and 64-bit]
+# InterBase Driver for Python, supporting 32-bit and 64-bit
 
 [InterBase Documentation](https://docwiki.embarcadero.com/InterBase/2020/en/Main_Page) \* 
 [IDB Source](https://github.com/Embarcadero/InterBasePython) \* 
