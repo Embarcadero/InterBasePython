@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
   
 jobs: 
-  build_universal_wheel:
+  build_wheel:
     name: Build universal wheel
     runs-on: ${{ matrix.os }}
     strategy:
@@ -28,15 +28,13 @@ jobs:
       with:
         python-version: ${{ matrix.python }}     
 
-    - name: Build sdist
+    - name: Build wheel
       run: |              
         python -m pip install build
-        python -m build --sdist --wheel .
+        python -m build --wheel .
 
     - name: Save sdist
       uses: actions/upload-artifact@v2
       with:
         path: dist/*.whl
-        if-no-files-found: error
-        
-               
+        if-no-files-found: error                     
