@@ -8,7 +8,7 @@ on:
       
 jobs: 
   build_wheel:
-    name: Build universal wheel
+    name: Build Python 3 wheel
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -34,4 +34,45 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         path: dist/*.whl
-        if-no-files-found: error                     
+        if-no-files-found: error        
+        
+  upload_pypi_test:
+    name: Upload to PyPI test
+    needs: [build_wheel]
+    runs-on: ubuntu-latest    
+    environment: 
+      name: pypi
+    # upload to PyPI test only for pushes to 'deploy-pypi-test' 
+    if: github.event_name == 'push' && github.ref == 'refs/heads/deploy-pypi-test'    
+    steps:                       
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+          
+      - name: Publish package to TestPyPI      
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: ${{ secrets.test_pypi_username }}
+          password: ${{ secrets.test_pypi_password }}
+          repository_url: https://test.pypi.org/legacy/    
+          
+  upload_pypi:
+    name: Upload to PyPI
+    needs: [build_wheel]
+    runs-on: ubuntu-latest
+    environment: 
+      name: pypi
+    # upload to PyPI only for pushes to 'deploy-pypi' 
+    if: github.event_name == 'push' && github.ref == 'refs/heads/deploy-pypi'
+    steps:                       
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+          
+      - name: Publish package to PyPI      
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: ${{ secrets.pypi_username }}
+          password: ${{ secrets.pypi_password }}    
