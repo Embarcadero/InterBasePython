@@ -1,14 +1,11 @@
 name: Build
 
 on: 
-  #push:
-    #branches:      
-      # Release branches
-      #- "[0-9]+.[0-9]+.X"
+  push:
+    branches:      
+      - deploy-pypi-test
+      - deploy-pypi
       
-  # Manual run
-  workflow_dispatch:
-  
 jobs: 
   build_wheel:
     name: Build universal wheel
