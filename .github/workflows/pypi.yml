@@ -42,6 +42,9 @@ jobs:
     runs-on: ubuntu-latest    
     environment: 
       name: pypi
+      url: https://test.pypi.org/p/interbasepython
+    permissions:
+      id-token: write
     # upload to PyPI test only for pushes to 'deploy-pypi-test' 
     if: github.event_name == 'push' && github.ref == 'refs/heads/deploy-pypi-test'    
     steps:                       
@@ -53,8 +56,6 @@ jobs:
       - name: Publish package to TestPyPI      
         uses: pypa/gh-action-pypi-publish@master
         with:
-          user: ${{ secrets.test_pypi_username }}
-          password: ${{ secrets.test_pypi_password }}
           repository_url: https://test.pypi.org/legacy/    
           
   upload_pypi:
@@ -63,6 +64,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: pypi
+      url: https://pypi.org/p/interbasepython
+    permissions:
+      id-token: write
     # upload to PyPI only for pushes to 'deploy-pypi' 
     if: github.event_name == 'push' && github.ref == 'refs/heads/deploy-pypi'
     steps:                       
@@ -72,7 +76,4 @@ jobs:
           path: dist
           
       - name: Publish package to PyPI      
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: ${{ secrets.pypi_username }}
-          password: ${{ secrets.pypi_password }}    
+        uses: pypa/gh-action-pypi-publish@master 
