@@ -43,7 +43,8 @@ jobs:
       name: pypi
       url: https://test.pypi.org/p/interbasepython
     permissions:
-      id-token: write 
+      id-token: write
+    if: github.ref == 'refs/heads/main'
     steps:                       
       - uses: actions/download-artifact@v2
         with:
@@ -64,7 +65,7 @@ jobs:
       url: https://pypi.org/p/interbasepython
     permissions:
       id-token: write
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: github.ref == 'refs/heads/main' && startsWith(github.ref, 'refs/tags/v')
     steps:                       
       - uses: actions/download-artifact@v2
         with:
