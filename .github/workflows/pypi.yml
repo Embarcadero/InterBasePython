@@ -4,7 +4,7 @@ on:
   push:
           
 jobs: 
-  build_wheel:
+  build_wheel: 
     name: Build Python 3 wheel
     runs-on: ${{ matrix.os }}
     strategy:
