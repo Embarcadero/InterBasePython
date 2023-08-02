@@ -27,13 +27,13 @@
 import os
 import idb
 
-from core import IDBTestBase
+from core import InterbaseTestBase
 from contextlib import closing
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_DIR_PATH,\
     IBTEST_SQL_DIALECT, IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestCreateDrop(IDBTestBase):
+class TestCreateDrop(InterbaseTestBase):
     def setUp(self):
         self.db_file = os.path.join(IBTEST_DB_DIR_PATH, 'droptest.ib')
         if os.path.exists(self.db_file):

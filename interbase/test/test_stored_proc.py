@@ -26,13 +26,13 @@
 
 import idb
 
-from core import IDBTestBase
+from core import InterbaseTestBase
 from decimal import Decimal
 from constants import IBTEST_USER, IBTEST_HOST, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestStoredProc(IDBTestBase):
+class TestStoredProc(InterbaseTestBase):
     def setUp(self):
         self.con = idb.connect(
             host=IBTEST_HOST,

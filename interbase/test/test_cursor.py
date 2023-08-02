@@ -26,12 +26,12 @@
 
 import idb
 
-from core import IDBTestBase
+from core import InterbaseTestBase
 from constants import IBTEST_PASSWORD, IBTEST_USER, IBTEST_HOST, \
     IBTEST_DB_PATH, IBTEST_USE_EMBEDDED, IBTEST_SQL_DIALECT, IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestCursor(IDBTestBase):
+class TestCursor(InterbaseTestBase):
     def setUp(self):
         self.con = idb.connect(
             host=IBTEST_HOST,

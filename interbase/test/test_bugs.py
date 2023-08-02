@@ -29,12 +29,12 @@ import idb
 import datetime
 
 from io import BytesIO
-from core import IDBTestBase
+from core import InterbaseTestBase
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_DIR_PATH, IBTEST_DB_PATH,\
     IBTEST_SQL_DIALECT, IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestBugs(IDBTestBase):
+class TestBugs(InterbaseTestBase):
     def setUp(self):
         self.dbfile = os.path.join(IBTEST_DB_DIR_PATH, 'ibbugs.ib')
         if os.path.exists(self.dbfile):

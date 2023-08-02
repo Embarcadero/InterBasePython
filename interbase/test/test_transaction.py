@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_transaction.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -26,12 +26,12 @@
 
 import idb
 
-from core import IDBTestBase
+from core import InterbaseTestBase
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestTransaction(IDBTestBase):
+class TestTransaction(InterbaseTestBase):
     def setUp(self):
         self.connection = idb.connect(
             host=IBTEST_HOST,

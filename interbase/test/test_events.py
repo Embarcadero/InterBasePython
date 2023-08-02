@@ -30,12 +30,12 @@ import time
 import threading
 
 from unittest import skip
-from core import IDBTestBase
+from core import InterbaseTestBase
 from constants import IBTEST_DB_DIR_PATH, IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestEvents(IDBTestBase):
+class TestEvents(InterbaseTestBase):
     def setUp(self):
         self.dbfile = os.path.join(IBTEST_DB_DIR_PATH, 'ibevents.ib')
         if os.path.exists(self.dbfile):

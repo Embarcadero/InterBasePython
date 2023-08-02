@@ -28,12 +28,12 @@ import os
 import idb
 import time
 
-from core import IDBTestBase
+from core import InterbaseTestBase
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_DIR_PATH, \
     IBTEST_SQL_DIALECT, IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestEncryption(IDBTestBase):
+class TestEncryption(InterbaseTestBase):
     def setUp(self) -> None:
         self.test_db_path = os.path.join(IBTEST_DB_DIR_PATH, "encrypt.ib")
         self.backup_file = os.path.join(IBTEST_DB_DIR_PATH, "backup.ib")

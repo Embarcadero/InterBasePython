@@ -28,13 +28,13 @@ import os
 import idb
 
 from io import StringIO
-from core import IDBTestBase
+from core import InterbaseTestBase
 from contextlib import closing
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestStreamBLOBs(IDBTestBase):
+class TestStreamBLOBs(InterbaseTestBase):
     def setUp(self):
         self.con = idb.connect(
             host=IBTEST_HOST,
