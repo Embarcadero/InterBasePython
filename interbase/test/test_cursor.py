@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_cursor.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -24,7 +24,7 @@
 #
 #  See LICENSE.TXT for details.
 
-import idb
+import interbase
 
 from core import InterbaseTestBase
 from constants import IBTEST_PASSWORD, IBTEST_USER, IBTEST_HOST, \
@@ -33,7 +33,7 @@ from constants import IBTEST_PASSWORD, IBTEST_USER, IBTEST_HOST, \
 
 class TestCursor(InterbaseTestBase):
     def setUp(self):
-        self.con = idb.connect(
+        self.con = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,
@@ -295,11 +295,11 @@ class TestCursor(InterbaseTestBase):
 
         cur = self.con.cursor()
         self.assertIsNone(cur.name)
-        self.assertRaises(idb.ProgrammingError, assign_name)
+        self.assertRaises(interbase.ProgrammingError, assign_name)
         cur.execute('select * from country')
         cur.name = 'test'
         self.assertEqual(cur.name, 'test')
-        self.assertRaises(idb.ProgrammingError, assign_name)
+        self.assertRaises(interbase.ProgrammingError, assign_name)
 
     def test_use_after_close(self):
         cmd = 'select * from country'

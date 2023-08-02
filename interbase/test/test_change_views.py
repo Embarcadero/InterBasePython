@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_change_views.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -25,7 +25,7 @@
 #  See LICENSE.TXT for details.
 
 import os
-import idb
+import interbase
 import time
 
 from core import InterbaseTestBase
@@ -38,12 +38,12 @@ class TestChangeView(InterbaseTestBase):
         self.cwd = os.getcwd()
         self.dbpath = os.path.join(self.cwd, "test")
         self.dbfile = os.path.join(self.dbpath, IBTEST_DB_PATH)
-        self.con = idb.connect(
+        self.con = interbase.connect(
             host=IBTEST_HOST,
             database=self.dbfile,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
-            isolation_level=idb.ISOLATION_LEVEL_SERIALIZABLE,
+            isolation_level=interbase.ISOLATION_LEVEL_SERIALIZABLE,
             sql_dialect=IBTEST_SQL_DIALECT,
             ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
             server_public_file=IBTEST_SERVER_PUBLIC_FILE
@@ -109,13 +109,13 @@ class TestChangeView(InterbaseTestBase):
         updated_record = changed_records[1]
         inserted_record = changed_records[2]
 
-        assert updated_record[1][1] & idb.SQLIND_UPDATE
-        assert inserted_record[1][1] & idb.SQLIND_INSERT
-        assert deleted_record[1][1] & idb.SQLIND_DELETE
+        assert updated_record[1][1] & interbase.SQLIND_UPDATE
+        assert inserted_record[1][1] & interbase.SQLIND_INSERT
+        assert deleted_record[1][1] & interbase.SQLIND_DELETE
         assert len(changed_records) == 3
 
     def tearDown(self):
-        self.con = idb.connect(
+        self.con = interbase.connect(
             host=IBTEST_HOST,
             database=self.dbfile,
             user=IBTEST_USER,

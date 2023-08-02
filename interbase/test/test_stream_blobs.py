@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_stream_blobs.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -25,7 +25,7 @@
 #  See LICENSE.TXT for details.
 
 import os
-import idb
+import interbase
 
 from io import StringIO
 from core import InterbaseTestBase
@@ -36,7 +36,7 @@ from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH,
 
 class TestStreamBLOBs(InterbaseTestBase):
     def setUp(self):
-        self.con = idb.connect(
+        self.con = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,

@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_events.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -25,7 +25,7 @@
 #  See LICENSE.TXT for details.
 
 import os
-import idb
+import interbase
 import time
 import threading
 
@@ -40,7 +40,7 @@ class TestEvents(InterbaseTestBase):
         self.dbfile = os.path.join(IBTEST_DB_DIR_PATH, 'ibevents.ib')
         if os.path.exists(self.dbfile):
             os.remove(self.dbfile)
-        self.con = idb.create_database(
+        self.con = interbase.create_database(
             host=IBTEST_HOST,
             database=self.dbfile,
             user=IBTEST_USER,

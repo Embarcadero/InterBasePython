@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_services.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -26,7 +26,7 @@
 
 import os
 from datetime import datetime
-import idb
+import interbase
 
 from sys import platform
 from unittest import skipUnless, skip
@@ -51,7 +51,7 @@ class TestServices(InterbaseTestBase):
                 os.remove(os.path.join(IBTEST_DB_DIR_PATH, filename))
 
     def test_attach(self):
-        svc = idb.services.connect(
+        svc = interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -61,7 +61,7 @@ class TestServices(InterbaseTestBase):
         svc.close()
 
     def test_query(self):
-        svc = idb.services.connect(host=IBTEST_HOST,
+        svc = interbase.services.connect(host=IBTEST_HOST,
                                    user=IBTEST_USER,
                                    password=IBTEST_PASSWORD,
                                    ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
@@ -93,7 +93,7 @@ class TestServices(InterbaseTestBase):
         x = svc.get_message_file_directory()
         # self.assertEqual(x, '/opt/interbase/')
 
-        _ = idb.connect(
+        _ = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,
@@ -102,7 +102,7 @@ class TestServices(InterbaseTestBase):
             ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
             server_public_file=IBTEST_SERVER_PUBLIC_FILE
         )
-        _ = idb.connect(
+        _ = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,
@@ -119,7 +119,7 @@ class TestServices(InterbaseTestBase):
         svc.close()
 
     def test_running(self):
-        svc = idb.services.connect(host=IBTEST_HOST,
+        svc = interbase.services.connect(host=IBTEST_HOST,
                                    user=IBTEST_USER,
                                    password=IBTEST_PASSWORD,
                                    ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
@@ -133,7 +133,7 @@ class TestServices(InterbaseTestBase):
         svc.close()
 
     def test_alias(self):
-        svc = idb.services.connect(
+        svc = interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -170,7 +170,7 @@ class TestServices(InterbaseTestBase):
         if os.path.exists(db_path):
             os.remove(db_path)
 
-        connection = idb.create_database(
+        connection = interbase.create_database(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -181,7 +181,7 @@ class TestServices(InterbaseTestBase):
         )
         connection.close()
 
-        svc = idb.services.connect(
+        svc = interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -205,7 +205,7 @@ class TestServices(InterbaseTestBase):
         if os.path.exists(db_path):
             os.remove(db_path)
 
-        connection = idb.create_database(
+        connection = interbase.create_database(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -216,7 +216,7 @@ class TestServices(InterbaseTestBase):
         )
         connection.close()
 
-        svc = idb.services.connect(
+        svc = interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -226,7 +226,7 @@ class TestServices(InterbaseTestBase):
         svc.create_dump(db_path, dump_path, overwrite=True)
 
     def test_ssl_connection(self):
-        svc = idb.services.connect(
+        svc = interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -234,7 +234,7 @@ class TestServices(InterbaseTestBase):
             server_public_file=IBTEST_SERVER_PUBLIC_FILE,
         )
         svc.close()
-        svc = idb.services.connect(
+        svc = interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -246,7 +246,7 @@ class TestServices(InterbaseTestBase):
 
     @skip("issue #49: client lib ignores server_public_path")
     def test_ssl_with_server_public_path(self):
-        svc = idb.services.connect(
+        svc = interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -254,7 +254,7 @@ class TestServices(InterbaseTestBase):
             server_public_file=IBTEST_SERVER_PUBLIC_FILE,
         )
         svc.close()
-        svc = idb.services.connect(
+        svc = interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -265,7 +265,7 @@ class TestServices(InterbaseTestBase):
         svc.close()
 
     def test_wait(self):
-        svc = idb.services.connect(
+        svc = interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -284,7 +284,7 @@ class TestServices(InterbaseTestBase):
     def test_archive(self):
         temp_db_path = os.path.join(IBTEST_DB_DIR_PATH, "ARCHIVE.IB")
 
-        connection = idb.create_database(
+        connection = interbase.create_database(
             host=IBTEST_HOST,
             database=temp_db_path,
             user=IBTEST_USER,
@@ -302,7 +302,7 @@ class TestServices(InterbaseTestBase):
         connection.commit()
 
         save_point_1 = datetime.now()
-        with idb.services.connect(host=IBTEST_HOST,
+        with interbase.services.connect(host=IBTEST_HOST,
                                   user=IBTEST_USER,
                                   password=IBTEST_PASSWORD,
                                   ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
@@ -311,7 +311,7 @@ class TestServices(InterbaseTestBase):
             service.archive_backup(temp_db_path)
             service.wait()
 
-        with idb.services.connect(host=IBTEST_HOST,
+        with interbase.services.connect(host=IBTEST_HOST,
                                   user=IBTEST_USER,
                                   password=IBTEST_PASSWORD,
                                   ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
@@ -322,7 +322,7 @@ class TestServices(InterbaseTestBase):
                     service.archive_restore(os.path.join(IBTEST_DB_DIR_PATH, filename),
                                             temp_db_path + ".restored", save_point_1)
 
-        new_connection = idb.connect(
+        new_connection = interbase.connect(
             host=IBTEST_HOST,
             database=temp_db_path + '.restored',
             user=IBTEST_USER,
@@ -352,7 +352,7 @@ class TestServices(InterbaseTestBase):
             os.remove(table_space_bk_file)
 
         with closing(
-            idb.create_database(
+            interbase.create_database(
                 host=IBTEST_HOST,
                 database=temp_db_path,
                 user=IBTEST_USER,
@@ -366,7 +366,7 @@ class TestServices(InterbaseTestBase):
             cursor.execute("""CREATE TABLESPACE MYTABLESPACE FILE '%s'""" % table_space_file)
             connection.commit()
 
-        with idb.services.connect(host=IBTEST_HOST,
+        with interbase.services.connect(host=IBTEST_HOST,
                                   user=IBTEST_USER,
                                   password=IBTEST_PASSWORD,
                                   ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
@@ -380,14 +380,14 @@ class TestServices2(InterbaseTestBase):
         self.ibk = os.path.join(IBTEST_DB_DIR_PATH, 'test_employee.ibk')
         self.ibk2 = os.path.join(IBTEST_DB_DIR_PATH, 'test_employee.ibk2')
         self.ridb = os.path.join(IBTEST_DB_DIR_PATH, 'test_employee.ib')
-        self.svc = idb.services.connect(
+        self.svc = interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
             ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
             server_public_file=IBTEST_SERVER_PUBLIC_FILE,
         )
-        self.con = idb.connect(
+        self.con = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,
@@ -397,7 +397,7 @@ class TestServices2(InterbaseTestBase):
             server_public_file=IBTEST_SERVER_PUBLIC_FILE
         )
         if not os.path.exists(self.ridb):
-            c = idb.create_database(
+            c = interbase.create_database(
                 host=IBTEST_HOST,
                 database=self.ridb,
                 user=IBTEST_USER,
@@ -436,7 +436,7 @@ class TestServices2(InterbaseTestBase):
         self.svc.get_log()
         for line in self.svc:
             self.assertIsNotNone(line)
-            self.assertIsInstance(line, idb.StringType)
+            self.assertIsInstance(line, interbase.StringType)
         self.assertFalse(self.svc.fetching)
         # callback
         output = []
@@ -464,7 +464,7 @@ class TestServices2(InterbaseTestBase):
                                 show_system_tables_and_indexes=True,
                                 show_record_versions=True)
         for line in self.svc:
-            self.assertIsInstance(line, idb.StringType)
+            self.assertIsInstance(line, interbase.StringType)
         self.assertFalse(self.svc.fetching)
         # callback
         output = []
@@ -500,7 +500,7 @@ class TestServices2(InterbaseTestBase):
         )
         for line in self.svc:
             self.assertIsNotNone(line)
-            self.assertIsInstance(line, idb.StringType)
+            self.assertIsInstance(line, interbase.StringType)
         self.assertFalse(self.svc.fetching)
         # callback
         output = []
@@ -526,7 +526,7 @@ class TestServices2(InterbaseTestBase):
         self.svc.restore(self.ibk, self.ridb, replace=1)
         for line in self.svc:
             self.assertIsNotNone(line)
-            self.assertIsInstance(line, idb.StringType)
+            self.assertIsInstance(line, interbase.StringType)
         self.assertFalse(self.svc.fetching)
         # callback
         output = []
@@ -549,21 +549,21 @@ class TestServices2(InterbaseTestBase):
 
     def test_setWriteMode(self):
         # Forced writes
-        self.svc.set_write_mode(self.ridb, idb.services.WRITE_FORCED)
+        self.svc.set_write_mode(self.ridb, interbase.services.WRITE_FORCED)
         self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
         self.assertIn('force write', ''.join(self.svc.readlines()))
         # No Forced writes
-        self.svc.set_write_mode(self.ridb, idb.services.WRITE_BUFFERED)
+        self.svc.set_write_mode(self.ridb, interbase.services.WRITE_BUFFERED)
         self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
         self.assertNotIn('force write', ''.join(self.svc.readlines()))
 
     def test_setAccessMode(self):
         # Read Only
-        self.svc.set_access_mode(self.ridb, idb.services.ACCESS_READ_ONLY)
+        self.svc.set_access_mode(self.ridb, interbase.services.ACCESS_READ_ONLY)
         self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
         self.assertIn('read only', ''.join(self.svc.readlines()))
         # Read/Write
-        self.svc.set_access_mode(self.ridb, idb.services.ACCESS_READ_WRITE)
+        self.svc.set_access_mode(self.ridb, interbase.services.ACCESS_READ_WRITE)
         self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
         self.assertNotIn('read only', ''.join(self.svc.readlines()))
 
@@ -588,11 +588,11 @@ class TestServices2(InterbaseTestBase):
     def test_getUsers(self):
         users = [user for user in self.svc.get_users() if user.name == 'SYSDBA']
         self.assertIsInstance(users, type(list()))
-        self.assertIsInstance(users[0], idb.services.User)
+        self.assertIsInstance(users[0], interbase.services.User)
         self.assertEqual(users[0].name, 'SYSDBA')
 
     def test_manage_user(self):
-        user = idb.services.User('IDB_TEST')
+        user = interbase.services.User('IDB_TEST')
         user.password = 'IDB_TEST'
         user.first_name = 'IDB'
         user.middle_name = 'X.'

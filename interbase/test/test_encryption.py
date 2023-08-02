@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_encryption.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -25,7 +25,7 @@
 #  See LICENSE.TXT for details.
 
 import os
-import idb
+import interbase
 import time
 
 from core import InterbaseTestBase
@@ -48,7 +48,7 @@ class TestEncryption(InterbaseTestBase):
         if os.path.exists(self.test_db_path):
             os.remove(self.test_db_path)
 
-        self.sysdba_connection: idb.Connection = idb.create_database(
+        self.sysdba_connection: interbase.Connection = interbase.create_database(
             host=IBTEST_HOST,
             database=self.test_db_path,
             user=IBTEST_USER,
@@ -66,7 +66,7 @@ class TestEncryption(InterbaseTestBase):
         )
         self.sysdba_connection.commit()
 
-        self.sysdso_connection: idb.Connection = idb.connect(
+        self.sysdso_connection: interbase.Connection = interbase.connect(
             user='SYSDSO',
             password=self.test_password,
             database=self.test_db_path,
@@ -74,7 +74,7 @@ class TestEncryption(InterbaseTestBase):
             ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
             server_public_file=IBTEST_SERVER_PUBLIC_FILE
         )
-        self.user_connection: idb.Connection = idb.connect(
+        self.user_connection: interbase.Connection = interbase.connect(
             user=self.test_username,
             password=self.test_password,
             database=self.test_db_path,
@@ -103,7 +103,7 @@ class TestEncryption(InterbaseTestBase):
             os.remove(self.backup_file)
 
     def test_encrypt_backup(self):
-        with idb.services.connect(
+        with interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
             password=IBTEST_PASSWORD,
@@ -136,11 +136,11 @@ class TestEncryption(InterbaseTestBase):
         sysdba_cursor.execute("""ALTER DATABASE ENCRYPT with %s""" % self.encrypt_key)
         self.sysdba_connection.commit()
 
-        with self.assertRaises(idb.ibcore.DatabaseError):
+        with self.assertRaises(interbase.ibcore.DatabaseError):
             # should raise exception because database is already encrypted
             sysdba_cursor.execute("""ALTER DATABASE ENCRYPT with %s""" % self.encrypt_key)
 
-        conn: idb.Connection = idb.connect(
+        conn: interbase.Connection = interbase.connect(
             dsn=self.test_db_path,
             user='TEST_USER_2',
             password='TEST',

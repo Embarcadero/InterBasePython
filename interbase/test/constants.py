@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           constants.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011

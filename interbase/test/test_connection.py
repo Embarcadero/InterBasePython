@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_connection.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -24,7 +24,7 @@
 #
 #  See LICENSE.TXT for details.
 
-import idb
+import interbase
 import os
 
 from unittest import skipUnless
@@ -38,7 +38,7 @@ class TestConnection(InterbaseTestBase):
 
     def test_connect(self):
         with closing(
-            idb.connect(
+            interbase.connect(
                 #dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
                 host=IBTEST_HOST,
                 database=IBTEST_DB_PATH,
@@ -54,11 +54,11 @@ class TestConnection(InterbaseTestBase):
             dpb.extend((0x1d, len(IBTEST_PASSWORD)))
             dpb.extend(ord(x) for x in IBTEST_PASSWORD)
             dpb.extend((ord('?'), 1, IBTEST_SQL_DIALECT))
-            self.assertEqual(con._dpb, idb.bs(dpb))
+            self.assertEqual(con._dpb, interbase.bs(dpb))
 
     def test_properties(self):
         with closing(
-                idb.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
+                interbase.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
                             host=IBTEST_HOST,
                             database=IBTEST_DB_PATH,
                             user=IBTEST_USER,
@@ -86,14 +86,14 @@ class TestConnection(InterbaseTestBase):
             self.assertEqual(len(con.transactions), 2)
             self.assertIn(con.main_transaction, con.transactions)
             self.assertIn(con.query_transaction, con.transactions)
-            self.assertEqual(con.default_tpb, idb.ISOLATION_LEVEL_READ_COMMITED)
-            self.assertIsInstance(con.schema, idb.schema.Schema)
+            self.assertEqual(con.default_tpb, interbase.ISOLATION_LEVEL_READ_COMMITED)
+            self.assertIsInstance(con.schema, interbase.schema.Schema)
             self.assertFalse(con.closed)
 
     def test_connect_role(self):
         role_name = 'role'
         with closing(
-                idb.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
+                interbase.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
                             host=IBTEST_HOST,
                             database=IBTEST_DB_PATH,
                             user=IBTEST_USER,
@@ -111,11 +111,11 @@ class TestConnection(InterbaseTestBase):
             dpb.extend((ord('<'), len(role_name)))
             dpb.extend(ord(x) for x in role_name)
             dpb.extend((ord('?'), 1, IBTEST_SQL_DIALECT))
-            self.assertEqual(con._dpb, idb.bs(dpb))
+            self.assertEqual(con._dpb, interbase.bs(dpb))
 
     def test_transaction(self):
         with closing(
-                idb.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
+                interbase.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
                             host=IBTEST_HOST,
                             database=IBTEST_DB_PATH,
                             user=IBTEST_USER,
@@ -143,7 +143,7 @@ class TestConnection(InterbaseTestBase):
             con.rollback(retaining=True)
             self.assertTrue(con.main_transaction.active)
             transaction = con.trans()
-            self.assertIsInstance(transaction, idb.Transaction)
+            self.assertIsInstance(transaction, interbase.Transaction)
             self.assertFalse(con.main_transaction.closed)
             self.assertEqual(len(con.transactions), 3)
             transaction.begin()
@@ -157,7 +157,7 @@ class TestConnection(InterbaseTestBase):
 
     def test_execute_immediate(self):
         with closing(
-                idb.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
+                interbase.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
                             host=IBTEST_HOST,
                             database=IBTEST_DB_PATH,
                             user=IBTEST_USER,
@@ -173,7 +173,7 @@ class TestConnection(InterbaseTestBase):
 
     def test_database_info(self):
         with closing(
-                idb.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
+                interbase.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
                             host=IBTEST_HOST,
                             database=IBTEST_DB_PATH,
                             user=IBTEST_USER,
@@ -182,13 +182,13 @@ class TestConnection(InterbaseTestBase):
                             ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
                             server_public_file=IBTEST_SERVER_PUBLIC_FILE)
         ) as con:
-            self.assertEqual(con.database_info(idb.isc_info_db_read_only, 'i'), 0)
-            self.assertEqual(con.database_info(idb.isc_info_page_size, 'i'), 4096)
-            self.assertEqual(con.database_info(idb.isc_info_db_sql_dialect, 'i'), IBTEST_SQL_DIALECT)
+            self.assertEqual(con.database_info(interbase.isc_info_db_read_only, 'i'), 0)
+            self.assertEqual(con.database_info(interbase.isc_info_page_size, 'i'), 4096)
+            self.assertEqual(con.database_info(interbase.isc_info_db_sql_dialect, 'i'), IBTEST_SQL_DIALECT)
 
     def test_db_info(self):
         with closing(
-                idb.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
+                interbase.connect(#dsn=IBTEST_HOST + ":" + IBTEST_DB_PATH if IBTEST_HOST else IBTEST_DB_PATH,
                             host=IBTEST_HOST,
                             database=IBTEST_DB_PATH,
                             user=IBTEST_USER,
@@ -198,16 +198,16 @@ class TestConnection(InterbaseTestBase):
                             server_public_file=IBTEST_SERVER_PUBLIC_FILE)) as con:
             res = con.db_info(
                 [
-                    idb.isc_info_page_size,
-                    idb.isc_info_db_read_only,
-                    idb.isc_info_db_sql_dialect,
-                    idb.isc_info_user_names
+                    interbase.isc_info_page_size,
+                    interbase.isc_info_db_read_only,
+                    interbase.isc_info_db_sql_dialect,
+                    interbase.isc_info_user_names
                 ]
             )
             #if you have more than 1 for SYSDBA, check if you have other connections to the test db!
             #check API guide page 28 for more info.
             self.assertDictEqual(res, {53: {'SYSDBA': 1}, 62: IBTEST_SQL_DIALECT, 14: 4096, 63: 0})
-            res = con.db_info(idb.isc_info_read_seq_count)
+            res = con.db_info(interbase.isc_info_read_seq_count)
             del res[0]  # remove this element (number of reads) because it changes often
             if 10 in res:
                 del res[10]  # remove this element, because embedded version does not return it
@@ -215,7 +215,7 @@ class TestConnection(InterbaseTestBase):
 
     def test_connection(self):
         with closing(
-                idb.connect(
+                interbase.connect(
                     user=IBTEST_USER,
                     password=IBTEST_PASSWORD,
                     database=IBTEST_DB_PATH,

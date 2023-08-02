@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_schema.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -24,10 +24,10 @@
 #
 #  See LICENSE.TXT for details.
 
-import idb
+import interbase
 
 from unittest import skip
-from idb import schema as sm
+from interbase import schema as sm
 from contextlib import closing
 from core import InterbaseTestBase, SchemaVisitor
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
@@ -36,7 +36,7 @@ from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH,
 
 class TestSchema(InterbaseTestBase):
     def setUp(self):
-        self.con = idb.connect(
+        self.con = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,
@@ -50,7 +50,7 @@ class TestSchema(InterbaseTestBase):
         self.con.close()
 
     def testSchemaBindClose(self):
-        s = idb.schema.Schema()
+        s = interbase.schema.Schema()
         self.assertTrue(s.closed)
         s.bind(self.con)
         # properties
@@ -199,11 +199,11 @@ class TestSchema(InterbaseTestBase):
         #
         self.assertFalse(s.closed)
         #
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             s.close()
         self.assertTupleEqual(cm.exception.args,
                               ("Call to 'close' not allowed for embedded Schema.",))
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             s.bind(self.con)
         self.assertTupleEqual(cm.exception.args,
                               ("Call to 'bind' not allowed for embedded Schema.",))
@@ -243,11 +243,11 @@ class TestSchema(InterbaseTestBase):
         #
         self.assertEqual(c.get_sql_for('alter', collation='UCS_BASIC'),
                          "ALTER CHARACTER SET UTF8 SET DEFAULT COLLATION UCS_BASIC")
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter', badparam='UCS_BASIC')
         self.assertTupleEqual(cm.exception.args,
                               ("Unsupported parameter(s) 'badparam'",))
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter')
         self.assertTupleEqual(cm.exception.args, ("Missing required parameter: 'collation'.",))
         #
@@ -283,11 +283,11 @@ class TestSchema(InterbaseTestBase):
                          "DROP EXCEPTION UNKNOWN_EMP_ID")
         self.assertEqual(c.get_sql_for('alter', message="New message."),
                          "ALTER EXCEPTION UNKNOWN_EMP_ID 'New message.'")
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter', badparam="New message.")
         self.assertTupleEqual(cm.exception.args,
                               ("Unsupported parameter(s) 'badparam'",))
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter')
         self.assertTupleEqual(cm.exception.args,
                               ("Missing required parameter: 'message'.",))
@@ -336,13 +336,13 @@ class TestSchema(InterbaseTestBase):
             "ALTER TABLE DEPARTMENT ALTER COLUMN PHONE_NO POSITION 2")
         self.assertEqual(column.get_sql_for('alter', datatype='VARCHAR(25)'),
             "ALTER TABLE DEPARTMENT ALTER COLUMN PHONE_NO TYPE VARCHAR(25)")
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             column.get_sql_for('alter', badparam=10)
         self.assertTupleEqual(cm.exception.args, ("Unsupported parameter(s) 'badparam'",))
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             column.get_sql_for('alter')
         self.assertTupleEqual(cm.exception.args, ("Parameter required.",))
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             column.get_sql_for('alter', expression='(1+1)')
         self.assertTupleEqual(cm.exception.args,
                               ("Change from persistent column to computed is not allowed.",))
@@ -360,7 +360,7 @@ class TestSchema(InterbaseTestBase):
             "ALTER TABLE EMPLOYEE ALTER COLUMN FULL_NAME TYPE VARCHAR(50) COMPUTED BY (first_name || ', ' || last_name)"
         )
 
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             column.get_sql_for('alter', datatype='VARCHAR(50)')
         self.assertTupleEqual(cm.exception.args, ("Change from computed column to persistent is not allowed.",))
         # Array column
@@ -538,13 +538,13 @@ class TestSchema(InterbaseTestBase):
             c.get_sql_for('alter', datatype='VARCHAR(30)'),
             "ALTER DOMAIN PRODTYPE TYPE VARCHAR(30)"
         )
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter', badparam=10)
         self.assertTupleEqual(
             cm.exception.args,
             ("Unsupported parameter(s) 'badparam'",)
         )
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter')
         self.assertTupleEqual(cm.exception.args, ("Parameter required.",))
         # Domain with quoted name
@@ -841,11 +841,11 @@ class TestSchema(InterbaseTestBase):
         self.assertEqual(c.get_sql_for('alter', columns=('country', 'currency'),
                                        query='select * from country', check=True),
                          "ALTER VIEW PHONE_LIST (country,currency)\n   AS\n     select * from country\n     WITH CHECK OPTION")
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter', badparam='select * from country')
         self.assertTupleEqual(cm.exception.args,
                               ("Unsupported parameter(s) 'badparam'",))
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter')
         self.assertTupleEqual(cm.exception.args, ("Missing required parameter: 'query'.",))
         self.assertEqual(
@@ -860,10 +860,10 @@ class TestSchema(InterbaseTestBase):
 
     def test_connection_with_schema(self):
         with closing(
-                idb.connect(
+                interbase.connect(
                     host=IBTEST_HOST, database=IBTEST_DB_PATH, user=IBTEST_USER,
                     password=IBTEST_PASSWORD,
-                    connection_class=idb.ConnectionWithSchema,
+                    connection_class=interbase.ConnectionWithSchema,
                     sql_dialect=IBTEST_SQL_DIALECT,
                     ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
                     server_public_file=IBTEST_SERVER_PUBLIC_FILE
@@ -923,10 +923,10 @@ class TestSchema(InterbaseTestBase):
             'BEFORE INSERT POSITION 0\nAS\nBEGIN\n  if (new.emp_no is null) then\n  '
             'new.emp_no = gen_id(emp_no_gen, 1);\nEND'
         )
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter')
         self.assertTupleEqual(cm.exception.args, ("Header or body definition required.",))
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter', declare="DECLARE VARIABLE i integer;")
         self.assertTupleEqual(cm.exception.args, ("Header or body definition required.",))
         self.assertEqual(
@@ -975,7 +975,7 @@ class TestSchema(InterbaseTestBase):
             'x = 2;\n'
             'END'
         )
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter', fire_on='ON CONNECT')
         self.assertTupleEqual(cm.exception.args,
                               ("Trigger type change is not allowed.",))
@@ -1008,7 +1008,7 @@ class TestSchema(InterbaseTestBase):
         self.assertEqual(c.sequence,0)
         self.assertEqual(c.domain.name,'RDB$94')
         self.assertEqual(c.datatype,'SMALLINT')
-        self.assertEqual(c.type_from,idb.schema.PROCPAR_DATATYPE)
+        self.assertEqual(c.type_from,interbase.schema.PROCPAR_DATATYPE)
         self.assertIsNone(c.default)
         self.assertIsNone(c.collation)
         self.assertIsNone(c.column)
@@ -1103,7 +1103,7 @@ AS
 BEGIN
   /* PASS */
 END""")
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('alter',declare="DECLARE VARIABLE i integer;")
         self.assertTupleEqual(cm.exception.args, ("Missing required parameter: 'code'.",))
         self.assertEqual(c.get_sql_for('alter', code=''), """ALTER PROCEDURE GET_EMP_PROJ\nAS\nBEGIN\nEND""")
@@ -1452,7 +1452,7 @@ END""")
         self.assertFalse(c.has_return_argument())
         #
         self.assertEqual(c.get_sql_for('drop'), "DROP EXTERNAL FUNCTION STRLEN")
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('drop', badparam='')
         self.assertTupleEqual(cm.exception.args,
                               ("Unsupported parameter(s) 'badparam'",))
@@ -1462,7 +1462,7 @@ END""")
 RETURNS INTEGER BY VALUE
 ENTRY_POINT 'IB_UDF_strlen'
 MODULE_NAME 'ib_udf'""")
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('declare',badparam='')
         self.assertTupleEqual(cm.exception.args,
                               ("Unsupported parameter(s) 'badparam'",))
@@ -1591,9 +1591,9 @@ MODULE_NAME 'ibudf'""")
         self.assertListEqual(c.get_dependents(), [])
         self.assertListEqual(c.get_dependencies(), [])
         #
-        self.assertIsInstance(c.user, idb.services.User)
+        self.assertIsInstance(c.user, interbase.services.User)
         self.assertIn(c.user.name, ['SYSDBA', 'PUBLIC'])
-        self.assertIsInstance(c.grantor, idb.services.User)
+        self.assertIsInstance(c.grantor, interbase.services.User)
         self.assertEqual(c.grantor.name, 'SYSDBA')
         self.assertEqual(c.privilege, 'X')
         self.assertIsInstance(c.subject, sm.Procedure)
@@ -1620,7 +1620,7 @@ MODULE_NAME 'ibudf'""")
                          "GRANT EXECUTE ON PROCEDURE ALL_LANGS TO SYSDBA GRANTED BY SYSDBA")
         self.assertEqual(c.get_sql_for('grant', grantors=['SYSDBA', 'TEST_USER']),
                          "GRANT EXECUTE ON PROCEDURE ALL_LANGS TO SYSDBA")
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('grant', badparam=True)
         self.assertTupleEqual(cm.exception.args,
                               ("Unsupported parameter(s) 'badparam'",))
@@ -1630,11 +1630,11 @@ MODULE_NAME 'ibudf'""")
                          "REVOKE EXECUTE ON PROCEDURE ALL_LANGS FROM SYSDBA GRANTED BY SYSDBA")
         self.assertEqual(c.get_sql_for('revoke', grantors=['SYSDBA', 'TEST_USER']),
                          "REVOKE EXECUTE ON PROCEDURE ALL_LANGS FROM SYSDBA")
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('revoke', grant_option=True)
         self.assertTupleEqual(cm.exception.args,
                               ("Can't revoke grant option that wasn't granted.",))
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             c.get_sql_for('revoke', badparam=True)
         self.assertTupleEqual(cm.exception.args,
             ("Unsupported parameter(s) 'badparam'",))
@@ -1644,14 +1644,14 @@ MODULE_NAME 'ibudf'""")
         self.assertEqual(c.get_sql_for('revoke'),
             "REVOKE EXECUTE ON PROCEDURE ALL_LANGS FROM PUBLIC")
         # get_privileges_of()
-        u = idb.services.User('PUBLIC')
+        u = interbase.services.User('PUBLIC')
         p = self.con.schema.get_privileges_of(u)
         self.assertEqual(len(p), 110)
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             p = self.con.schema.get_privileges_of('PUBLIC')
         self.assertTupleEqual(cm.exception.args,
                               ("Unknown user_type code.",))
-        with self.assertRaises(idb.ProgrammingError) as cm:
+        with self.assertRaises(interbase.ProgrammingError) as cm:
             p = self.con.schema.get_privileges_of('PUBLIC', 50)
         self.assertTupleEqual(cm.exception.args,
                               ("Unknown user_type code.",))

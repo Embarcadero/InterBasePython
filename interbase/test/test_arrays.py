@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_arrays.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -24,7 +24,7 @@
 #
 #  See LICENSE.TXT for details.
 
-import idb
+import interbase
 import datetime
 import decimal
 
@@ -35,7 +35,7 @@ from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH,
 
 class TestArrays(InterbaseTestBase):
     def setUp(self):
-        self.con = idb.connect(
+        self.con = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER, password=IBTEST_PASSWORD,

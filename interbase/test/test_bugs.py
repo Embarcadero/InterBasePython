@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_bugs.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -25,7 +25,7 @@
 #  See LICENSE.TXT for details.
 
 import os
-import idb
+import interbase
 import datetime
 
 from io import BytesIO
@@ -39,7 +39,7 @@ class TestBugs(InterbaseTestBase):
         self.dbfile = os.path.join(IBTEST_DB_DIR_PATH, 'ibbugs.ib')
         if os.path.exists(self.dbfile):
             os.remove(self.dbfile)
-        self.con = idb.create_database(
+        self.con = interbase.create_database(
             host=IBTEST_HOST,
             database=self.dbfile,
             user=IBTEST_USER,
@@ -95,7 +95,7 @@ class TestBugs(InterbaseTestBase):
         self.con.commit()
         # test data
         data = ("1234567890" * 25) + "12345"
-        for i in idb.ibase.xrange(255):
+        for i in interbase.ibase.xrange(255):
             cur.execute(
                 "insert into idbtest (id, test255) values (?, ?)",
                 (i, data[:i])
@@ -143,7 +143,7 @@ class TestBugs(InterbaseTestBase):
 
         # test data
         data_bytes = (1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-        blob_data = idb.bs(data_bytes)
+        blob_data = interbase.bs(data_bytes)
         cur.execute(
             "insert into idbtest3 (id, t_blob) values (?, ?)",
             (1, blob_data)
@@ -190,7 +190,7 @@ class TestBugs(InterbaseTestBase):
         del c
 
         cur = self.con.cursor()
-        with self.assertRaises(idb.DatabaseError) as cm:
+        with self.assertRaises(interbase.DatabaseError) as cm:
             cur.fetchall()
         self.assertTupleEqual(
             cm.exception.args,
@@ -200,7 +200,7 @@ class TestBugs(InterbaseTestBase):
         cur.execute("select * from RDB$DATABASE")
         cur.fetchall()
         cur.execute("create generator seqtest")
-        with self.assertRaises(idb.DatabaseError) as cm:
+        with self.assertRaises(interbase.DatabaseError) as cm:
             cur.fetchall()
         self.assertTupleEqual(
             cm.exception.args,
@@ -208,7 +208,7 @@ class TestBugs(InterbaseTestBase):
         )
 
     def test_pyib_44(self):
-        self.con2 = idb.connect(
+        self.con2 = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,

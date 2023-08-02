@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_transaction.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -24,7 +24,7 @@
 #
 #  See LICENSE.TXT for details.
 
-import idb
+import interbase
 import decimal
 import datetime
 
@@ -35,7 +35,7 @@ from constants import IBTEST_USER, IBTEST_HOST, IBTEST_PASSWORD, IBTEST_DB_PATH,
 
 class TestInsertData(InterbaseTestBase):
     def setUp(self):
-        self.con = idb.connect(
+        self.con = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,
@@ -44,7 +44,7 @@ class TestInsertData(InterbaseTestBase):
             ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
             server_public_file=IBTEST_SERVER_PUBLIC_FILE
         )
-        self.con2 = idb.connect(
+        self.con2 = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,
@@ -157,7 +157,7 @@ class TestInsertData(InterbaseTestBase):
         rows = cur.fetchall()
         self.assertListEqual(rows, [(4, 'This is a BLOB!')])
         # Non-textual BLOB
-        blob_data = idb.bs([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+        blob_data = interbase.bs([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
         cur.execute('insert into T2 (C1,C16) values (?,?)', [8, blob_data])
         cur.transaction.commit()
         cur.execute('select C1,C16 from T2 where C1 = 8')
@@ -172,7 +172,7 @@ class TestInsertData(InterbaseTestBase):
         self.assertEqual(row[1], big_blob)
         # Unicode in BLOB
         blob_text = 'This is a BLOB!'
-        if not isinstance(blob_text, idb.ibase.myunicode):
+        if not isinstance(blob_text, interbase.ibase.myunicode):
             blob_text = blob_text.decode('utf-8')
         cur2.execute('insert into T2 (C1,C9) values (?,?)', [6, blob_text])
         cur2.transaction.commit()

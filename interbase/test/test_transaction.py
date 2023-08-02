@@ -24,7 +24,7 @@
 #
 #  See LICENSE.TXT for details.
 
-import idb
+import interbase
 
 from core import InterbaseTestBase
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
@@ -33,7 +33,7 @@ from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH,
 
 class TestTransaction(InterbaseTestBase):
     def setUp(self):
-        self.connection = idb.connect(
+        self.connection = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,
@@ -63,7 +63,7 @@ class TestTransaction(InterbaseTestBase):
         self.assertIs(transaction.cursors[0], cur)
 
     def test_context_manager(self):
-        with idb.TransactionContext(self.connection) as tr:
+        with interbase.TransactionContext(self.connection) as tr:
             cursor = tr.cursor()
             cursor.execute("insert into t (c1) values (1)")
 
@@ -72,7 +72,7 @@ class TestTransaction(InterbaseTestBase):
         self.assertListEqual(rows, [(1,)])
 
         try:
-            with idb.TransactionContext(self.connection):
+            with interbase.TransactionContext(self.connection):
                 cursor.execute("delete from t")
                 raise Exception()
         except Exception as e:
@@ -82,7 +82,7 @@ class TestTransaction(InterbaseTestBase):
         rows = cursor.fetchall()
         self.assertListEqual(rows, [(1,)])
 
-        with idb.TransactionContext(self.connection):
+        with interbase.TransactionContext(self.connection):
             cursor.execute("delete from t")
 
         cursor.execute("select * from t")
@@ -108,7 +108,7 @@ class TestTransaction(InterbaseTestBase):
         cur = self.connection.cursor()
         cur.execute("select * from t")
         self.connection.commit()
-        with self.assertRaises(idb.DatabaseError) as cm:
+        with self.assertRaises(interbase.DatabaseError) as cm:
             rows = cur.fetchall()
         self.assertTupleEqual(cm.exception.args,
                               ('Cannot fetch from this cursor because it has not executed a statement.',))
@@ -119,19 +119,19 @@ class TestTransaction(InterbaseTestBase):
         cur = self.connection.cursor()
         cur.execute("select * from t")
         self.connection.commit()
-        with self.assertRaises(idb.DatabaseError) as cm:
+        with self.assertRaises(interbase.DatabaseError) as cm:
             rows = cur.fetchall()
         self.assertTupleEqual(cm.exception.args,
                               ('Cannot fetch from this cursor because it has not executed a statement.',))
 
     def test_tpb(self):
-        tpb = idb.TPB()
-        tpb.access_mode = idb.isc_tpb_write
-        tpb.isolation_level = idb.isc_tpb_read_committed
-        tpb.isolation_level = (idb.isc_tpb_read_committed, idb.isc_tpb_rec_version)
-        tpb.lock_resolution = idb.isc_tpb_wait
+        tpb = interbase.TPB()
+        tpb.access_mode = interbase.isc_tpb_write
+        tpb.isolation_level = interbase.isc_tpb_read_committed
+        tpb.isolation_level = (interbase.isc_tpb_read_committed, interbase.isc_tpb_rec_version)
+        tpb.lock_resolution = interbase.isc_tpb_wait
         # tpb.lock_timeout = 10 #lock timeouts are not supported since 2017
-        tpb.table_reservation['COUNTRY'] = (idb.isc_tpb_protected, idb.isc_tpb_lock_write)
+        tpb.table_reservation['COUNTRY'] = (interbase.isc_tpb_protected, interbase.isc_tpb_lock_write)
         transaction = self.connection.trans(tpb)
         transaction.begin()
         transaction.commit()
@@ -139,6 +139,6 @@ class TestTransaction(InterbaseTestBase):
     def test_transaction_info(self):
         self.connection.begin()
         transaction = self.connection.main_transaction
-        info = transaction.transaction_info(idb.ibase.isc_info_tra_id, 's')
+        info = transaction.transaction_info(interbase.ibase.isc_info_tra_id, 's')
         self.assertIn(b'\x04\x04\x00', info)
         transaction.commit()

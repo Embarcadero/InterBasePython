@@ -19,7 +19,7 @@ import time
 import sys
 from unittest import skip, skipUnless
 
-import idb
+import interbase
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB, IBTEST_SERVER_PUBLIC_FILE
 
 if sys.version[0] >= '3': #python 3.x
@@ -66,7 +66,7 @@ class DatabaseAPI20Test(unittest.TestCase):
     cwd = os.getcwd()
     dbfile = os.path.join(cwd, 'files', IBTEST_DB)
 
-    driver = idb
+    driver = interbase
     connect_args = () # List of arguments to pass to connect
     connect_kw_args = {'host': IBTEST_HOST,'database': dbfile,
                        'user': IBTEST_USER,'password': IBTEST_PASSWORD} # Keyword arguments for connect

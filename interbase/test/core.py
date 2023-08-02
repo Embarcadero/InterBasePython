@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           core.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -25,7 +25,7 @@
 #  See LICENSE.TXT for details.
 
 import sys
-import idb
+import interbase
 import unittest
 
 from io import StringIO
@@ -55,14 +55,14 @@ class InterbaseTestBase(unittest.TestCase):
         # Print a header.
         for field_desc in cur.description:
             self.printout(
-                field_desc[idb.DESCRIPTION_NAME].ljust(field_desc[idb.DESCRIPTION_DISPLAY_SIZE]),
+                field_desc[interbase.DESCRIPTION_NAME].ljust(field_desc[interbase.DESCRIPTION_DISPLAY_SIZE]),
                 newline=False
             )
         self.printout()
         for field_desc in cur.description:
             self.printout(
-                "-" * max((len(field_desc[idb.DESCRIPTION_NAME]),
-                field_desc[idb.DESCRIPTION_DISPLAY_SIZE])),
+                "-" * max((len(field_desc[interbase.DESCRIPTION_NAME]),
+                field_desc[interbase.DESCRIPTION_DISPLAY_SIZE])),
                 newline=False
             )
         self.printout()
@@ -74,15 +74,15 @@ class InterbaseTestBase(unittest.TestCase):
                 field_value = str(row[fieldIndex])
                 field_max_width = max(
                     (
-                        len(cur.description[fieldIndex][idb.DESCRIPTION_NAME]),
-                        cur.description[fieldIndex][idb.DESCRIPTION_DISPLAY_SIZE]
+                        len(cur.description[fieldIndex][interbase.DESCRIPTION_NAME]),
+                        cur.description[fieldIndex][interbase.DESCRIPTION_DISPLAY_SIZE]
                      )
                 )
                 self.printout(field_value.ljust(field_max_width), newline=False)
             self.printout()
 
 
-class SchemaVisitor(idb.schema.SchemaVisitor):
+class SchemaVisitor(interbase.schema.SchemaVisitor):
     def __init__(self, test, action, follow='dependencies'):
         self.test = test
         self.seen = []

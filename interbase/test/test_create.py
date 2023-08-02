@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_bugs.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -25,7 +25,7 @@
 #  See LICENSE.TXT for details.
 
 import os
-import idb
+import interbase
 
 from core import InterbaseTestBase
 from contextlib import closing
@@ -40,7 +40,7 @@ class TestCreateDrop(InterbaseTestBase):
             os.remove(self.db_file)
 
     def test_create_drop(self):
-        with closing(idb.create_database(
+        with closing(interbase.create_database(
                 host=IBTEST_HOST,
                 database=self.db_file,
                 user=IBTEST_USER, password=IBTEST_PASSWORD,

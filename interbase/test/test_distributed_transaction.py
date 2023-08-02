@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_distributed_transaction.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -25,7 +25,7 @@
 #  See LICENSE.TXT for details.
 
 import os
-import idb
+import interbase
 
 from core import InterbaseTestBase
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_DIR_PATH,\
@@ -44,7 +44,7 @@ class TestDistributedTransaction(InterbaseTestBase):
         if os.path.exists(self.db2):
             os.remove(self.db2)
 
-        self.con1 = idb.create_database(
+        self.con1 = interbase.create_database(
             host=IBTEST_HOST,
             database=self.db1,
             user=IBTEST_USER,
@@ -53,7 +53,7 @@ class TestDistributedTransaction(InterbaseTestBase):
             ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
             server_public_file=IBTEST_SERVER_PUBLIC_FILE
         )
-        self.con1 = idb.connect(
+        self.con1 = interbase.connect(
             host=IBTEST_HOST,
             database=self.db1,
             user=IBTEST_USER,
@@ -65,7 +65,7 @@ class TestDistributedTransaction(InterbaseTestBase):
         self.con1.execute_immediate("create table T (PK integer, C1 integer)")
         self.con1.commit()
 
-        self.con2 = idb.create_database(
+        self.con2 = interbase.create_database(
             host=IBTEST_HOST,
             database=self.db2,
             user=IBTEST_USER,
@@ -74,7 +74,7 @@ class TestDistributedTransaction(InterbaseTestBase):
             ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
             server_public_file=IBTEST_SERVER_PUBLIC_FILE
         )
-        self.con2 = idb.connect(
+        self.con2 = interbase.connect(
             host=IBTEST_HOST,
             database=self.db2,
             user=IBTEST_USER,
@@ -91,7 +91,7 @@ class TestDistributedTransaction(InterbaseTestBase):
             # We can't drop database via connection in group
             self.con1.group.disband()
         if not self.con1:
-            self.con1 = idb.connect(
+            self.con1 = interbase.connect(
                 host=IBTEST_HOST,
                 database=self.db1,
                 user=IBTEST_USER,
@@ -103,7 +103,7 @@ class TestDistributedTransaction(InterbaseTestBase):
         self.con1.drop_database()
         self.con1.close()
         if not self.con2:
-            self.con2 = idb.connect(
+            self.con2 = interbase.connect(
                 host=IBTEST_HOST,
                 database=self.db2,
                 user=IBTEST_USER,
@@ -116,7 +116,7 @@ class TestDistributedTransaction(InterbaseTestBase):
         self.con2.close()
 
     def test_context_manager(self):
-        cg = idb.ConnectionGroup((self.con1, self.con2))
+        cg = interbase.ConnectionGroup((self.con1, self.con2))
 
         q = 'select * from T order by pk'
         c1 = cg.cursor(self.con1)
@@ -128,7 +128,7 @@ class TestDistributedTransaction(InterbaseTestBase):
         p2 = cc2.prep(q)
 
         # Distributed transaction: COMMIT
-        with idb.TransactionContext(cg):
+        with interbase.TransactionContext(cg):
             c1.execute('insert into t (pk) values (1)')
             c2.execute('insert into t (pk) values (1)')
 
@@ -143,7 +143,7 @@ class TestDistributedTransaction(InterbaseTestBase):
 
         # Distributed transaction: ROLLBACK
         try:
-            with idb.TransactionContext(cg):
+            with interbase.TransactionContext(cg):
                 c1.execute('insert into t (pk) values (2)')
                 c2.execute('insert into t (pk) values (2)')
                 raise Exception()
@@ -160,7 +160,7 @@ class TestDistributedTransaction(InterbaseTestBase):
         cg.disband()
 
     def test_simple_dt(self):
-        cg = idb.ConnectionGroup((self.con1, self.con2))
+        cg = interbase.ConnectionGroup((self.con1, self.con2))
         self.assertEqual(self.con1.group, cg)
         self.assertEqual(self.con2.group, cg)
 
@@ -246,8 +246,8 @@ class TestDistributedTransaction(InterbaseTestBase):
 
     @skip("issue #44: test_limbo_transactions fails with exception: access violation on win x32")
     def test_limbo_transactions(self):
-        cg = idb.ConnectionGroup((self.con1, self.con2))
-        svc = idb.services.connect(host=IBTEST_HOST,
+        cg = interbase.ConnectionGroup((self.con1, self.con2))
+        svc = interbase.services.connect(host=IBTEST_HOST,
                                    user=IBTEST_USER,
                                    password=IBTEST_PASSWORD,
                                    ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
@@ -273,7 +273,7 @@ class TestDistributedTransaction(InterbaseTestBase):
         self.con2 = None
 
         # Disband will raise an error
-        with self.assertRaises(idb.DatabaseError) as cm:
+        with self.assertRaises(interbase.DatabaseError) as cm:
             cg.disband()
         self.assertTupleEqual(
             cm.exception.args,
@@ -290,7 +290,7 @@ class TestDistributedTransaction(InterbaseTestBase):
 
         # Data chould be blocked by limbo transaction
         if not self.con1:
-            self.con1 = idb.connect(
+            self.con1 = interbase.connect(
                 dsn=self.db1,
                 user=IBTEST_USER,
                 password=IBTEST_PASSWORD,
@@ -299,7 +299,7 @@ class TestDistributedTransaction(InterbaseTestBase):
                 server_public_file=IBTEST_SERVER_PUBLIC_FILE
             )
         if not self.con2:
-            self.con2 = idb.connect(
+            self.con2 = interbase.connect(
                 dsn=self.db2,
                 user=IBTEST_USER,
                 password=IBTEST_PASSWORD,
@@ -309,7 +309,7 @@ class TestDistributedTransaction(InterbaseTestBase):
             )
         c1 = self.con1.cursor()
         c1.execute('select * from t')
-        with self.assertRaises(idb.DatabaseError) as cm:
+        with self.assertRaises(interbase.DatabaseError) as cm:
             row = c1.fetchall()
         self.assertTupleEqual(
             cm.exception.args,
@@ -318,7 +318,7 @@ class TestDistributedTransaction(InterbaseTestBase):
         )
         c2 = self.con2.cursor()
         c2.execute('select * from t')
-        with self.assertRaises(idb.DatabaseError) as cm:
+        with self.assertRaises(interbase.DatabaseError) as cm:
             row = c2.fetchall()
         self.assertTupleEqual(
             cm.exception.args,
@@ -327,7 +327,7 @@ class TestDistributedTransaction(InterbaseTestBase):
         )
 
         # resolve via service
-        svc = idb.services.connect(host=IBTEST_HOST,
+        svc = interbase.services.connect(host=IBTEST_HOST,
                                    user=IBTEST_USER,
                                    password=IBTEST_PASSWORD,
                                    ssl=IBTEST_SERVER_PUBLIC_FILE is not None,

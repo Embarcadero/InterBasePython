@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           test_charset_conversion.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        12.10.2011
@@ -24,7 +24,7 @@
 #
 #  See LICENSE.TXT for details.
 
-import idb
+import interbase
 
 from core import InterbaseTestBase
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
@@ -33,7 +33,7 @@ from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH,
 
 class TestCharsetConversion(InterbaseTestBase):
     def setUp(self):
-        self.con = idb.connect(
+        self.con = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,
@@ -51,7 +51,7 @@ class TestCharsetConversion(InterbaseTestBase):
         self.con.close()
 
     def test_octets(self):
-        bytestring = idb.ibcore.bs([1, 2, 3, 4, 5])
+        bytestring = interbase.ibcore.bs([1, 2, 3, 4, 5])
         cur = self.con.cursor()
         cur.execute("insert into T4 (C1, C_OCTETS, V_OCTETS) values (?,?,?)",
                     (1, bytestring, bytestring))
@@ -69,7 +69,7 @@ class TestCharsetConversion(InterbaseTestBase):
         str_5win1250 = 'abcde'
         str_30win1250 = '012345678901234567890123456789'
 
-        con1250 = idb.connect(
+        con1250 = interbase.connect(
             host=IBTEST_HOST,
             database=IBTEST_DB_PATH,
             user=IBTEST_USER,
@@ -117,7 +117,7 @@ solução não permitirá que o InterBase e o InterBase rodem ao mesmo tempo.
 Porém você poderá trocar entre ambos com um mínimo de luta. """
         self.assertEqual(len(s), 294)
         data = tuple([2, s])
-        b_data = tuple([3, idb.ibase.b('bytestring')])
+        b_data = tuple([3, interbase.ibase.b('bytestring')])
         cur = self.con.cursor()
         # Text BLOB
         cur.execute('insert into T3 (C1,C4) values (?,?)', data)
