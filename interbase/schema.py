@@ -1,6 +1,6 @@
 # coding:utf-8
 #
-#   PROGRAM:     idb
+#   PROGRAM:     interbase
 #   MODULE:      schema.py
 #   DESCRIPTION: Database schema
 #   CREATED:     10.5.2013
@@ -26,9 +26,9 @@
 
 import sys
 import os
-import idb
-# from . import ibcore as idb
-from idb.utils import LateBindingProperty
+import interbase
+# from . import ibcore as interbase
+from interbase.utils import LateBindingProperty
 import string
 import weakref
 from itertools import groupby
@@ -298,7 +298,7 @@ class Schema(object):
 
     def __fail_if_closed(self):
         if self.closed:
-            raise idb.ProgrammingError("Schema is not binded to connection.")
+            raise interbase.ProgrammingError("Schema is not binded to connection.")
 
     def _close(self):
         self._ic.close()
@@ -326,7 +326,7 @@ class Schema(object):
                             'constraints', 'collations', 'character sets',
                             'exceptions', 'roles', 'functions', 'files', 'shadows',
                             'privileges', 'users']:
-                raise idb.ProgrammingError("Unknown metadata category '%s'" % data)
+                raise interbase.ProgrammingError("Unknown metadata category '%s'" % data)
         if (not data or data == 'tables'):
             self.__tables = None
         if (not data or data == 'views'):
@@ -400,7 +400,7 @@ order by r.RDB$DIMENSION""" % field.name)]
         elif itype == 8:  # User
             result = self.__object_by_name(self._get_users(), name)
             if not result:
-                result = idb.services.User(name)
+                result = interbase.services.User(name)
                 self.__users.append(result)
             return result
         elif itype == 9:  # Field
@@ -416,7 +416,7 @@ order by r.RDB$DIMENSION""" % field.name)]
         elif itype == 17:  # Collation
             return self.get_collation(name)
         else:
-            raise idb.ProgrammingError('Unsupported subject type')
+            raise interbase.ProgrammingError('Unsupported subject type')
 
     # --- special attribute access methods
 
@@ -659,12 +659,12 @@ FROM RDB$USER_PRIVILEGES""")
         if self.__users is None:
             self.__fail_if_closed()
             self._ic.execute("select distinct(RDB$USER) FROM RDB$USER_PRIVILEGES")
-            self.__users = [idb.services.User(row[0].strip()) for row in self._ic]
+            self.__users = [interbase.services.User(row[0].strip()) for row in self._ic]
         return self.__users
 
     # --- Properties
 
-    #: True if link to :class:`~idb.Connection` is closed.
+    #: True if link to :class:`~interbase.Connection` is closed.
     closed = property(__get_closed)
     description = LateBindingProperty(_get_description, None, None,
                                       "Database description or None if it doesn't have a description.")
@@ -732,15 +732,15 @@ FROM RDB$USER_PRIVILEGES""")
     # --- Public
 
     def bind(self, connection):
-        """Bind this instance to specified :class:`~idb.Connection`.
+        """Bind this instance to specified :class:`~interbase.Connection`.
 
-        :param connection: :class:`~idb.Connection` instance.
+        :param connection: :class:`~interbase.Connection` instance.
 
         :raises ProgrammingError: If Schema object was set as internal (via
             :meth:`_set_as_internal`).
         """
         if self.__internal:
-            raise idb.ProgrammingError("Call to 'bind' not allowed for embedded Schema.")
+            raise interbase.ProgrammingError("Call to 'bind' not allowed for embedded Schema.")
         if self._con:
             self.close()
         self._con = connection
@@ -795,13 +795,13 @@ FROM RDB$USER_PRIVILEGES""")
         self.enum_trigger_types = enum_dict('RDB$TRIGGER_TYPE')
 
     def close(self):
-        """Sever link to :class:`~idb.Connection`.
+        """Sever link to :class:`~interbase.Connection`.
 
         :raises ProgrammingError: If Schema object was set as internal (via
             :meth:`_set_as_internal`).
         """
         if self.__internal:
-            raise idb.ProgrammingError("Call to 'close' not allowed for embedded Schema.")
+            raise interbase.ProgrammingError("Call to 'close' not allowed for embedded Schema.")
         self._close()
         self.__clear()
 
@@ -1008,7 +1008,7 @@ FROM RDB$USER_PRIVILEGES""")
         """Get list of all privileges granted to user/database object.
 
         :param user: User name or instance of class that represents possible user.
-            Allowed classes are :class:`~idb.services.User`, :class:`Table`,
+            Allowed classes are :class:`~interbase.services.User`, :class:`Table`,
             :class:`View`, :class:`Procedure`, :class:`Trigger` or :class:`Role`.
         :param int user_type: **Required if** `user` is provided as string name.
             Numeric code for user type, see :attr:`Schema.enum_object_types`.
@@ -1016,16 +1016,16 @@ FROM RDB$USER_PRIVILEGES""")
 
         :raises ProgrammingError: For unknown `user_type` code.
         """
-        if isinstance(user, (idb.StringType, idb.UnicodeType)):
+        if isinstance(user, (interbase.StringType, interbase.UnicodeType)):
             if (user_type is None) or (user_type not in self.enum_object_types):
-                raise idb.ProgrammingError("Unknown user_type code.")
+                raise interbase.ProgrammingError("Unknown user_type code.")
             else:
                 uname = user
                 utype = [user_type]
         elif isinstance(user, (Table, View, Procedure, Trigger, Role)):
             uname = user.name
             utype = user._type_code
-        elif isinstance(user, idb.services.User):
+        elif isinstance(user, interbase.services.User):
             uname = user.name
             utype = [8]
         return [p for p in self.privileges
@@ -1054,7 +1054,7 @@ class BaseSchemaItem(object):
         p = set(params.keys())
         n = set(param_names)
         if not p.issubset(n):
-            raise idb.ProgrammingError("Unsupported parameter(s) '%s'" %
+            raise interbase.ProgrammingError("Unsupported parameter(s) '%s'" %
                                        ','.join(p.difference(n)))
 
     def _needs_quoting(self, ident):
@@ -1141,7 +1141,7 @@ class BaseSchemaItem(object):
             _call = getattr(self, '_get_%s_sql' % _action)
             return _call(**params)
         else:
-            raise idb.ProgrammingError("Unsupported action '%s'" % action)
+            raise interbase.ProgrammingError("Unsupported action '%s'" % action)
 
 
 class Collation(BaseSchemaItem):
@@ -1278,7 +1278,7 @@ class CharacterSet(BaseSchemaItem):
                                                                          collation.name if isinstance(collation,
                                                                                                       Collation) else collation))
         else:
-            raise idb.ProgrammingError("Missing required parameter: 'collation'.")
+            raise interbase.ProgrammingError("Missing required parameter: 'collation'.")
 
     def _get_name(self):
         return self._attributes['RDB$CHARACTER_SET_NAME']
@@ -1367,7 +1367,7 @@ class DatabaseException(BaseSchemaItem):
             return "ALTER EXCEPTION %s '%s'" % (self.get_quoted_name(),
                                                 escape_single_quotes(message))
         else:
-            raise idb.ProgrammingError("Missing required parameter: 'message'.")
+            raise interbase.ProgrammingError("Missing required parameter: 'message'.")
 
     def _get_drop_sql(self, **params):
         self._check_params(params, [])
@@ -1428,7 +1428,7 @@ class Sequence(BaseSchemaItem):
         if value is not None:
             return "ALTER SEQUENCE %s RESTART WITH %d" % (self.get_quoted_name(), value)
         else:
-            raise idb.ProgrammingError("Missing required parameter: 'value'.")
+            raise interbase.ProgrammingError("Missing required parameter: 'value'.")
 
     def _get_drop_sql(self, **params):
         self._check_params(params, [])
@@ -1490,10 +1490,10 @@ class TableColumn(BaseSchemaItem):
         new_name = params.get('name')
         new_position = params.get('position')
         if new_expr and not self.iscomputed():
-            raise idb.ProgrammingError("Change from persistent column to computed"
+            raise interbase.ProgrammingError("Change from persistent column to computed"
                                        " is not allowed.")
         elif self.iscomputed() and (new_type and not new_expr):
-            raise idb.ProgrammingError("Change from computed column to persistent"
+            raise interbase.ProgrammingError("Change from computed column to persistent"
                                        " is not allowed.")
         sql = 'ALTER TABLE %s ALTER COLUMN %s' % (self.table.get_quoted_name(),
                                                   self.get_quoted_name())
@@ -1509,7 +1509,7 @@ class TableColumn(BaseSchemaItem):
                 result += ' COMPUTED BY %s' % new_expr
             return result
         else:
-            raise idb.ProgrammingError("Parameter required.")
+            raise interbase.ProgrammingError("Parameter required.")
 
     def _get_drop_sql(self, **params):
         self._check_params(params, [])
@@ -1809,7 +1809,7 @@ class ViewColumn(BaseSchemaItem):
             relation = self.schema.get_procedure(brel)
             if relation:
                 return relation.get_outparam(bfield)
-            raise idb.OperationalError("Can't locate base relation.")
+            raise interbase.OperationalError("Can't locate base relation.")
         return None
 
     def _get_view(self):
@@ -1928,7 +1928,7 @@ class Domain(BaseSchemaItem):
         new_type = params.get('datatype')
         sql = 'ALTER DOMAIN %s' % self.get_quoted_name()
         if len(params) > 1:
-            raise idb.ProgrammingError("Only one parameter allowed.")
+            raise interbase.ProgrammingError("Only one parameter allowed.")
         if new_name:
             return '%s TO %s' % (sql, self._get_quoted_ident(new_name))
         elif new_default != '':
@@ -1940,7 +1940,7 @@ class Domain(BaseSchemaItem):
         elif new_type:
             return '%s TYPE %s' % (sql, new_type)
         else:
-            raise idb.ProgrammingError("Parameter required.")
+            raise interbase.ProgrammingError("Parameter required.")
 
     def _get_drop_sql(self, **params):
         self._check_params(params, [])
@@ -2329,7 +2329,7 @@ class Constraint(BaseSchemaItem):
             if not i.issystemobject():
                 const_def += '\n  USING %s INDEX %s' % (i.index_type, i.get_quoted_name())
         else:
-            raise idb.OperationalError("Unrecognized constraint type '%s'" % self.constraint_type)
+            raise interbase.OperationalError("Unrecognized constraint type '%s'" % self.constraint_type)
         return const_def
 
     def _get_drop_sql(self, **params):
@@ -2712,7 +2712,7 @@ class View(BaseSchemaItem):
                                                          '(%s)' % columns if columns else '',
                                                          '%s\n     WITH CHECK OPTION' % query if check else query)
         else:
-            raise idb.ProgrammingError("Missing required parameter: 'query'.")
+            raise interbase.ProgrammingError("Missing required parameter: 'query'.")
 
     def _get_drop_sql(self, **params):
         self._check_params(params, [])
@@ -2864,7 +2864,7 @@ class Trigger(BaseSchemaItem):
             dbaction = action.upper().startswith('ON ')
             if ((dbaction and not self.isdbtrigger())
                     or (not dbaction and self.isdbtrigger())):
-                raise idb.ProgrammingError("Trigger type change is not allowed.")
+                raise interbase.ProgrammingError("Trigger type change is not allowed.")
             header += '\n  %s' % action
         if sequence is not None:
             header += '\n  POSITION %d' % sequence
@@ -2889,7 +2889,7 @@ class Trigger(BaseSchemaItem):
             body = ''
         #
         if not (header or body):
-            raise idb.ProgrammingError("Header or body definition required.")
+            raise interbase.ProgrammingError("Header or body definition required.")
         return 'ALTER TRIGGER %s%s%s' % (self.get_quoted_name(), header, body)
 
     def _get_drop_sql(self, **params):
@@ -3048,7 +3048,7 @@ class ProcedureParameter(BaseSchemaItem):
             else:
                 return PROCPAR_TYPE_OF_COLUMN
         else:
-            raise idb.InternalError("Unknown parameter mechanism code: %d" % m)
+            raise interbase.InternalError("Unknown parameter mechanism code: %d" % m)
 
     def _get_default(self):
         result = self._attributes.get('RDB$DEFAULT_SOURCE')
@@ -3199,7 +3199,7 @@ class Procedure(BaseSchemaItem):
         declare = params.get('declare')
         code = params.get('code')
         if code is None:
-            raise idb.ProgrammingError("Missing required parameter: 'code'.")
+            raise interbase.ProgrammingError("Missing required parameter: 'code'.")
         #
         header = ''
         if inpars is not None:
@@ -3332,7 +3332,7 @@ order by rdb$parameter_number""" % self.__param_columns(), (self.name,))]
                                      "List of :class:`Privilege` objects granted to this object.")
     # IB 2.1
     proc_type = LateBindingProperty(_get_proc_type, None, None,
-                                    "Procedure type code. See :attr:`idb.Connection.enum_procedure_types`.")
+                                    "Procedure type code. See :attr:`interbase.Connection.enum_procedure_types`.")
     valid_blr = LateBindingProperty(_get_valid_blr, None, None,
                                     "Procedure BLR invalidation flag. Could be True/False or None.")
 
@@ -3868,7 +3868,7 @@ class Privilege(BaseSchemaItem):
         grantors = params.get('grantors')
         option_only = params.get('grant_option', False)
         if option_only and not self.has_grant():
-            raise idb.ProgrammingError("Can't revoke grant option that wasn't granted.")
+            raise interbase.ProgrammingError("Can't revoke grant option that wasn't granted.")
         privileges = {'S': 'SELECT', 'I': 'INSERT', 'U': 'UPDATE', 'D': 'DELETE', 'R': 'REFERENCES'}
         admin_option = 'GRANT OPTION FOR ' if self.has_grant() and option_only else ''
         if self.privilege in privileges:
@@ -3903,7 +3903,7 @@ class Privilege(BaseSchemaItem):
                                      self._attributes['RDB$USER_TYPE'])
 
     def _get_grantor(self):
-        return idb.services.User(self._attributes['RDB$GRANTOR'])
+        return interbase.services.User(self._attributes['RDB$GRANTOR'])
 
     def _get_privilege(self):
         return self._attributes['RDB$PRIVILEGE']
@@ -3937,10 +3937,10 @@ class Privilege(BaseSchemaItem):
     # --- Properties
 
     user = LateBindingProperty(_get_user, None, None,
-                               "Grantee. Either :class:`~idb.services.User`, :class:`Role`, " \
+                               "Grantee. Either :class:`~interbase.services.User`, :class:`Role`, " \
                                ":class:`Procedure`, :class:`Trigger` or :class:`View` object.")
     grantor = LateBindingProperty(_get_grantor, None, None,
-                                  "Grantor :class:`~idb.services.User` object.")
+                                  "Grantor :class:`~interbase.services.User` object.")
     privilege = LateBindingProperty(_get_privilege, None, None, "Privilege code.")
     subject = LateBindingProperty(_get_subject, None, None,
                                   "Privilege subject. Either :class:`Role`, :class:`Table`, :class:`View` " \

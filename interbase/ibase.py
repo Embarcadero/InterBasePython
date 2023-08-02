@@ -1,6 +1,6 @@
 #coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           ibase.py
 #   DESCRIPTION:    Python ctypes interface to InterBase client library
 #   CREATED:        6.10.2011
@@ -308,7 +308,7 @@ blr_column_name = 21
 blr_column_name2 = 22
 blr_domain_type_of = 0
 blr_domain_full = 1
-# Rest of BLR is defined in idb.blr
+# Rest of BLR is defined in interbase.blr
 
 # Database parameter block stuff
 

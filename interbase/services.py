@@ -1,6 +1,6 @@
 #coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           services.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        19.11.2011
@@ -24,10 +24,10 @@
 #
 #  See LICENSE.TXT for details.
 
-import idb
+import interbase
 import sys
 import os
-import idb.ibase as ibase
+import interbase.ibase as ibase
 import ctypes
 import struct
 import warnings
@@ -186,7 +186,7 @@ def connect(
     :param string enc_password: Encrypted password.
     :param string sep_password: Database system encryption password.
     :param bool ssl: Enable ssl connection to database.
-    :param string ib_library_name: Full path to InterBase client library. See :func:`~idb.load_api` for details.
+    :param string ib_library_name: Full path to InterBase client library. See :func:`~interbase.load_api` for details.
     :param string server_public_file: server public file
     :param string client_private_file: client private file.
     :param string client_pass_phrase: Passphrase
@@ -202,9 +202,9 @@ def connect(
        host.  Therefore, the database specified as a parameter to methods such as
        `getStatistics` MUST NOT include the host name of the database server.
     """
-    setattr(sys.modules[__name__], 'api', idb.load_api(ib_library_name, embedded))
+    setattr(sys.modules[__name__], 'api', interbase.load_api(ib_library_name, embedded))
     if password is None:
-        raise idb.ProgrammingError('A password is required to use'
+        raise interbase.ProgrammingError('A password is required to use'
                                    ' the Services Manager.')
 
     #_checkString(host)
@@ -291,27 +291,27 @@ class Connection(object):
         self.sep_password = ibase.b(sep_password)
 
         # if len(self.host) + len(self.user) + len(self.password) > 118:
-        #     raise idb.ProgrammingError("The combined length of host, user and"
+        #     raise interbase.ProgrammingError("The combined length of host, user and"
         #                                " password can't exceed 118 bytes.")
         # spb_length = 2 + 1 + 1 + len(self.user) + 1 + 1 + len(self.password)
-        spb = idb.bs(
+        spb = interbase.bs(
             [
                 ibase.isc_spb_version, ibase.isc_spb_current_version,
                 ibase.isc_spb_user_name, len(self.user)
             ]
-        ) + self.user + idb.bs(
+        ) + self.user + interbase.bs(
             [ibase.isc_spb_password, len(self.password)]
         ) + self.password
 
         if self.enc_password:
-            spb += idb.bs([ibase.isc_spb_password_enc, len(self.enc_password)]) + self.enc_password
+            spb += interbase.bs([ibase.isc_spb_password_enc, len(self.enc_password)]) + self.enc_password
         if self.sep_password:
-            spb += idb.bs([ibase.isc_spb_sys_encrypt_password, len(self.sep_password)]) + self.sep_password
+            spb += interbase.bs([ibase.isc_spb_sys_encrypt_password, len(self.sep_password)]) + self.sep_password
 
         api.isc_service_attach(self._isc_status, len(self.host), self.host,
                                  self._svc_handle, len(spb), spb)
-        if idb.db_api_error(self._isc_status):
-            raise idb.exception_from_status(idb.DatabaseError,
+        if interbase.db_api_error(self._isc_status):
+            raise interbase.exception_from_status(interbase.DatabaseError,
                                             self._isc_status,
                                             "Services/isc_service_attach:")
         # Get InterBase engine version
@@ -351,14 +351,14 @@ class Connection(object):
     def __get_fetching(self):
         return self.__fetching
     def __read_buffer(self, init=''):
-        request = idb.bs([ibase.isc_info_svc_to_eof])
+        request = interbase.bs([ibase.isc_info_svc_to_eof])
         spb = ibase.b('')
         api.isc_service_query(self._isc_status, self._svc_handle, None,
                                 len(spb), spb,
                                 len(request), request,
                                 ibase.USHRT_MAX, self._result_buffer)
-        if idb.db_api_error(self._isc_status):
-            raise idb.exception_from_status(idb.DatabaseError,
+        if interbase.db_api_error(self._isc_status):
+            raise interbase.exception_from_status(interbase.DatabaseError,
                                   self._isc_status,
                                   "Services/isc_service_query:")
         (result, _) = self._extract_string(self._result_buffer, 1)
@@ -398,7 +398,7 @@ class Connection(object):
             return st
     def _extract_int(self, raw, index):
         new_index = index + ctypes.sizeof(ctypes.c_ushort)
-        return (idb.bytes_to_int(raw[index:new_index]), new_index)
+        return (interbase.bytes_to_int(raw[index:new_index]), new_index)
     def _extract_string(self, raw, index):
         (size, index) = self._extract_int(raw, index)
         new_index = index + size
@@ -410,29 +410,29 @@ class Connection(object):
             return (str(raw[index:new_index]), new_index)
     def _Q(self, code, result_type, timeout=-1):
         if code < 0 or code > ibase.USHRT_MAX:
-            raise idb.ProgrammingError("The service query request_buf code"
+            raise interbase.ProgrammingError("The service query request_buf code"
                                        " must fall between 0 and %d,"
                                        " inclusive." % ibase.USHRT_MAX)
         result = None
         result_size = 1024
-        request = idb.bs([code])
+        request = interbase.bs([code])
         if timeout == -1:
             spb = ibase.b('')
         else:
-            spb = idb.bs(ibase.isc_info_svc_timeout, timeout)
+            spb = interbase.bs(ibase.isc_info_svc_timeout, timeout)
         while True:
             result_buffer = ctypes.create_string_buffer(result_size)
             api.isc_service_query(self._isc_status, self._svc_handle, None,
                                     len(spb), spb,
                                     len(request), request,
                                     result_size, result_buffer)
-            if idb.db_api_error(self._isc_status):
-                raise idb.exception_from_status(idb.DatabaseError,
+            if interbase.db_api_error(self._isc_status):
+                raise interbase.exception_from_status(interbase.DatabaseError,
                                       self._isc_status,
                                       "Services/isc_service_query:")
             if ord(result_buffer[0]) == ibase.isc_info_truncated:
                 if result_size == ibase.USHRT_MAX:
-                    raise idb.InternalError("Database C API constraints maximum"
+                    raise interbase.InternalError("Database C API constraints maximum"
                                             "result buffer size to %d"
                                             % ibase.USHRT_MAX)
                 else:
@@ -484,13 +484,13 @@ class Connection(object):
         return self._Q(code, self.QUERY_TYPE_RAW)
     def _action_thin(self, request_buffer):
         if len(request_buffer) > ibase.USHRT_MAX:
-            raise idb.ProgrammingError("The size of the request buffer"
+            raise interbase.ProgrammingError("The size of the request buffer"
                                        " must not exceed %d."
                                        % ibase.USHRT_MAX)
         api.isc_service_start(self._isc_status, self._svc_handle, None,
                                 len(request_buffer), request_buffer)
-        if idb.db_api_error(self._isc_status):
-            raise idb.exception_from_status(idb.OperationalError,
+        if interbase.db_api_error(self._isc_status):
+            raise interbase.exception_from_status(interbase.OperationalError,
                          self._isc_status,
                          "Unable to perform the requested Service API action:")
         return None
@@ -510,7 +510,7 @@ class Connection(object):
         while 1:
             try:
                 line = self._QS(ibase.isc_info_svc_line)
-            except idb.OperationalError:
+            except interbase.OperationalError:
                 # YYY: It is routine for actions such as RESTORE to raise an
                 # exception at the end of their output.  We ignore any such
                 # exception and assume that it was expected, which is somewhat
@@ -605,8 +605,8 @@ class Connection(object):
         """
         if self._svc_handle:
             api.isc_service_detach(self._isc_status, self._svc_handle)
-            if idb.db_api_error(self._isc_status):
-                raise idb.exception_from_status(idb.DatabaseError,
+            if interbase.db_api_error(self._isc_status):
+                raise interbase.exception_from_status(interbase.DatabaseError,
                               self._isc_status, "Services/isc_service_detach:")
             self._svc_handle = None
             self.__fetching = False
@@ -665,9 +665,9 @@ class Connection(object):
         """
         self.__check_active()
         if not db_name:
-            raise idb.ProgrammingError('You must specify path to existing db file')
+            raise interbase.ProgrammingError('You must specify path to existing db file')
         if not dump_file:
-            raise idb.ProgrammingError('You must specify path to dump file')
+            raise interbase.ProgrammingError('You must specify path to dump file')
 
         _checkString(db_name)
         _checkString(dump_file)
@@ -693,9 +693,9 @@ class Connection(object):
         """
         self.__check_active()
         if not alias:
-            raise idb.ProgrammingError('You must specify alias name')
+            raise interbase.ProgrammingError('You must specify alias name')
         if not path:
-            raise idb.ProgrammingError('You must specify path to database')
+            raise interbase.ProgrammingError('You must specify path to database')
 
         _checkString(path)
         _checkString(alias)
@@ -716,7 +716,7 @@ class Connection(object):
         """
         self.__check_active()
         if not alias:
-            raise idb.ProgrammingError('You must specify alias name')
+            raise interbase.ProgrammingError('You must specify alias name')
         _checkString(alias)
 
         request_buffer = _ServiceActionRequestBuilder(ibase.isc_action_svc_delete_db_alias)
@@ -794,7 +794,7 @@ class Connection(object):
         :returns tuple: Capability info codes for each capability reported by
            server.
 
-        Next idb.services constants define possible info codes returned::
+        Next interbase.services constants define possible info codes returned::
 
             CAPABILITY_MULTI_CLIENT
             CAPABILITY_REMOTE_HOP
@@ -804,7 +804,7 @@ class Connection(object):
 
         Example::
 
-            >>>idb.services.CAPABILITY_REMOTE_HOP in svc.get_server_capabilities()
+            >>>interbase.services.CAPABILITY_REMOTE_HOP in svc.get_server_capabilities()
             True
         """
         self.__check_active()
@@ -887,7 +887,7 @@ class Connection(object):
                 i += 9  # Advance past the marker byte and the 64-bit integer.
                 transIDs.append(transID)
             else:
-                raise idb.InternalError('Unable to process buffer contents'
+                raise interbase.InternalError('Unable to process buffer contents'
                     ' beginning at position %d.' % i)
         return transIDs
     def _resolve_limbo_transaction(self, resolution, database, transaction_id):
@@ -1049,7 +1049,7 @@ class Connection(object):
               )
 
         if destFilenamesCount > 9999:
-            raise idb.ProgrammingError("The database engine cannot output a"
+            raise interbase.ProgrammingError("The database engine cannot output a"
                 " single source database to more than 9999 backup files."
               )
         self._validate_companion_string_numeric_sequences(
@@ -1481,14 +1481,14 @@ class Connection(object):
 
         :param string database: Database filename or alias.
         :param integer mode: One from following constants:
-           :data:`~idb.services.WRITE_FORCED` or
-           :data:`~idb.services.WRITE_BUFFERED`
+           :data:`~interbase.services.WRITE_FORCED` or
+           :data:`~interbase.services.WRITE_BUFFERED`
         """
         self.__check_active()
         _checkString(database)
         if mode not in (WRITE_FORCED, WRITE_BUFFERED):
             raise ValueError('mode must be one of the following constants:'
-                '  idb.services.WRITE_FORCED, idb.services.WRITE_BUFFERED.')
+                '  interbase.services.WRITE_FORCED, interbase.services.WRITE_BUFFERED.')
         self._property_action_with_one_num_code(database,
                                                 ibase.isc_spb_prp_write_mode,
                                                 mode, num_ctype='b')
@@ -1497,14 +1497,14 @@ class Connection(object):
 
         :param string database: Database filename or alias.
         :param integer mode: One from following constants:
-           :data:`~idb.services.ACCESS_READ_WRITE` or
-           :data:`~idb.services.ACCESS_READ_ONLY`
+           :data:`~interbase.services.ACCESS_READ_WRITE` or
+           :data:`~interbase.services.ACCESS_READ_ONLY`
         """
         self.__check_active()
         _checkString(database)
         if mode not in (ACCESS_READ_WRITE, ACCESS_READ_ONLY):
             raise ValueError('mode must be one of the following constants:'
-                ' idb.services.ACCESS_READ_WRITE, idb.services.ACCESS_READ_ONLY.')
+                ' interbase.services.ACCESS_READ_WRITE, interbase.services.ACCESS_READ_ONLY.')
         self._property_action_with_one_num_code(database,
                                                 ibase.isc_spb_prp_access_mode,
                                                 mode, num_ctype='b')
@@ -1538,12 +1538,12 @@ class Connection(object):
 
         :param string database: Database filename or alias.
         :param integer shutdown_mode: One from following constants:
-           :data:`~idb.services.SHUT_LEGACY`, :data:`~idb.services.SHUT_SINGLE`,
-           :data:`~idb.services.SHUT_MULTI` or :data:`~idb.services.SHUT_FULL`.
+           :data:`~interbase.services.SHUT_LEGACY`, :data:`~interbase.services.SHUT_SINGLE`,
+           :data:`~interbase.services.SHUT_MULTI` or :data:`~interbase.services.SHUT_FULL`.
         :param integer shutdown_method: One from following constants:
-           :data:`~idb.services.SHUT_FORCE`,
-           :data:`~idb.services.SHUT_DENY_NEW_TRANSACTIONS`
-           or :data:`~idb.services.SHUT_DENY_NEW_ATTACHMENTS`.
+           :data:`~interbase.services.SHUT_FORCE`,
+           :data:`~interbase.services.SHUT_DENY_NEW_TRANSACTIONS`
+           or :data:`~interbase.services.SHUT_DENY_NEW_ATTACHMENTS`.
         :param integer timeout: Time in seconds, that the shutdown must complete in.
 
         .. seealso:: See also :meth:`~Connection.bring_online` method.
@@ -1552,15 +1552,15 @@ class Connection(object):
         _checkString(database)
         if shutdown_mode not in (SHUT_LEGACY, SHUT_SINGLE, SHUT_MULTI, SHUT_FULL):
             raise ValueError('shutdown_mode must be one of the following'
-                ' constants:  idb.services.SHUT_LEGACY, idb.services.SHUT_SINGLE,'
-                ' idb.services.SHUT_MULTI,'
-                ' idb.services.SHUT_FULL.')
+                ' constants:  interbase.services.SHUT_LEGACY, interbase.services.SHUT_SINGLE,'
+                ' interbase.services.SHUT_MULTI,'
+                ' interbase.services.SHUT_FULL.')
         if shutdown_method not in (SHUT_FORCE, SHUT_DENY_NEW_TRANSACTIONS,
                                    SHUT_DENY_NEW_ATTACHMENTS):
             raise ValueError('shutdown_method must be one of the following'
-                ' constants:  idb.services.SHUT_FORCE,'
-                ' idb.services.SHUT_DENY_NEW_TRANSACTIONS,'
-                ' idb.services.SHUT_DENY_NEW_ATTACHMENTS.')
+                ' constants:  interbase.services.SHUT_FORCE,'
+                ' interbase.services.SHUT_DENY_NEW_TRANSACTIONS,'
+                ' interbase.services.SHUT_DENY_NEW_ATTACHMENTS.')
         reqBuf = _ServiceActionRequestBuilder()
         if shutdown_mode != SHUT_LEGACY:
             reqBuf.add_numeric(ibase.isc_spb_prp_shutdown_mode,
@@ -1572,8 +1572,8 @@ class Connection(object):
 
         :param string database: Database filename or alias.
         :param integer online_mode: (Optional) One from following constants:
-           :data:`~idb.services.SHUT_LEGACY`, :data:`~idb.services.SHUT_SINGLE`,
-           :data:`~idb.services.SHUT_MULTI` or :data:`~idb.services.SHUT_NORMAL` (**Default**).
+           :data:`~interbase.services.SHUT_LEGACY`, :data:`~interbase.services.SHUT_SINGLE`,
+           :data:`~interbase.services.SHUT_MULTI` or :data:`~interbase.services.SHUT_NORMAL` (**Default**).
 
         .. seealso:: See also :meth:`~Connection.shutdown` method.
         """
@@ -1581,9 +1581,9 @@ class Connection(object):
         _checkString(database)
         if online_mode not in (SHUT_LEGACY, SHUT_NORMAL,SHUT_SINGLE, SHUT_MULTI):
             raise ValueError('online_mode must be one of the following'
-                ' constants:  idb.services.SHUT_LEGACY, idb.services.SHUT_NORMAL,'
-                ' idb.services.SHUT_SINGLE,'
-                ' idb.services.SHUT_MULTI.')
+                ' constants:  interbase.services.SHUT_LEGACY, interbase.services.SHUT_NORMAL,'
+                ' interbase.services.SHUT_SINGLE,'
+                ' interbase.services.SHUT_MULTI.')
         reqBuf = _ServiceActionRequestBuilder()
         if online_mode == SHUT_LEGACY:
             reqBuf.add_option_mask(ibase.isc_spb_prp_db_online)
@@ -1725,13 +1725,13 @@ class Connection(object):
         """
         self.__check_active()
         if not user.name:
-            raise idb.ProgrammingError('You must specify a username.')
+            raise interbase.ProgrammingError('You must specify a username.')
         else:
             _checkString(user.name)
             user.name = ibase.b(user.name)
 
         if not user.password:
-            raise idb.ProgrammingError('You must specify a password.')
+            raise interbase.ProgrammingError('You must specify a password.')
         else:
             _checkString(user.password)
             user.password = ibase.b(user.password)
@@ -1859,7 +1859,7 @@ class User(object):
         self.group_id = None
 
     def __str__(self):
-        return '<idb.services.User %s>' % (
+        return '<interbase.services.User %s>' % (
             (self.name is None and 'without a name')
             or 'named "%s"' % self.name)
     def load_information(self,svc):
@@ -1872,7 +1872,7 @@ class User(object):
         :raises ProgrammingError: If user name is not defined.
         """
         if self.name is None:
-            raise idb.ProgrammingError("Can't load information about user without name.")
+            raise interbase.ProgrammingError("Can't load information about user without name.")
         user = svc.get_users(self.name)
         if len(user) > 0:
             self.first_name = user.first_name
@@ -1936,22 +1936,22 @@ class _ServiceActionRequestBuilder(object):
         # message with InterBase 1.5 (though it would not have raised an error
         # at all with InterBase 1.0 and earlier).
         ### Todo: verify handling of P version differences, refactor
-        databaseName = ibase.b(databaseName, idb.ibcore._FS_ENCODING)
+        databaseName = ibase.b(databaseName, interbase.ibcore._FS_ENCODING)
         if ibase.PYTHON_MAJOR_VER == 3:
-            colonIndex = (databaseName.decode(idb.ibcore._FS_ENCODING)).find(':')
+            colonIndex = (databaseName.decode(interbase.ibcore._FS_ENCODING)).find(':')
         else:
             colonIndex = databaseName.find(':')
         if colonIndex != -1:
             # This code makes no provision for platforms other than Windows
             # that allow colons in paths (such as MacOS).  Some of
-            # idb's current implementation (e.g., event handling) is
+            # interbase's current implementation (e.g., event handling) is
             # constrained to Windows or POSIX anyway.
             if not sys.platform.lower().startswith('win') or (
                 # This client process is running on Windows.
                 #
                 # Files that don't exist might still be valid if the connection
                 # is to a server other than the local machine.
-                not os.path.exists(ibase.nativestr(databaseName,idb.ibcore._FS_ENCODING))
+                not os.path.exists(ibase.nativestr(databaseName,interbase.ibcore._FS_ENCODING))
                 # "Guess" that if the colon falls within the first two
                 # characters of the string, the pre-colon portion refers to a
                 # Windows drive letter rather than to a remote host.

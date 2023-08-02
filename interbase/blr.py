@@ -1,6 +1,6 @@
 #coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           blr.py
 #   DESCRIPTION:    BLR-related definitions
 #   CREATED:        12.6.2013

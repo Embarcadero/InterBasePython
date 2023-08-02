@@ -1,6 +1,6 @@
 #coding:utf-8
 #
-#   PROGRAM:     idb
+#   PROGRAM:     interbase
 #   MODULE:      utils.py
 #   DESCRIPTION: Various utility classes and functions
 #   CREATED:     10.5.2013

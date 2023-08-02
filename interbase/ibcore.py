@@ -1,6 +1,6 @@
 #coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           ibcore.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        8.10.2011
@@ -40,7 +40,7 @@ from . import utils
 
 from distutils import util
 from itertools import zip_longest as izip_longest
-from idb.ibase import (
+from interbase.ibase import (
     isc_dpb_dbkey_scope, isc_dpb_force_write,
     isc_dpb_encrypt_key,
     isc_dpb_lc_ctype, isc_dpb_no_reserve,
@@ -119,12 +119,12 @@ paramstyle = 'qmark'
 
 def load_api(ib_library_name=None, embedded=False):
     """Initializes bindings to InterBase Client Library unless they are already initialized.
-    Called automatically by :func:`idb.connect` and :func:`idb.create_database`.
+    Called automatically by :func:`interbase.connect` and :func:`interbase.create_database`.
 
     :param string ib_library_name: (optional) Path to InterBase Client Library.
-       When it's not specified, IDB does its best to locate appropriate client library.
+       When it's not specified, interbase does its best to locate appropriate client library.
 
-    :returns: :class:`idb.ibase.ibclient_API` instance.
+    :returns: :class:`interbase.ibase.ibclient_API` instance.
     """
     embedded_env_var = util.strtobool(os.environ.get('IBTEST_USE_EMBEDDED', 'False'))
     if not hasattr(sys.modules[__name__],'api'):
@@ -201,7 +201,7 @@ class TransactionConflict(DatabaseError):
 # Named positional constants to be used as indices into the description
 # attribute of a cursor (these positions are defined by the DB API spec).
 # For example:
-#   nameOfFirstField = cursor.description[0][idb.DESCRIPTION_NAME]
+#   nameOfFirstField = cursor.description[0][interbase.DESCRIPTION_NAME]
 
 DESCRIPTION_NAME = 0
 DESCRIPTION_TYPE_CODE = 1
@@ -571,8 +571,8 @@ def connect(
     Establish a connection to database.
 
     :param dsn: Connection string in format [host[/port]]:database
-    :param string user: User name. If not specified, idb attempts to use ISC_USER envar.
-    :param string password: User password. If not specified, idb attempts to use ISC_PASSWORD envar.
+    :param string user: User name. If not specified, interbase attempts to use ISC_USER envar.
+    :param string password: User password. If not specified, interbase attempts to use ISC_PASSWORD envar.
     :param string host: Server host machine specification.
     :param string database: Database specification (file spec. or alias)
     :param sql_dialect: SQL Dialect for connection.
@@ -587,7 +587,7 @@ def connect(
     :type isolation_level: 0, 1, 2 or 3
     :param connection_class: Custom connection class
     :type connection_class: subclass of :class:`Connection`
-    :param string ib_library_name: Full path to InterBase client library. See :func:`~idb.load_api` for details.
+    :param string ib_library_name: Full path to InterBase client library. See :func:`~interbase.load_api` for details.
     :param bool ssl: Enable ssl connection to database.
     :param string encrypted_password: Encrypted password.
     :param string sep_password: Database system encryption password.
@@ -613,8 +613,8 @@ def connect(
 
     .. code-block:: python
 
-       con = idb.connect(dsn='host:/path/database.idb', user='sysdba', password='pass', charset='UTF8')
-       con = idb.connect(host='myhost', database='/path/database.idb', user='sysdba', password='pass', charset='UTF8')
+       con = interbase.connect(dsn='host:/path/database.interbase', user='sysdba', password='pass', charset='UTF8')
+       con = interbase.connect(host='myhost', database='/path/database.interbase', user='sysdba', password='pass', charset='UTF8')
     """
     load_api(ib_library_name, embedded)
     if connection_class is None:
@@ -722,8 +722,8 @@ def create_database(sql='', sql_dialect=3, dsn='', user=None, password=None,
     :param sql_dialect: SQL Dialect for newly created database.
     :type sql_dialect: 1 or 3
     :param dsn: Connection string in format [host[/port]]:database
-    :param string user: User name. If not specified, idb attempts to use ISC_USER envar.
-    :param string password: User password. If not specified, idb attempts to use ISC_PASSWORD envar.
+    :param string user: User name. If not specified, interbase attempts to use ISC_USER envar.
+    :param string password: User password. If not specified, interbase attempts to use ISC_PASSWORD envar.
     :param string host: Server host machine specification.
     :param string database: Database specification (file spec. or alias)
     :param integer page_size: Database page size.
@@ -732,7 +732,7 @@ def create_database(sql='', sql_dialect=3, dsn='', user=None, password=None,
     :param string files: Specification of secondary database files.
     :param connection_class: Custom connection class
     :type connection_class: subclass of :class:`Connection`
-    :param string ib_library_name: Full path to InterBase client library. See :func:`~idb.load_api` for details.
+    :param string ib_library_name: Full path to InterBase client library. See :func:`~interbase.load_api` for details.
     :param bool embedded: Load embedded version of the driver.
 
     :returns: Connection to the newly created database.
@@ -745,8 +745,8 @@ def create_database(sql='', sql_dialect=3, dsn='', user=None, password=None,
 
     .. code-block:: python
 
-       con = idb.create_database("create database '/temp/db.idb' user 'sysdba' password 'pass'")
-       con = idb.create_database(dsn='/temp/db.idb',user='sysdba',password='pass',page_size=8192)
+       con = interbase.create_database("create database '/temp/db.interbase' user 'sysdba' password 'pass'")
+       con = interbase.create_database(dsn='/temp/db.interbase',user='sysdba',password='pass',page_size=8192)
     """
     load_api(ib_library_name, embedded)
     if connection_class == None:
@@ -1009,7 +1009,7 @@ class Connection(object):
         # More informative error message:
         raise AttributeError("A connection's 'charset' property can be"
             " specified upon Connection creation as a keyword argument to"
-            " idb.connect, but it cannot be modified thereafter."
+            " interbase.connect, but it cannot be modified thereafter."
             )
     def __get_group(self):
         if self.__group:
@@ -1200,7 +1200,7 @@ class Connection(object):
 
         .. note::  Some of the information available through this method would be
            more easily retrieved with the Services API (see submodule
-           :mod:`idb.services`).
+           :mod:`interbase.services`).
         """
         self.__check_attached()
         request_buffer = bs([info_code])
@@ -1255,7 +1255,7 @@ class Connection(object):
         that parses the output of `database_info` into Python-friendly objects
         instead of returning raw binary buffers in the case of complex result types.
 
-        :param request: Single `idb.isc_info_*` info request code or a sequence
+        :param request: Single `interbase.isc_info_*` info request code or a sequence
                         of such codes.
         :returns: Mapping of (info request code -> result).
         :raises ValueError: When requested code is not recognized.
@@ -1453,7 +1453,7 @@ class Connection(object):
                 #  1) Performance + Principle of Least Surprise
                 #     If the client program is trying to do some delicate
                 #     performance measurements, it's not helpful for
-                #     idb to be issuing unexpected queries behind the
+                #     interbase to be issuing unexpected queries behind the
                 #     scenes.
                 #  2) Field RDB$RELATIONS.RDB$RELATION_NAME is a CHAR field,
                 #     which means its values emerge from the database with
@@ -1673,7 +1673,7 @@ class Connection(object):
     version = property(__get_version)
     #: (Read Only) (float) InterBase version number of connected server. Only major.minor version.
     engine_version = property(__get_engine_version)
-    #: (Read Only) (:class:`~idb.schema.Schema`) Database metadata object.
+    #: (Read Only) (:class:`~interbase.schema.Schema`) Database metadata object.
     schema = utils.LateBindingProperty(_get_schema)
     #: (Read Only) (float) On-Disk Structure (ODS) version.
     ods = property(__get_ods)
@@ -1682,8 +1682,8 @@ class Connection(object):
 @utils.embed_attributes(schema.Schema,'schema')
 class ConnectionWithSchema(Connection):
     """:class:`Connection` descendant that exposes all attributes of encapsulated
-    :class:`~idb.schema.Schema` instance directly as connection attributes, except
-    :meth:`~idb.schema.Schema.close` and :meth:`~idb.schema.Schema.bind`, and
+    :class:`~interbase.schema.Schema` instance directly as connection attributes, except
+    :meth:`~interbase.schema.Schema.close` and :meth:`~interbase.schema.Schema.bind`, and
     those attributes that are already defined by Connection class.
 
     .. note::
@@ -3362,7 +3362,7 @@ class Cursor(object):
 
         .. warning::
 
-           IDB's implementation of Cursor somewhat violates the Python DB API 2.0,
+           Interbase's implementation of Cursor somewhat violates the Python DB API 2.0,
            which requires that cursor will be unusable after call to `close`; and
            an Error (or subclass) exception should be raised if any operation is
            attempted with the cursor.
@@ -4139,7 +4139,7 @@ class ConnectionGroup(object):
     """
     # XXX: ConnectionGroup objects currently are not thread-safe.  Since
     # separate Connections can be manipulated simultaneously by different
-    # threads in idb, it would make sense for a container of multiple
+    # threads in interbase, it would make sense for a container of multiple
     # connections to be safely manipulable simultaneously by multiple threads.
 
     # XXX: Adding two connections to the same database freezes the DB client
@@ -4198,9 +4198,9 @@ class ConnectionGroup(object):
                                   contains 16 connections.
         """
         ### CONTRAINTS ON $con: ###
-        # con must be an instance of idb.Connection:
+        # con must be an instance of interbase.Connection:
         if not isinstance(con, Connection):
-            raise TypeError("con must be an instance of idb.Connection")
+            raise TypeError("con must be an instance of interbase.Connection")
         # con cannot already be a member of this group:
         if con in self:
             raise ProgrammingError("con is already a member of this group.")
@@ -4719,7 +4719,7 @@ class _RowMapping(object):
         pos = 0
         for fieldSpec in description:
             # It's possible for a result set from the database engine to return
-            # multiple fields with the same name, but idb's key-based
+            # multiple fields with the same name, but interbase's key-based
             # row interface only honors the first (thus setdefault, which won't
             # store the position if it's already present in self._fields).
             fields.setdefault(fieldSpec[DESCRIPTION_NAME], row[pos])
@@ -4953,7 +4953,7 @@ class TPB(_RequestBufferBuilder):
             '\n  "TABLE_NAME": (sharingMode, accessMode)'
             '\nFor example:'
             '\n  tpbBuilder.table_reservation["MY_TABLE"] ='
-            ' (idb.isc_tpb_protected, idb.isc_tpb_lock_write)'
+            ' (interbase.isc_tpb_protected, interbase.isc_tpb_lock_write)'
             )
 
     #: (:class:`TableReservation`) Table reservation specification.
@@ -4966,7 +4966,7 @@ class TPB(_RequestBufferBuilder):
     #:
     #: .. code-block:: python
     #:
-    #:   tpb.table_reservation["MY_TABLE"] = (idb.isc_tpb_protected, idb.isc_tpb_lock_write)
+    #:   tpb.table_reservation["MY_TABLE"] = (interbase.isc_tpb_protected, interbase.isc_tpb_lock_write)
     table_reservation = property(_get_table_reservation,
                                  _set_table_reservation_access)
 
@@ -5132,9 +5132,9 @@ def _validateTPB(tpb):
         return tpb
     elif not (isinstance(tpb, mybytes) and len(tpb) > 0):
         raise ProgrammingError('TPB must be non-unicode string of length > 0')
-    # The idb documentation promises (or at least strongly implies)
+    # The interbase documentation promises (or at least strongly implies)
     # that if the user tries to set a TPB that does not begin with
-    # isc_tpb_version3, idb will automatically supply that
+    # isc_tpb_version3, interbase will automatically supply that
     # infrastructural value.  This promise might cause problems in the future,
     # when isc_tpb_version3 is superseded.  A possible solution would be to
     # check the first byte against all known isc_tpb_versionX version flags,

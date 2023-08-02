@@ -1,6 +1,6 @@
 #coding:utf-8
 #
-#   PROGRAM/MODULE: idb
+#   PROGRAM/MODULE: interbase
 #   FILE:           __init__.py
 #   DESCRIPTION:    Python driver for InterBase
 #   CREATED:        8.10.2011
@@ -24,9 +24,9 @@
 #
 #  See LICENSE.TXT for details.
 
-from idb.ibcore import *
-from idb.ibcore import __version__
-from idb import services
+from interbase.ibcore import *
+from interbase.ibcore import __version__
+from interbase import services
 
 __all__ = (
            'BINARY', 'Binary', 'BlobReader', 'Connection', 'ConnectionGroup',
@@ -111,7 +111,7 @@ __all__ = (
            'isc_tpb_read_committed', 'isc_tpb_rec_version', 'isc_tpb_restart_requests',
            'isc_tpb_shared', 'isc_tpb_verb_time', 'isc_tpb_version3', 'isc_tpb_wait',
            'isc_tpb_write', 'paramstyle', 'threadsafety',
-           # New in IDB
+           # New in Interbase
            'ISOLATION_LEVEL_READ_COMMITED', 'ISOLATION_LEVEL_READ_COMMITED_LEGACY',
            'ISOLATION_LEVEL_REPEATABLE_READ', 'ISOLATION_LEVEL_SERIALIZABLE',
            'ISOLATION_LEVEL_SNAPSHOT', 'ISOLATION_LEVEL_SNAPSHOT_TABLE_STABILITY',
