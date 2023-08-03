@@ -7,7 +7,7 @@ Welcome to Interbase's documentation!
 #####################################
 
 Interbase is a `Python <http://python.org>`__ library package that
-implements `Python Database API 2.0`-compliant support for the open source relational
+implements `Python Database API 2.0`-compliant support for the relational
 database `InterBase® <https://www.embarcadero.com/products/interbase>`__.
 In addition to the minimal feature set of the standard Python DB API,
 Interbase also exposes nearly the entire native client API of the database engine.
