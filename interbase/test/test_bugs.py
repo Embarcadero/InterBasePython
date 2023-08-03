@@ -81,7 +81,7 @@ class TestBugs(InterbaseTestBase):
 
     def test_pyib_22(self):
         create_table = """
-        CREATE TABLE IDBTEST (
+        CREATE TABLE IBTEST (
             ID INTEGER,
             TEST80 VARCHAR(80),
             TEST128 VARCHAR(128),
@@ -97,11 +97,11 @@ class TestBugs(InterbaseTestBase):
         data = ("1234567890" * 25) + "12345"
         for i in interbase.ibase.xrange(255):
             cur.execute(
-                "insert into idbtest (id, test255) values (?, ?)",
+                "insert into ibtest (id, test255) values (?, ?)",
                 (i, data[:i])
             )
         self.con.commit()
-        cur.execute("select test255 from idbtest order by id")
+        cur.execute("select test255 from ibtest order by id")
         i = 0
         for row in cur:
             value = row[0]
@@ -111,7 +111,7 @@ class TestBugs(InterbaseTestBase):
 
     def test_pyib_25(self):
         create_table = """
-        CREATE TABLE IDBTEST2 (
+        CREATE TABLE IBTEST2 (
             ID INTEGER,
             TEST5000 VARCHAR(5000)
         );
@@ -122,17 +122,17 @@ class TestBugs(InterbaseTestBase):
         # test data
         data = "1234567890" * 500
         cur.execute(
-            "insert into idbtest2 (id, test5000) values (?, ?)",
+            "insert into ibtest2 (id, test5000) values (?, ?)",
             (1, data)
         )
         self.con.commit()
-        cur.execute("select test5000 from idbtest2")
+        cur.execute("select test5000 from ibtest2")
         row = cur.fetchone()
         self.assertEqual(row[0], data)
 
     def test_pyib_30(self):
         create_table = """
-        CREATE TABLE IDBTEST3 (
+        CREATE TABLE IBTEST3 (
             ID INTEGER,
             T_BLOB BLOB sub_type 2
         );
@@ -145,25 +145,25 @@ class TestBugs(InterbaseTestBase):
         data_bytes = (1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
         blob_data = interbase.bs(data_bytes)
         cur.execute(
-            "insert into idbtest3 (id, t_blob) values (?, ?)",
+            "insert into ibtest3 (id, t_blob) values (?, ?)",
             (1, blob_data)
         )
         cur.execute(
-            "insert into idbtest3 (id, t_blob) values (?, ?)",
+            "insert into ibtest3 (id, t_blob) values (?, ?)",
             (2, BytesIO(blob_data))
         )
         self.con.commit()
 
         # PYFB-XX: binary blob trucated at zero-byte
-        cur.execute("select t_blob from idbtest3 where id = 1")
+        cur.execute("select t_blob from ibtest3 where id = 1")
         row = cur.fetchone()
         self.assertEqual(row[0], blob_data)
 
-        cur.execute("select t_blob from idbtest3 where id = 2")
+        cur.execute("select t_blob from ibtest3 where id = 2")
         row = cur.fetchone()
         self.assertEqual(row[0], blob_data)
 
-        p = cur.prep("select t_blob from idbtest3 where id = 2")
+        p = cur.prep("select t_blob from ibtest3 where id = 2")
         p.set_stream_blob('T_BLOB')
         cur.execute(p)
         blob_reader = cur.fetchone()[0]
