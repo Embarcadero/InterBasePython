@@ -592,32 +592,32 @@ class TestServices2(InterbaseTestBase):
         self.assertEqual(users[0].name, 'SYSDBA')
 
     def test_manage_user(self):
-        user = interbase.services.User('IDB_TEST')
-        user.password = 'IDB_TEST'
-        user.first_name = 'IDB'
+        user = interbase.services.User('INTERBASE_TEST')
+        user.password = 'INTERBASE_TEST'
+        user.first_name = 'INTERBASE'
         user.middle_name = 'X.'
         user.last_name = 'TEST'
         self.svc.add_user(user)
         self.assertTrue(self.svc.user_exists(user))
-        self.assertTrue(self.svc.user_exists('IDB_TEST'))
-        users = [user for user in self.svc.get_users() if user.name == 'IDB_TEST']
+        self.assertTrue(self.svc.user_exists('INTERBASE_TEST'))
+        users = [user for user in self.svc.get_users() if user.name == 'INTERBASE_TEST']
         self.assertIsNotNone(users)
         self.assertEqual(len(users), 1)
-        # self.assertEqual(users[0].password,'IDB_TEST')
-        self.assertEqual(users[0].first_name, 'IDB')
+        # self.assertEqual(users[0].password,'INTERBASE_TEST')
+        self.assertEqual(users[0].first_name, 'INTERBASE')
         self.assertEqual(users[0].middle_name, 'X.')
         self.assertEqual(users[0].last_name, 'TEST')
-        user.password = 'XIDB_TEST'
-        user.first_name = 'XIDB'
+        user.password = 'XINTERBASE_TEST'
+        user.first_name = 'XINTERBASE'
         user.middle_name = 'XX.'
         user.last_name = 'XTEST'
         self.svc.modify_user(user)
-        users = [user for user in self.svc.get_users() if user.name == 'IDB_TEST']
+        users = [user for user in self.svc.get_users() if user.name == 'INTERBASE_TEST']
         self.assertTrue(users)
         self.assertEqual(len(users), 1)
-        # self.assertEqual(users[0].password,'XIDB_TEST')
-        self.assertEqual(users[0].first_name, 'XIDB')
+        # self.assertEqual(users[0].password,'XINTERBASE_TEST')
+        self.assertEqual(users[0].first_name, 'XINTERBASE')
         self.assertEqual(users[0].middle_name, 'XX.')
         self.assertEqual(users[0].last_name, 'XTEST')
         self.svc.remove_user(user)
-        self.assertFalse(self.svc.user_exists('IDB_TEST'))
+        self.assertFalse(self.svc.user_exists('INTERBASE_TEST'))
