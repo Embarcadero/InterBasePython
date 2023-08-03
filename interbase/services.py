@@ -1127,7 +1127,8 @@ class Connection(object):
                 callback(line)
 
     def archive_restore(self, bkp_file: str, spb_dbname: str, recover_until: str = None, callback=None):
-        """Request to execute an Archive Recover operation and recover from a database
+        """
+        Request to execute an Archive Recover operation and recover from a database
         archive in the journal archive directory location.
 
         :param string bkp_file: Path of the database in the Journal Archive location,

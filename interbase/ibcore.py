@@ -4371,9 +4371,10 @@ class ConnectionGroup(object):
 
     def prepare(self):
         """
-          Manually triggers the first phase of a two-phase commit (2PC).  Use
+        Manually triggers the first phase of a two-phase commit (2PC).  Use 
         of this method is optional; if preparation is not triggered manually,
         it will be performed implicitly by commit() in a 2PC.
+
         """
         self.__require_non_empty_group('prepare')
         self.__require_transaction_state(True,"This group has no transaction to prepare.")
