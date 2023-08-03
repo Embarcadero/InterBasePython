@@ -379,7 +379,7 @@ class TestServices2(InterbaseTestBase):
     def setUp(self):
         self.ibk = os.path.join(IBTEST_DB_DIR_PATH, 'test_employee.ibk')
         self.ibk2 = os.path.join(IBTEST_DB_DIR_PATH, 'test_employee.ibk2')
-        self.ridb = os.path.join(IBTEST_DB_DIR_PATH, 'test_employee.ib')
+        self.rib = os.path.join(IBTEST_DB_DIR_PATH, 'test_employee.ib')
         self.svc = interbase.services.connect(
             host=IBTEST_HOST,
             user=IBTEST_USER,
@@ -396,10 +396,10 @@ class TestServices2(InterbaseTestBase):
             ssl=IBTEST_SERVER_PUBLIC_FILE is not None,
             server_public_file=IBTEST_SERVER_PUBLIC_FILE
         )
-        if not os.path.exists(self.ridb):
+        if not os.path.exists(self.rib):
             c = interbase.create_database(
                 host=IBTEST_HOST,
-                database=self.ridb,
+                database=self.rib,
                 user=IBTEST_USER,
                 password=IBTEST_PASSWORD,
                 sql_dialect=IBTEST_SQL_DIALECT,
@@ -413,8 +413,8 @@ class TestServices2(InterbaseTestBase):
         self.con.execute_immediate("delete from t")
         self.con.commit()
         self.con.close()
-        if os.path.exists(self.ridb):
-            os.remove(self.ridb)
+        if os.path.exists(self.rib):
+            os.remove(self.rib)
         if os.path.exists(self.ibk):
             os.remove(self.ibk)
         if os.path.exists(self.ibk2):
@@ -444,14 +444,14 @@ class TestServices2(InterbaseTestBase):
         self.assertGreater(len(output), 0)
 
     def test_get_limbo_transactions_ids(self):
-        ids = self.svc.get_limbo_transaction_ids(self.ridb)
+        ids = self.svc.get_limbo_transaction_ids(self.rib)
         self.assertIsInstance(ids, type(list()))
 
     def test_getStatistics(self):
         def fetchline(line):
             output.append(line)
 
-        self.svc.get_statistics(self.ridb)
+        self.svc.get_statistics(self.rib)
         self.assertTrue(self.svc.fetching)
         self.assertTrue(self.svc.isrunning())
         # fetch materialized
@@ -460,7 +460,7 @@ class TestServices2(InterbaseTestBase):
         self.assertFalse(self.svc.isrunning())
         self.assertIsInstance(stats, type(list()))
         # iterate over result
-        self.svc.get_statistics(self.ridb,
+        self.svc.get_statistics(self.rib,
                                 show_system_tables_and_indexes=True,
                                 show_record_versions=True)
         for line in self.svc:
@@ -468,14 +468,14 @@ class TestServices2(InterbaseTestBase):
         self.assertFalse(self.svc.fetching)
         # callback
         output = []
-        self.svc.get_statistics(self.ridb, callback=fetchline)
+        self.svc.get_statistics(self.rib, callback=fetchline)
         self.assertGreater(len(output), 0)
 
     def test_backup(self):
         def fetchline(line):
             output.append(line)
 
-        self.svc.backup(self.ridb, self.ibk)
+        self.svc.backup(self.rib, self.ibk)
         self.assertTrue(self.svc.fetching)
         self.assertTrue(self.svc.isrunning())
         # fetch materialized
@@ -487,7 +487,7 @@ class TestServices2(InterbaseTestBase):
         self.assertIsInstance(report, type(list()))
         # iterate over result
         self.svc.backup(
-            self.ridb,
+            self.rib,
             self.ibk,
             ignore_checksums=1,
             ignore_limbo_transactions=1,
@@ -504,7 +504,7 @@ class TestServices2(InterbaseTestBase):
         self.assertFalse(self.svc.fetching)
         # callback
         output = []
-        self.svc.backup(self.ridb, self.ibk, callback=fetchline)
+        self.svc.backup(self.rib, self.ibk, callback=fetchline)
         self.assertGreater(len(output), 0)
 
     def test_restore(self):
@@ -512,9 +512,9 @@ class TestServices2(InterbaseTestBase):
             output.append(line)
 
         output = []
-        self.svc.backup(self.ridb, self.ibk, callback=fetchline)
+        self.svc.backup(self.rib, self.ibk, callback=fetchline)
         self.assertTrue(os.path.exists(self.ibk))
-        self.svc.restore(self.ibk, self.ridb, replace=1)
+        self.svc.restore(self.ibk, self.rib, replace=1)
         self.assertTrue(self.svc.fetching)
         self.assertTrue(self.svc.isrunning())
         # fetch materialized
@@ -523,66 +523,66 @@ class TestServices2(InterbaseTestBase):
         self.assertFalse(self.svc.isrunning())
         self.assertIsInstance(report, type(list()))
         # iterate over result
-        self.svc.restore(self.ibk, self.ridb, replace=1)
+        self.svc.restore(self.ibk, self.rib, replace=1)
         for line in self.svc:
             self.assertIsNotNone(line)
             self.assertIsInstance(line, interbase.StringType)
         self.assertFalse(self.svc.fetching)
         # callback
         output = []
-        self.svc.restore(self.ibk, self.ridb, replace=1, callback=fetchline)
+        self.svc.restore(self.ibk, self.rib, replace=1, callback=fetchline)
         self.assertGreater(len(output), 0)
 
     def test_setDefaultPageBuffers(self):
-        self.svc.set_default_page_buffers(self.ridb, 100)
+        self.svc.set_default_page_buffers(self.rib, 100)
 
     def test_setSweepInterval(self):
-        self.svc.set_sweep_interval(self.ridb, 10000)
+        self.svc.set_sweep_interval(self.rib, 10000)
 
     def test_setShouldReservePageSpace(self):
-        self.svc.set_reserve_page_space(self.ridb, False)
-        self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
+        self.svc.set_reserve_page_space(self.rib, False)
+        self.svc.get_statistics(self.rib, show_only_db_header_pages=1)
         self.assertIn('no reserve', ''.join(self.svc.readlines()))
-        self.svc.set_reserve_page_space(self.ridb, True)
-        self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
+        self.svc.set_reserve_page_space(self.rib, True)
+        self.svc.get_statistics(self.rib, show_only_db_header_pages=1)
         self.assertNotIn('no reserve', ''.join(self.svc.readlines()))
 
     def test_setWriteMode(self):
         # Forced writes
-        self.svc.set_write_mode(self.ridb, interbase.services.WRITE_FORCED)
-        self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
+        self.svc.set_write_mode(self.rib, interbase.services.WRITE_FORCED)
+        self.svc.get_statistics(self.rib, show_only_db_header_pages=1)
         self.assertIn('force write', ''.join(self.svc.readlines()))
         # No Forced writes
-        self.svc.set_write_mode(self.ridb, interbase.services.WRITE_BUFFERED)
-        self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
+        self.svc.set_write_mode(self.rib, interbase.services.WRITE_BUFFERED)
+        self.svc.get_statistics(self.rib, show_only_db_header_pages=1)
         self.assertNotIn('force write', ''.join(self.svc.readlines()))
 
     def test_setAccessMode(self):
         # Read Only
-        self.svc.set_access_mode(self.ridb, interbase.services.ACCESS_READ_ONLY)
-        self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
+        self.svc.set_access_mode(self.rib, interbase.services.ACCESS_READ_ONLY)
+        self.svc.get_statistics(self.rib, show_only_db_header_pages=1)
         self.assertIn('read only', ''.join(self.svc.readlines()))
         # Read/Write
-        self.svc.set_access_mode(self.ridb, interbase.services.ACCESS_READ_WRITE)
-        self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
+        self.svc.set_access_mode(self.rib, interbase.services.ACCESS_READ_WRITE)
+        self.svc.get_statistics(self.rib, show_only_db_header_pages=1)
         self.assertNotIn('read only', ''.join(self.svc.readlines()))
 
     def test_setSQLDialect(self):
-        self.svc.set_sql_dialect(self.ridb, 1)
-        self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
+        self.svc.set_sql_dialect(self.rib, 1)
+        self.svc.get_statistics(self.rib, show_only_db_header_pages=1)
         self.assertIn('Database dialect\t 1', ''.join(self.svc.readlines()))
-        self.svc.set_sql_dialect(self.ridb, 3)
-        self.svc.get_statistics(self.ridb, show_only_db_header_pages=1)
+        self.svc.set_sql_dialect(self.rib, 3)
+        self.svc.get_statistics(self.rib, show_only_db_header_pages=1)
         self.assertIn('Database dialect\t 3', ''.join(self.svc.readlines()))
 
     def test_activateShadowFile(self):
-        self.svc.activate_shadow(self.ridb)
+        self.svc.activate_shadow(self.rib)
 
     def test_sweep(self):
-        self.svc.sweep(self.ridb)
+        self.svc.sweep(self.rib)
 
     def test_repair(self):
-        result = self.svc.repair(self.ridb)
+        result = self.svc.repair(self.rib)
         self.assertFalse(result)
 
     def test_getUsers(self):
