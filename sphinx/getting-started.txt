@@ -1,18 +1,18 @@
 
-########################
-Getting Started with IDB
-########################
+##############################
+Getting Started with Interbase
+##############################
 
 Installation
 ************
 
-IDB is written as pure-Python module on top of InterBase client library (gds.so/dylib and gds32/ibclient64.dll) using ctypes_,
-so *make sure you have InterBase client properly installed before you try to install IDB*, otherwise the 
-installation will fail. IDB supports InterBase 2020 and higher.
+Interbase is written as pure-Python module on top of InterBase client library (gds.so/dylib and gds32/ibclient64.dll) using ctypes_,
+so *make sure you have InterBase client properly installed before you try to install Interbase*, otherwise the 
+installation will fail. Interbase supports InterBase 2020 and higher.
 
-IDB is distributed as `setuptools`_ package, so you'll need setuptools or 
+Interbase is distributed as `setuptools`_ package, so you'll need setuptools or 
 `compatible package <http://pypi.python.org/pypi/distribute>`_ installed to
-install IDB properly.
+install Interbase properly.
 
 Installation using pip
 ========================
@@ -36,11 +36,11 @@ Quick-start Guide
 *****************
 
 This brief tutorial aims to get the reader started by demonstrating
-elementary usage of IDB. It is not a comprehensive Python
+elementary usage of Interbase. It is not a comprehensive Python
 Database API tutorial, nor is it comprehensive in its coverage of
 anything else.
 
-The numerous advanced features of IDB are covered in another
+The numerous advanced features of Interbase are covered in another
 section of this documentation, which is not in a tutorial format, though it
 is replete with examples.
 
@@ -55,13 +55,13 @@ A database connection is typically established with code such as this:
 
 .. sourcecode:: python
 
-    import idb
+    import interbase
     
     # The server is named 'bison'; the database file is at '/temp/test.db'.
-    con = idb.connect(dsn='bison:/temp/test.db', user='sysdba', password='pass')
+    con = interbase.connect(dsn='bison:/temp/test.db', user='sysdba', password='pass')
     
     # Or, equivalently:
-    con = idb.connect(
+    con = interbase.connect(
         host='bison', database='/temp/test.db',
         user='sysdba', password='masterkey'
       )
@@ -74,9 +74,9 @@ UTF-8 as the character set of the connection:
 
 .. sourcecode:: python
 
-    import idb
+    import interbase
     
-    con = idb.connect(
+    con = interbase.connect(
         dsn='bison:/temp/test.db',
         user='sysdba', password='masterkey',
         charset='UTF8' # specify a character set for the connection
@@ -108,9 +108,9 @@ the `languages` table:
 
 .. sourcecode:: python
 
-    import idb
+    import interbase
 
-    con = idb.connect(dsn='bison:/temp/test.db', user='sysdba', password='masterkey')
+    con = interbase.connect(dsn='bison:/temp/test.db', user='sysdba', password='masterkey')
 
     # Create a Cursor object that operates in the context of Connection con:
     cur = con.cursor()
@@ -136,9 +136,9 @@ fetching a single row at a time from a `SELECT`-cursor:
 
 .. sourcecode:: python
 
-    import idb
+    import interbase
 
-    con = idb.connect(dsn='bison:/temp/test.db', user='sysdba', password='masterkey')
+    con = interbase.connect(dsn='bison:/temp/test.db', user='sysdba', password='masterkey')
 
     cur = con.cursor()
     SELECT = "select name, year_released from languages order by year_released"
@@ -179,19 +179,19 @@ example to `languages`):
 
 .. sourcecode:: python
 
-    import idb
+    import interbase
 
     TABLE_NAME = 'languages'
     SELECT = 'select * from %s order by year_released' % TABLE_NAME
 
-    con = idb.connect(dsn='bison:/temp/test.db', user='sysdba', password='masterkey')
+    con = interbase.connect(dsn='bison:/temp/test.db', user='sysdba', password='masterkey')
 
     cur = con.cursor()
     cur.execute(SELECT)
 
     # Print a header.
     for fieldDesc in cur.description:
-        print fieldDesc[idb.DESCRIPTION_NAME].ljust(fieldDesc[idb.DESCRIPTION_DISPLAY_SIZE]) ,
+        print fieldDesc[interbase.DESCRIPTION_NAME].ljust(fieldDesc[interbase.DESCRIPTION_DISPLAY_SIZE]) ,
     print # Finish the header with a newline.
     print '-' * 78
 
@@ -201,7 +201,7 @@ example to `languages`):
     for row in cur:
         for fieldIndex in fieldIndices:
             fieldValue = str(row[fieldIndex])
-            fieldMaxWidth = cur.description[fieldIndex][idb.DESCRIPTION_DISPLAY_SIZE]
+            fieldMaxWidth = cur.description[fieldIndex][interbase.DESCRIPTION_DISPLAY_SIZE]
 
             print fieldValue.ljust(fieldMaxWidth) ,
 
@@ -224,9 +224,9 @@ Let's insert more languages:
 
 .. sourcecode:: python
 
-    import idb
+    import interbase
 
-    con = idb.connect(dsn='bison:/temp/test.db', user='sysdba', password='masterkey')
+    con = interbase.connect(dsn='bison:/temp/test.db', user='sysdba', password='masterkey')
 
     cur = con.cursor()
 
@@ -281,7 +281,7 @@ retrieved from a stored procedure by `SELECT`ing from the procedure,
 whereas output parameters are retrieved with an `EXECUTE PROCEDURE`
 statement.
 add
-To *retrieve a result set* from a stored procedure with IDB,
+To *retrieve a result set* from a stored procedure with Interbase,
 use code such as this:
 
 .. sourcecode:: python

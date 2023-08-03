@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# IDB documentation build configuration file, created by
+# Interbase documentation build configuration file, created by
 # sphinx-quickstart on Wed Jan  7 12:29:48 2009.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -41,7 +41,7 @@ source_suffix = '.txt'
 master_doc = 'index'
 
 # General information about the project.
-project = u'IDB'
+project = u'Interbase'
 copyright = u'Embarcadero Technologies, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -69,6 +69,8 @@ unused_docs = ['usage']
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.
 exclude_trees = ['.build','requirements.txt']
+
+exclude_patterns = ['requirements.txt']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None
@@ -177,7 +179,7 @@ htmlhelp_basename = 'IDBdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, document class [howto/manual]).
 latex_documents = [
-  ('index', 'IDB.tex', r'IDB Documentation',
+  ('index', 'Interbase.tex', r'Interbase Documentation',
    r'Embarcadero', 'manual'),
 ]
 
