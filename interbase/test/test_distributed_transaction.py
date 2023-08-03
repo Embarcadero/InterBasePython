@@ -27,13 +27,13 @@
 import os
 import interbase
 
-from core import InterbaseTestBase
+from core import InterBaseTestBase
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_DIR_PATH,\
     IBTEST_SQL_DIALECT, IBTEST_SERVER_PUBLIC_FILE
 from unittest import skip
 
 
-class TestDistributedTransaction(InterbaseTestBase):
+class TestDistributedTransaction(InterBaseTestBase):
     def setUp(self):
         self.db1 = os.path.join(IBTEST_DB_DIR_PATH, 'ibtest-1.ib')
         self.db2 = os.path.join(IBTEST_DB_DIR_PATH, 'ibtest-2.ib')

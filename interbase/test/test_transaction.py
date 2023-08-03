@@ -26,12 +26,12 @@
 
 import interbase
 
-from core import InterbaseTestBase
+from core import InterBaseTestBase
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestTransaction(InterbaseTestBase):
+class TestTransaction(InterBaseTestBase):
     def setUp(self):
         self.connection = interbase.connect(
             host=IBTEST_HOST,

@@ -28,12 +28,12 @@ import interbase
 import decimal
 import datetime
 
-from core import InterbaseTestBase
+from core import InterBaseTestBase
 from constants import IBTEST_USER, IBTEST_HOST, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestInsertData(InterbaseTestBase):
+class TestInsertData(InterBaseTestBase):
     def setUp(self):
         self.con = interbase.connect(
             host=IBTEST_HOST,

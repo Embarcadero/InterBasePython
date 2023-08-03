@@ -31,9 +31,9 @@ import unittest
 from io import StringIO
 
 
-class InterbaseTestBase(unittest.TestCase):
+class InterBaseTestBase(unittest.TestCase):
     def __init__(self, method_name='runTest'):
-        super(InterbaseTestBase, self).__init__(method_name)
+        super(InterBaseTestBase, self).__init__(method_name)
         self.output = StringIO()
 
     def clear_output(self):

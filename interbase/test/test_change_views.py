@@ -28,12 +28,12 @@ import os
 import interbase
 import time
 
-from core import InterbaseTestBase
+from core import InterBaseTestBase
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestChangeView(InterbaseTestBase):
+class TestChangeView(InterBaseTestBase):
     def setUp(self):
         self.cwd = os.getcwd()
         self.dbpath = os.path.join(self.cwd, "test")

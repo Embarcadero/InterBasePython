@@ -29,12 +29,12 @@ import interbase
 from unittest import skip
 from interbase import schema as sm
 from contextlib import closing
-from core import InterbaseTestBase, SchemaVisitor
+from core import InterBaseTestBase, SchemaVisitor
 from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestSchema(InterbaseTestBase):
+class TestSchema(InterBaseTestBase):
     def setUp(self):
         self.con = interbase.connect(
             host=IBTEST_HOST,

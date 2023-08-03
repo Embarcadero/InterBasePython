@@ -30,13 +30,13 @@ import interbase
 
 from sys import platform
 from unittest import skipUnless, skip
-from core import InterbaseTestBase
+from core import InterBaseTestBase
 from contextlib import closing
 from constants import IBTEST_HOST, IBTEST_PASSWORD, IBTEST_DB_PATH, \
     IBTEST_USER, IBTEST_DB_DIR_PATH, IBTEST_USE_EMBEDDED, IBTEST_SQL_DIALECT, IBTEST_SERVER_PUBLIC_FILE
 
 
-class TestServices(InterbaseTestBase):
+class TestServices(InterBaseTestBase):
     def setUp(self):
         self.deleteTempFiles()
 
@@ -375,7 +375,7 @@ class TestServices(InterbaseTestBase):
             service.backup_tablespace(temp_db_path, 'MYTABLESPACE', table_space_bk_file)
             self.assertTrue(os.path.exists(table_space_bk_file))
 
-class TestServices2(InterbaseTestBase):
+class TestServices2(InterBaseTestBase):
     def setUp(self):
         self.ibk = os.path.join(IBTEST_DB_DIR_PATH, 'test_employee.ibk')
         self.ibk2 = os.path.join(IBTEST_DB_DIR_PATH, 'test_employee.ibk2')

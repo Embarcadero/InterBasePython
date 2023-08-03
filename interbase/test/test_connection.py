@@ -29,12 +29,12 @@ import os
 
 from unittest import skipUnless
 from sys import platform
-from core import InterbaseTestBase
+from core import InterBaseTestBase
 from contextlib import closing
 from constants import IBTEST_PASSWORD, IBTEST_USER, IBTEST_DB_PATH, IBTEST_HOST,\
     IBTEST_USE_EMBEDDED, IBTEST_SQL_DIALECT, IBTEST_SERVER_PUBLIC_FILE
 
-class TestConnection(InterbaseTestBase):
+class TestConnection(InterBaseTestBase):
 
     def test_connect(self):
         with closing(
