@@ -99,7 +99,7 @@ intersphinx_mapping = {'python': ('http://docs.python.org/', None)}
 # Options for HTML output
 # -----------------------
 
-html_theme = "idbtheme"
+html_theme = "interbasetheme"
 html_theme_path = ["."]
 
 # The style sheet to use for HTML and HTML Help pages. A file of that name
@@ -126,7 +126,7 @@ html_theme_path = ["."]
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['idbtheme/static']
+html_static_path = ['interbasetheme/static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -164,7 +164,7 @@ html_static_path = ['idbtheme/static']
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'IDBdoc'
+htmlhelp_basename = 'Interbasedoc'
 
 
 # Options for LaTeX output
