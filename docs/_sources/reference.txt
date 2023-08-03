@@ -1,9 +1,9 @@
 
-=============
-IDB Reference
-=============
+===================
+Interbase Reference
+===================
 
-.. module:: idb
+.. module:: interbase
    :synopsis: Python Database API 2.0 Compliant driver for InterBase
 
 Module globals
@@ -145,7 +145,7 @@ Connection
 
 .. note::
 
-   For list of methods see :class:`idb.schema.Schema`.
+   For list of methods see :class:`interbase.schema.Schema`.
 
 Cursor
 ------
@@ -231,7 +231,7 @@ TableReservation
 Internally used classes exposed to driver users
 ===============================================
 
-.. module:: idb.ibcore
+.. module:: interbase.ibcore
    :synopsis: Implementation of InterBase driver
 
 RowMapping
@@ -257,7 +257,7 @@ EventBlock
 Services
 ========
 
-.. module:: idb.services
+.. module:: interbase.services
    :synopsis: Submodule for work with InterBase Services
 
 Module globals
@@ -335,7 +335,7 @@ User
 Database schema
 ===============
 
-.. module:: idb.schema
+.. module:: interbase.schema
    :synopsis: Submodule for work with database metadata (schema)
 
 Functions
@@ -557,7 +557,7 @@ SchemaVisitor
 Utilities
 =========
 
-.. module:: idb.utils
+.. module:: interbase.utils
    :synopsis: Submodule with various classes and functions
 
 
@@ -599,17 +599,17 @@ EmbeddedAttribute
    :member-order: groupwise
    :members: 
 
-.. module:: idb.blr
+.. module:: interbase.blr
    :synopsis: Python ctypes interface to InterBase client library (BLR)
 
-.. module:: idb.ibase
+.. module:: interbase.ibase
    :synopsis: Python ctypes interface to InterBase client library
 
 ctypes interface to InterBase client library
 ============================================
 
-:ref:`ctypes <python:module-ctypes>` interface to `gds.so/dylib` and `gds32/ibclient64.dll` is defined in submodule :mod:`idb.ibase`
-and :mod:`idb.blr`.
+:ref:`ctypes <python:module-ctypes>` interface to `gds.so/dylib` and `gds32/ibclient64.dll` is defined in submodule :mod:`interbase.ibase`
+and :mod:`interbase.blr`.
 
 .. autoclass:: ibclient_API
    :member-order: groupwise
