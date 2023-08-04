@@ -6,7 +6,7 @@ Home-page: https://github.com/Embarcadero/InterBasePython
 Author: 
 Author-email:
 License: BSD
-Description: idb package is a set of InterBase RDBMS bindings for python.
+Description: interbase package is a set of InterBase RDBMS bindings for python.
              It works on Python 3.x.
         
 Keywords: InterBase

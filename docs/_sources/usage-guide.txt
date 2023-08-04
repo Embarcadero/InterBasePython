@@ -3,27 +3,27 @@
 Usage Guide
 ===========
 
-.. currentModule:: idb
+.. currentModule:: interbase
 
 Driver structure
 ================
 
 Source code is currently divided into next submodules:
 
-* :mod:`~idb.ibase` - Python :ref:`ctypes <python:module-ctypes>` interface to InterBase client library.
-* :mod:`~idb.ibcore` - Main driver source code.
-* :mod:`~idb.services` - Driver code to work with InterBase Services.
-* :mod:`~idb.schema` - Driver code to work with InterBase database schema (metadata).
-* :mod:`~idb.utils` - Various classes and functions used by driver that are generally useful.
+* :mod:`~interbase.ibase` - Python :ref:`ctypes <python:module-ctypes>` interface to InterBase client library.
+* :mod:`~interbase.ibcore` - Main driver source code.
+* :mod:`~interbase.services` - Driver code to work with InterBase Services.
+* :mod:`~interbase.schema` - Driver code to work with InterBase database schema (metadata).
+* :mod:`~interbase.utils` - Various classes and functions used by driver that are generally useful.
 
-All important data, functions, classes and constants are available directly in idb namespace, 
-so there is not need to import or use :mod:`~idb.ibcore` and :mod:`~idb.ibase` submodules directly.
-Exception is the :mod:`idb.services` submodule that contains functions and classes for work with
+All important data, functions, classes and constants are available directly in interbase namespace, 
+so there is not need to import or use :mod:`~interbase.ibcore` and :mod:`~interbase.ibase` submodules directly.
+Exception is the :mod:`interbase.services` submodule that contains functions and classes for work with
 InterBase Services. Because Services are optional, not so frequently used InterBase facility, all
 service-related code was isolated in separate submodule rather than exposed directly through
-main module namespace. Because :mod:`~idb.services` submodule contains names also used by main 
-driver (:func:`~idb.services.connect`, :class:`~idb.services.Connection`), it's advised to use 
-fully qualified names when referring to them instead importing them via `from idb.services import ...`.
+main module namespace. Because :mod:`~interbase.services` submodule contains names also used by main 
+driver (:func:`~interbase.services.connect`, :class:`~interbase.services.Connection`), it's advised to use 
+fully qualified names when referring to them instead importing them via `from interbase.services import ...`.
 
 
 .. index:: Database
@@ -31,7 +31,7 @@ fully qualified names when referring to them instead importing them via `from id
 Databases
 =========
 
-Access to the database is made available through :class:`Connection` objects. IDB provides two
+Access to the database is made available through :class:`Connection` objects. Interbase provides two
 constructors for these:
 
 * :func:`connect` - Returns `Connection` to database that already exists.
@@ -65,7 +65,7 @@ it's recommended practice to use them. Parameter `role` is needed only when you 
 
 Connection options are optional (see `InterBase Documentation`_ for details). However you may often 
 want to specify `charset`, as it directs automatic conversions of string data between client and
-server, and automatic conversions from/to unicode performed by IDB driver (see `Data handling 
+server, and automatic conversions from/to unicode performed by Interbase driver (see `Data handling 
 and conversions`_ for details).
 
 **Examples:**
@@ -75,30 +75,30 @@ and conversions`_ for details).
    # Connecting via 'dsn' 
    #
    # Local database (local protocol, if supported)
-   con = idb.connect(dsn='/path/database.idb', user='sysdba', password='pass')
+   con = interbase.connect(dsn='/path/database.interbase', user='sysdba', password='pass')
    # Local database (TCP/IP)
-   con = idb.connect(dsn='localhost:/path/database.idb', user='sysdba', password='pass')
+   con = interbase.connect(dsn='localhost:/path/database.interbase', user='sysdba', password='pass')
    # Local database (TCP/IP with port specification)
-   con = idb.connect(dsn='localhost/3050:/path/database.idb', user='sysdba', password='pass')
+   con = interbase.connect(dsn='localhost/3050:/path/database.interbase', user='sysdba', password='pass')
    # Remote database
-   con = idb.connect(dsn='host:/path/database.db', user='sysdba', password='pass')
+   con = interbase.connect(dsn='host:/path/database.db', user='sysdba', password='pass')
    # Remote database with port specification
-   con = idb.connect(dsn='host/3050:/path/database.db', user='sysdba', password='pass')
+   con = interbase.connect(dsn='host/3050:/path/database.db', user='sysdba', password='pass')
    #
    # Connecting via 'database', 'host' and 'port'
    #
    # Local database (local protocol, if supported)
-   con = idb.connect(database='/path/database.db', user='sysdba', password='pass')
+   con = interbase.connect(database='/path/database.db', user='sysdba', password='pass')
    # Local database (TCP/IP)
-   con = idb.connect(host='localhost', database='/path/database.db', user='sysdba', password='pass')
+   con = interbase.connect(host='localhost', database='/path/database.db', user='sysdba', password='pass')
    # Local database (TCP/IP with port specification)
-   con = idb.connect(host='localhost/3050', database='/path/database.db', user='sysdba', password='pass')
+   con = interbase.connect(host='localhost/3050', database='/path/database.db', user='sysdba', password='pass')
    # Remote database
-   con = idb.connect(host='myhost', database='/path/database.db', user='sysdba', password='pass')
+   con = interbase.connect(host='myhost', database='/path/database.db', user='sysdba', password='pass')
 
-IDB supports additional `Connection` class(es) that extend :class:`Connection` functionality
+Interbase supports additional `Connection` class(es) that extend :class:`Connection` functionality
 in optional (opt-in) way. For example :class:`ConnectionWithSchema` extends Connection interface with methods
-and attributes provided by :class:`~idb.schema.Schema`. New `connection_class` parameter was introduced to
+and attributes provided by :class:`~interbase.schema.Schema`. New `connection_class` parameter was introduced to
 `connect` and `create_database` to connect to/create database using different class than descends from 
 `Connection`.
 
@@ -108,8 +108,8 @@ and attributes provided by :class:`~idb.schema.Schema`. New `connection_class` p
    
    # Connecting through ConnectionWithSchema
    #
-   con = idb.connect(dsn='/path/database.idb', user='sysdba', password='pass',
-                     connection_class=idb.ConnectionWithSchema)
+   con = interbase.connect(dsn='/path/database.interbase', user='sysdba', password='pass',
+                     connection_class=interbase.ConnectionWithSchema)
 
 
 .. index::
@@ -119,14 +119,14 @@ Using `create_database`
 -----------------------
 
 The InterBase engine supports dynamic database creation via the SQL statement `CREATE DATABASE`. 
-IDB wraps it into :func:`create_database`, that returns `Connection` instance attached to newly
+Interbase wraps it into :func:`create_database`, that returns `Connection` instance attached to newly
 created database.
 
 **Example:**
 
 .. code-block:: python
 
-   con = idb.create_database("create database 'host:/temp/db.db' user 'sysdba' password 'pass'")
+   con = interbase.create_database("create database 'host:/temp/db.db' user 'sysdba' password 'pass'")
 
 .. note::
 
@@ -137,7 +137,7 @@ created database.
 
 .. code-block:: python
    
-   con = idb.create_database(dsn='/temp/db.idb',user='sysdba',password='pass',page_size=8192)
+   con = interbase.create_database(dsn='/temp/db.interbase',user='sysdba',password='pass',page_size=8192)
 
 .. index::
    pair: Database; delete
@@ -151,19 +151,19 @@ other than the one who requests the deletion, it may have supporting objects suc
 files, and it may even have dependent shadow databases. Although the database engine recognizes a 
 `DROP DATABASE` SQL statement, support for that statement is limited to the `isql` command-line 
 administration utility. However, the engine supports the deletion of databases via an API call, which 
-IDB exposes as :meth:`~Connection.drop_database` method in :class:`Connection` class. So, to drop 
+Interbase exposes as :meth:`~Connection.drop_database` method in :class:`Connection` class. So, to drop 
 a database you need to connect to it first.
 
 **Examples:**
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.create_database("create database '/temp/db.db' user 'sysdba' password 'pass'")
+   con = interbase.create_database("create database '/temp/db.db' user 'sysdba' password 'pass'")
    con.drop_database()
 
-   con = idb.connect(dsn='/path/database.idb', user='sysdba', password='pass')
+   con = interbase.connect(dsn='/path/database.interbase', user='sysdba', password='pass')
    con.drop_database()
 
 
@@ -193,9 +193,9 @@ with it:
    pair: InterBase; information about
 
 Getting information about InterBase version
-------------------------------------------
+-------------------------------------------
 
-IDB provides version strings as `Connection` properties:
+Interbase provides version strings as `Connection` properties:
 
 - :attr:`~Connection.server_version` - Legacy InterBase-friendly version string.
 
@@ -210,14 +210,14 @@ Particular InterBase features may also depend on specific support in database.
 These required structures are present automatically when database is created by particular
 engine version that needs them, but InterBase engine may typically work with
 databases created by older versions and thus with older structure, so it could be necessary to consult
-also On-Disk Structure (ODS for short) version. IDB provides this number as :attr:`Connection.ods` (float) 
+also On-Disk Structure (ODS for short) version. Interbase provides this number as :attr:`Connection.ods` (float) 
 property.
 
 **Example**:
 
 .. code-block:: python
 
-   con = idb.connect(dsn='/path/database.idb', user='sysdba', password='pass')
+   con = interbase.connect(dsn='/path/database.interbase', user='sysdba', password='pass')
    print 'InterBase version:',con.version
    print 'ODS version:',con.ods
 
@@ -228,14 +228,14 @@ Getting information about database
 ----------------------------------
 
 InterBase provides various information about server and connected database via `database_info` API call. 
-IDB surfaces this API through methods :meth:`~Connection.db_info` and :meth:`~Connection.database_info` 
+Interbase surfaces this API through methods :meth:`~Connection.db_info` and :meth:`~Connection.database_info` 
 on Connection object.
 
 :meth:`Connection.database_info` is a `very thin` wrapper around function `isc_database_info()`. 
 This method does not attempt to interpret its results except with regard to whether they are a string 
 or an integer. For example, requesting `isc_info_user_names` with the call::
 
-   con.database_info(idb.isc_info_user_names, 's')
+   con.database_info(interbase.isc_info_user_names, 's')
 
 will return a binary string containing a raw succession of length-name pairs. 
 
@@ -243,12 +243,12 @@ will return a binary string containing a raw succession of length-name pairs.
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='localhost:/temp/test.db', user='sysdba', password='pass')
+   con = interbase.connect(dsn='localhost:/temp/test.db', user='sysdba', password='pass')
 
    # Retrieving an integer info item is quite simple.
-   bytesInUse = con.database_info(idb.isc_info_current_memory, 'i')
+   bytesInUse = con.database_info(interbase.isc_info_current_memory, 'i')
 
    print 'The server is currently using %d bytes of memory.' % bytesInUse
 
@@ -259,22 +259,22 @@ will return a binary string containing a raw succession of length-name pairs.
    #
    # Often, the buffer contains a succession of length-string pairs
    # (one byte telling the length of s, followed by s itself).
-   # Function idb.ibase.ord2 is provided to convert a raw
+   # Function interbase.ibase.ord2 is provided to convert a raw
    # byte to a Python integer (see examples below).
-   buf = con.database_info(idb.isc_info_db_id, 's')
+   buf = con.database_info(interbase.isc_info_db_id, 's')
 
    # Parse the filename from the buffer.
    beginningOfFilename = 2
    # The second byte in the buffer contains the size of the database filename
    # in bytes.
-   lengthOfFilename = idb.ibase.ord2(buf[1])
+   lengthOfFilename = interbase.ibase.ord2(buf[1])
    filename = buf[beginningOfFilename:beginningOfFilename + lengthOfFilename]
 
    # Parse the host name from the buffer.
    beginningOfHostName = (beginningOfFilename + lengthOfFilename) + 1
    # The first byte after the end of the database filename contains the size
    # of the host name in bytes.
-   lengthOfHostName = idb.ibase.ord2(buf[beginningOfHostName - 1])
+   lengthOfHostName = interbase.ibase.ord2(buf[beginningOfHostName - 1])
    host = buf[beginningOfHostName:beginningOfHostName + lengthOfHostName]
 
    print 'We are connected to the database at %s on host %s.' % (filename, host)
@@ -289,7 +289,7 @@ which is high-level convenience wrapper around the `database_info()` method that
 database_info into Python-friendly objects instead of returning raw binary buffers in the case of complex 
 result types. For example, requesting `isc_info_user_names` with the call::
 
-   con.db_info(idb.isc_info_user_names)
+   con.db_info(interbase.isc_info_user_names)
 
 returns a dictionary that maps (username -> number of open connections). If SYSDBA has one open connection 
 to the database to which `con` is connected, and TEST_USER_1 has three open connections to that same database, 
@@ -301,7 +301,7 @@ the return value would be::
 
 .. code-block:: python
 
-   import idb
+   import interbase
    import os.path
 
    ###############################################################################
@@ -312,13 +312,13 @@ the return value would be::
    # number of attachments by each user to the test database.
    testUserCons = []
    for i in range(3):
-     tcon = idb.connect(dsn='localhost:/temp/test.db', user='TEST_USER_1', password='pass')
+     tcon = interbase.connect(dsn='localhost:/temp/test.db', user='TEST_USER_1', password='pass')
      testUserCons.append(tcon)
 
-   con = idb.connect(dsn='localhost:/temp/test.db', user='sysdba', password='pass')
+   con = interbase.connect(dsn='localhost:/temp/test.db', user='sysdba', password='pass')
 
    print 'Open connections to this database:'
-   print con.db_info(idb.isc_info_user_names)
+   print con.db_info(interbase.isc_info_user_names)
 
    ###############################################################################
    # Querying multiple isc_info_* items at once:
@@ -332,9 +332,9 @@ the return value would be::
    #     in file systems to which the client program lacks access.
    #   - If the database is split across multiple files, db_info includes all of
    #     them.
-   res = con.db_info([idb.isc_info_page_size, idb.isc_info_allocation])
-   pagesAllocated = res[idb.isc_info_allocation]
-   pageSize = res[idb.isc_info_page_size]
+   res = con.db_info([interbase.isc_info_page_size, interbase.isc_info_allocation])
+   pagesAllocated = res[interbase.isc_info_allocation]
+   pageSize = res[interbase.isc_info_page_size]
    print '\ndb_info indicates database size is', pageSize * pagesAllocated, 'bytes'
    print 'os.path.getsize indicates size is ', os.path.getsize(DB_FILENAME), 'bytes'
 
@@ -352,7 +352,7 @@ Sample output::
 Executing SQL Statements
 ========================
 
-IDB implements two ways for execution of SQL commands against connected database:
+Interbase implements two ways for execution of SQL commands against connected database:
 
 * :meth:`~Connection.execute_immediate` - for execution of SQL commands that don't
   return any result. 
@@ -371,7 +371,7 @@ Because `Cursor` objects always operate in context of single :class:`Connection`
 if database engine supports transactions, it supports only one transaction per connection, hence it 
 defines constructor method :meth:`~Connection.cursor` (and other transaction-related methods) as part
 of :class:`Connection` interface. However, InterBase supports multiple independent transactions per 
-connection. To conform to Python DB API, IDB uses concept of internal :attr:`~Connection.main_transaction` 
+connection. To conform to Python DB API, Interbase uses concept of internal :attr:`~Connection.main_transaction` 
 and secondary :attr:`~Connection.transactions`. Cursor constructor is primarily defined by 
 :class:`Transaction`, and Cursor constructor on `Connection` is therefore a shortcut for `main_transaction.cursor()`.
 
@@ -425,7 +425,7 @@ There are three methods how to execute SQL commands:
 .. _parameterized-statements:
 
 Parameterized statements
------------------------
+------------------------
 
 When SQL command you want to execute contains data `values`, you can either:
 
@@ -454,10 +454,10 @@ While both methods have the same results, the second one (called `parameterized`
 advantages:
 
 * You don't need to handle conversions from Python data types to strings.
-* IDB will handle all data type conversions (if necessary) from Python data types to InterBase ones,
+* Interbase will handle all data type conversions (if necessary) from Python data types to InterBase ones,
   including `None/NULL` conversion and conversion from `unicode` to `byte strings` in encoding expected 
   by server.
-* You may pass BLOB values as open `file-like` objects, and IDB will handle the transfer of BLOB value.
+* You may pass BLOB values as open `file-like` objects, and Interbase will handle the transfer of BLOB value.
 * If you'll pass exactly the same command `string` again to particular :class:`Cursor` instance,
   it will be executed more efficiently (see section about `Prepared Statements`_ for details).
 
@@ -534,8 +534,8 @@ methods for fetching these `rows`, that should satisfy all your specific needs:
 
 .. important::
 
-   IDB makes absolutely no guarantees about the return value of the `fetchone` / `fetchmany` / `fetchall` 
-   methods except that it is a sequence indexed by field position. IDB makes absolutely no guarantees about 
+   Interbase makes absolutely no guarantees about the return value of the `fetchone` / `fetchmany` / `fetchall` 
+   methods except that it is a sequence indexed by field position. Interbase makes absolutely no guarantees about 
    the return value of the `fetchonemap` / `fetchmanymap` / `fetchallmap` methods except that it is a mapping 
    of field name to field value. Therefore, client programmers should not rely on the return value being 
    an instance of a particular class or type.
@@ -544,9 +544,9 @@ methods for fetching these `rows`, that should satisfy all your specific needs:
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='/temp/test.db', user='sysdba', password='masterkey')
+   con = interbase.connect(dsn='/temp/test.db', user='sysdba', password='masterkey')
 
    cur = con.cursor()
    SELECT = "select name, year_released from languages order by year_released"
@@ -601,12 +601,12 @@ subsequent execution if particular statement should be executed repeatedly - by 
 statement for repeated execution. This may save significant amount of server processing time, and result
 in better overall performance.
 
-IDB builds on this by encapsulating all statement-related code into separate :class:`PreparedStatement` 
+Interbase builds on this by encapsulating all statement-related code into separate :class:`PreparedStatement` 
 class, and implementing :class:`Cursor` class as a wrapper around it. 
 
 .. warning::
 
-   IDB's implementation of Cursor somewhat violates the Python DB API 2.0, which requires that cursor 
+   Interbase's implementation of Cursor somewhat violates the Python DB API 2.0, which requires that cursor 
    will be unusable after call to `close`; and an Error (or subclass) exception should be raised if 
    any operation is attempted with the cursor.
 
@@ -649,9 +649,9 @@ The following program demonstrates the explicit use of `PreparedStatements`. It 
 .. code-block:: python
 
    import time
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='localhost:employee',
+   con = interbase.connect(dsn='localhost:employee',
        user='sysdba', password='masterkey'
      )
 
@@ -666,8 +666,8 @@ The following program demonstrates the explicit use of `PreparedStatements`. It 
    # Explicitly prepare the insert statement:
    psIns = cur.prep("insert into t (a,b) values (?,?)")
    print 'psIns.sql: "%s"' % psIns.sql
-   print 'psIns.statement_type == idb.isc_info_sql_stmt_insert:', (
-       psIns.statement_type == idb.isc_info_sql_stmt_insert
+   print 'psIns.statement_type == interbase.isc_info_sql_stmt_insert:', (
+       psIns.statement_type == interbase.isc_info_sql_stmt_insert
      )
    print 'psIns.n_input_params: %d' % psIns.n_input_params
    print 'psIns.n_output_params: %d' % psIns.n_output_params
@@ -707,8 +707,8 @@ The following program demonstrates the explicit use of `PreparedStatements`. It 
    print
    psSel = cur.prep("select * from t where a = ?")
    print 'psSel.sql: "%s"' % psSel.sql
-   print 'psSel.statement_type == idb.isc_info_sql_stmt_select:', (
-       psSel.statement_type == idb.isc_info_sql_stmt_select
+   print 'psSel.statement_type == interbase.isc_info_sql_stmt_select:', (
+       psSel.statement_type == interbase.isc_info_sql_stmt_select
      )
    print 'psSel.n_input_params: %d' % psSel.n_input_params
    print 'psSel.n_output_params: %d' % psSel.n_output_params
@@ -724,7 +724,7 @@ The following program demonstrates the explicit use of `PreparedStatements`. It 
 Sample output::
 
    psIns.sql: "insert into t (a,b) values (?,?)"
-   psIns.statement_type == idb.isc_info_sql_stmt_insert: True
+   psIns.statement_type == interbase.isc_info_sql_stmt_insert: True
    psIns.n_input_params: 2
    psIns.n_output_params: 0
    psIns.plan: None
@@ -735,7 +735,7 @@ Sample output::
      2037.70 insertions per second.
 
    psSel.sql: "select * from t where a = ?"
-   psSel.statement_type == idb.isc_info_sql_stmt_select: True
+   psSel.statement_type == interbase.isc_info_sql_stmt_select: True
    psSel.n_input_params: 1
    psSel.n_output_params: 2
    psSel.plan: PLAN (T INDEX (UNIQUE_T_A))
@@ -744,7 +744,7 @@ Sample output::
    Traceback (most recent call last):
      File "pstest.py", line 85, in <module>
        cur2.execute(psSel)
-        File "/home/job/python/envs/pyinterbase/idb/idb/ibcore.py", line 2623, in execute
+        File "/home/job/python/envs/pyinterbase/interbase/interbase/ibcore.py", line 2623, in execute
        raise ValueError("PreparedStatement was created by different Cursor.")
    ValueError: PreparedStatement was created by different Cursor.
 
@@ -759,15 +759,15 @@ Named Cursors
 -------------
 
 To allow the Python programmer to perform scrolling `UPDATE` or `DELETE` via the `“SELECT ... FOR UPDATE”` 
-syntax, IDB provides the read/write property :attr:`Cursor.name`.
+syntax, Interbase provides the read/write property :attr:`Cursor.name`.
 
 **Example Program:**
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='localhost:/temp/test.db', user='sysdba', password='pass')
+   con = interbase.connect(dsn='localhost:/temp/test.db', user='sysdba', password='pass')
    curScroll = con.cursor()
    curUpdate = con.cursor()
 
@@ -800,7 +800,7 @@ InterBase’s `server-side` procedural SQL syntax makes no such distinction, but
 API code) must. A result set is retrieved from a stored procedure by `SELECT'ing from the procedure, 
 whereas output parameters are retrieved with an 'EXECUTE PROCEDURE' statement`.
 
-To **retrieve a result set** from a stored procedure with IDB, use code such as this:
+To **retrieve a result set** from a stored procedure with Interbase, use code such as this:
 
 .. code-block:: python
 
@@ -852,7 +852,7 @@ aggressive about its typing model that KInterbasDB must compromise in order to r
 of programming the database engine.
 
 An example is the handling of “magic values” for date and time fields. The database engine interprets certain 
-string values such as `‘yesterday’` and `‘now’` as having special meaning in a date/time context. If IDB did 
+string values such as `‘yesterday’` and `‘now’` as having special meaning in a date/time context. If Interbase did 
 not accept strings as the values of parameters destined for storage in date/time fields, the resulting code 
 would be awkward. Consider the difference between the two Python snippets below, which insert a row containing 
 an integer and a timestamp into a table defined with the following DDL statement:
@@ -874,18 +874,18 @@ an integer and a timestamp into a table defined with the following DDL statement
    t = 'now'
    cur.execute( "insert into test_table (i, t) values (?, ?)", (i, t) )
 
-If IDB did not support weak parameter typing, string parameters that the database engine is to interpret 
+If Interbase did not support weak parameter typing, string parameters that the database engine is to interpret 
 as “magic values” would have to be rolled into the SQL statement in a separate operation from the binding 
 of the rest of the parameters, as in the first Python snippet above. Implicit conversion of parameter values 
 from strings allows the consistency evident in the second snippet, which is both more readable and more 
 general.
 
-It should be noted that IDB does not perform the conversion from string itself. Instead, it passes that 
+It should be noted that Interbase does not perform the conversion from string itself. Instead, it passes that 
 responsibility to the database engine by changing the parameter metadata structure dynamically at the last 
 moment, then restoring the original state of the metadata structure after the database engine has performed 
 the conversion.
 
-A secondary benefit is that when one uses IDB to import large amounts of data from flat files into 
+A secondary benefit is that when one uses Interbase to import large amounts of data from flat files into 
 the database, the incoming values need not necessarily be converted to their proper Python types before 
 being passed to the database engine. Eliminating this intermediate step may accelerate the import process 
 considerably, although other factors such as the chosen connection protocol and the deactivation of indexes 
@@ -921,14 +921,14 @@ transliteration between character sets when necessary.
    and client application must ensure that all textual data sent to server are encoded only in this charset
    as well.
 
-IDB helps with client side of this character set bargain by automatically converting `unicode` strings into
+Interbase helps with client side of this character set bargain by automatically converting `unicode` strings into
 `bytes/strings` encoded in connection character set, and vice versa. However, developers are still
-responsible that `non-unicode` strings passed to server are in correct encoding (because IDB makes no 
+responsible that `non-unicode` strings passed to server are in correct encoding (because Interbase makes no 
 assumption about encoding of non-unicode strings, so it can't recode them to connection charset).
 
 .. important::
 
-   In case that `connection charset` is NOT defined at all, or `NONE` charset is specified, IDB uses
+   In case that `connection charset` is NOT defined at all, or `NONE` charset is specified, Interbase uses
    :func:`locale.getpreferredencoding` to determine encoding for conversions from/to `unicode`.
 
 .. important::
@@ -937,7 +937,7 @@ assumption about encoding of non-unicode strings, so it can't recode them to con
    Values assigned to OCTETS columns are always passed `as is`, because they're basically binary streams.
    This has specific implications regarding Python version you use. Python 2.x `native strings` are `bytes`,
    suitable for such binary streams, but Python 3 native strings are `unicode`, and you would probably
-   want to use `bytes` type instead. However, IDB in this case doesn't check the value type at all, so
+   want to use `bytes` type instead. However, Interbase in this case doesn't check the value type at all, so
    you'll not be warned if you'll make a mistake and pass `unicode` to OCTETS column (unless you'll pass 
    more bytes than column may hold, or you intend to store unicode that way).
 
@@ -953,7 +953,7 @@ Rules for automatic conversion depend on Python version you use:
 
 * Native Python 3 strings are `unicode`, so conversion is fully automatic in both directions for all
   textual data, i.e. including for string values returned by InterBase Service  and `info` calls etc. 
-  When `connection charset` is not specified, IDB uses :func:`locale.getpreferredencoding` to determine 
+  When `connection charset` is not specified, Interbase uses :func:`locale.getpreferredencoding` to determine 
   encoding for conversions from/to `unicode`.
 
 .. tip::
@@ -970,7 +970,7 @@ Rules for automatic conversion depend on Python version you use:
 Working with BLOBs
 ------------------
 
-IDB uses two types of BLOB values:
+Interbase uses two types of BLOB values:
 
 * **Materialized** BLOB values are Python strings. This is the **default** type.
 * **Streamed** BLOB values are `file-like` objects.
@@ -988,7 +988,7 @@ These drawbacks are addressed by `stream` BLOBs. Using BLOBs in `stream` mode is
   `file-like` object in place of BLOB parameter. The `file-like` object must implement only the 
   :meth:`~file.read` method, as no other method is used.
 * For **output** values, you have to call :meth:`Cursor.set_stream_blob` (or :meth:`PreparedStatement.set_stream_blob`)
-  method with specification of column name(s) that should be returned as `file-like` objects. IDB then
+  method with specification of column name(s) that should be returned as `file-like` objects. Interbase then
   returns :class:`BlobReader` instance instead string in place of returned BLOB value for these column(s).
 
 The :class:`BlobReader` instance is bound to particular BLOB value returned by server, so its life time 
@@ -1019,9 +1019,9 @@ and closing the reader would cause an error.
    import os.path
    from cStringIO import StringIO
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
+   con = interbase.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
 
    cur = con.cursor()
 
@@ -1039,7 +1039,7 @@ and closing the reader would cause an error.
 
    cur.execute("delete from blob_test")
 
-   # --- Streaming mode (file-like objects for input; idb.BlobReader objects for output) ---
+   # --- Streaming mode (file-like objects for input; interbase.BlobReader objects for output) ---
 
    # Insertion:
    cur.execute("insert into blob_test values (?)", (StringIO('abcdef'),))
@@ -1055,7 +1055,7 @@ and closing the reader would cause an error.
 
    readerA = cur.fetchone()[0]
 
-   print '\nStreaming retrieval (via idb.BlobReader):'
+   print '\nStreaming retrieval (via interbase.BlobReader):'
 
    # Python "file-like" interface:
    print 'readerA.mode:    "%s"' % readerA.mode
@@ -1074,7 +1074,7 @@ Output::
    Materialized retrieval (as str):
    [('abcdef',), ('ghijklmnop',)]
 
-   Streaming retrieval (via idb.BlobReader):
+   Streaming retrieval (via interbase.BlobReader):
    readerA.mode:    "rb"
    readerA.closed:   False
    readerA.tell():   0
@@ -1090,9 +1090,9 @@ Output::
    pair: Data; ARRAY
 
 InterBase ARRAY type
--------------------
+--------------------
 
-IDB supports InterBase ARRAY data type. ARRAY values are represented as Python lists. On input, the Python 
+Interbase supports InterBase ARRAY data type. ARRAY values are represented as Python lists. On input, the Python 
 sequence (list or tuple) must be nested appropriately if the array field is multi-dimensional, and 
 the incoming sequence must not fall short of its maximum possible length (it will not be “padded” 
 implicitly–see below). On output, the lists will be nested if the database array has multiple dimensions.
@@ -1120,8 +1120,8 @@ implicitly–see below). On output, the lists will be nested if the database arr
 
 .. code-block:: python
 
-   >>> import idb
-   >>> con = idb.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
+   >>> import interbase
+   >>> con = interbase.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
    >>> cur = con.cursor()
    >>> cur.execute("select LANGUAGE_REQ from job where job_code='Eng' and job_grade=3 and job_country='Japan'")
    >>> cur.fetchone()
@@ -1131,9 +1131,9 @@ implicitly–see below). On output, the lists will be nested if the database arr
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='localhost:/temp/test.db', user='sysdba', password='pass')
+   con = interbase.connect(dsn='localhost:/temp/test.db', user='sysdba', password='pass')
    con.execute_immediate("recreate table array_table (a int[3,4])")
    con.commit()
 
@@ -1167,18 +1167,18 @@ Output::
 Transanction management
 =======================
 
-For the sake of simplicity, IDB lets the Python programmer ignore transaction management to the greatest 
+For the sake of simplicity, Interbase lets the Python programmer ignore transaction management to the greatest 
 extent allowed by the Python Database API Specification 2.0. The specification says, “if the database 
 supports an auto-commit feature, this must be initially off”. At a minimum, therefore, it is necessary to 
 call the commit method of the connection in order to persist any changes made to the database.
 
 Remember that because of ACID, every data manipulation operation in the InterBase database engine takes 
 place in the context of a transaction, including operations that are conceptually “read-only”, such as 
-a typical SELECT. The client programmer of IDB establishes a transaction implicitly by using any SQL 
+a typical SELECT. The client programmer of Interbase establishes a transaction implicitly by using any SQL 
 execution method, such as :meth:`~Connection.execute_immediate`, :meth:`Cursor.execute()`, or 
 :meth:`Cursor.callproc`.
 
-Although IDB allows the programmer to pay little attention to transactions, it also exposes the full 
+Although Interbase allows the programmer to pay little attention to transactions, it also exposes the full 
 complement of the database engine’s advanced transaction control features: `transaction parameters`_, 
 `retaining transactions`_, `savepoints`_, and `distributed transactions`_.
 
@@ -1200,7 +1200,7 @@ respond to the following methods:
     back to the start of any pending transaction. **Closing a connection without committing the changes 
     first will cause an implicit rollback to be performed.**
 
-In addition to the implicit transaction initiation required by Python Database API, IDB allows the programmer 
+In addition to the implicit transaction initiation required by Python Database API, Interbase allows the programmer 
 to start transactions explicitly via the :meth:`Connection.begin` method. Also :meth:`Connection.savepoint`
 method was added to provide support for `InterBase SAVEPOINTs`_.
 
@@ -1210,7 +1210,7 @@ simultaneously within single connection / attachment to the database. This featu
 as applications may require multiple transaction opened simultaneously to perform various tasks, 
 which would require to open multiple connections and thus consume more resources than necessary.
 
-IDB surfaces this InterBase feature by separating transaction management out from :class:`Connection` into 
+Interbase surfaces this InterBase feature by separating transaction management out from :class:`Connection` into 
 separate :class:`Transaction` objects. To comply with Python DB API 2.0 requirements, `Connection` object
 uses one `Transaction` instance as :attr:`main transaction <Connection.main_transaction>`, and delegates
 :meth:`~Connection.begin`, :meth:`~Connection.savepoint`, :meth:`~Connection.commit`, 
@@ -1226,9 +1226,9 @@ calls to it.
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
+   con = interbase.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
 
    cur = con.cursor()
 
@@ -1255,7 +1255,7 @@ calls to it.
 Auto-commit
 -----------
 
-IDB doesn't support `auto-commit` feature directly, but developers may achieve the similar result
+Interbase doesn't support `auto-commit` feature directly, but developers may achieve the similar result
 using `explicit` transaction start, taking advantage of :attr:`~Transaction.default_action` and its
 default value (`commit`).
 
@@ -1263,9 +1263,9 @@ default value (`commit`).
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
+   con = interbase.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
 
    cur = con.cursor()
 
@@ -1302,18 +1302,18 @@ only wants to set the TPB for a single transaction, he can start a transaction e
 
 For details about TPB construction, see the `InterBase API documentation`_. In particular, the `ibase.h` 
 supplied with InterBase contains all possible TPB elements – single bytes that the C API defines as 
-constants whose names begin with `isc_tpb_`. IDB makes all of those TPB constants available (under 
+constants whose names begin with `isc_tpb_`. Interbase makes all of those TPB constants available (under 
 the same names) as module-level constants. A transaction parameter buffer is handled in C as a character 
-array; IDB requires that TPBs be constructed as Python `strings` (or `bytes` for Python 3). Since 
-the constants in the `idb.isc_tpb_*` family are numbers, they can't be simply concatenated to create 
-a TPB, but you may use utility function **idb.bs(byte_array)** that accepts sequence of numbers and 
+array; Interbase requires that TPBs be constructed as Python `strings` (or `bytes` for Python 3). Since 
+the constants in the `interbase.isc_tpb_*` family are numbers, they can't be simply concatenated to create 
+a TPB, but you may use utility function **interbase.bs(byte_array)** that accepts sequence of numbers and 
 returns `string` (P2) or `bytes` (P3).
 
 For example next call returns TPB for typical `READ COMMITED` transaction:
 
 .. code-block:: python
 
-   from idb import *
+   from interbase import *
 
    TPB = bs([isc_tpb_version3, 
              isc_tpb_write, 
@@ -1328,7 +1328,7 @@ For example next call returns TPB for typical `READ COMMITED` transaction:
    `table reservation` parameters is uncomfortable as you’ll need to mix binary codes with table names 
    passed as Pascal strings (characters preceded by string length).
 
-IDB provides several predefined TPB's for convenience:
+Interbase provides several predefined TPB's for convenience:
 
 * **ISOLATION_LEVEL_READ_COMMITED**
      Read/Write READ COMMITED with `record version` and WAIT option. Isolation level with greatest 
@@ -1357,7 +1357,7 @@ IDB provides several predefined TPB's for convenience:
         InterBase threats these transactions as `pre-committed`, so they are best option **for long 
         running transactions that only read data**.
 
-        Internally IDB uses such transaction to read metadata from connected database. This internal
+        Internally Interbase uses such transaction to read metadata from connected database. This internal
         transaction is also available to developers for convenience as :attr:`Connection.query_transaction`.
 
 * **ISOLATION_LEVEL_REPEATABLE_READ** or **ISOLATION_LEVEL_SNAPSHOT**
@@ -1387,9 +1387,9 @@ IDB provides several predefined TPB's for convenience:
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
+   con = interbase.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
 
    cur = con.cursor()
 
@@ -1399,17 +1399,17 @@ IDB provides several predefined TPB's for convenience:
    com.commit()
 
    # Start using transactions in REPEATABLE READ (SNAPSHOT) isolation
-   con.default_tpb = idb.ISOLATION_LEVEL_REPEATABLE_READ
+   con.default_tpb = interbase.ISOLATION_LEVEL_REPEATABLE_READ
    con.begin()
    cur.execute('select * from JOB')
    com.commit()
 
    # Start THIS transaction as R/O READ COMMITTED
-   con.begin(idb.ISOLATION_LEVEL_READ_COMMITED_RO)
+   con.begin(interbase.ISOLATION_LEVEL_READ_COMMITED_RO)
    cur.execute('select * from JOB')
    com.commit()
 
-For cases when predefined transaction parameter blocks are not suitable for your needs, IDB offers utility
+For cases when predefined transaction parameter blocks are not suitable for your needs, Interbase offers utility
 class :class:`TPB` for convenient and safe construction of custom `tpb blocks`. Simply create instance
 of this class, set member attributes to required values and use either :meth:`rendered <TPB.render>` binary 
 tpb block or `TPB` instance itself to set `default_tpb` or as parameter to `begin()`.
@@ -1418,23 +1418,23 @@ tpb block or `TPB` instance itself to set `default_tpb` or as parameter to `begi
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
+   con = interbase.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
 
    # Use TPB to construct valid transaction parameter block
-   # from the idb.isc_tpb_* family.
-   customTPB = idb.TPB()
-   customTPB.isolation_level = idb.isc_tpb_consistency # SERIALIZABLE
-   customTPB.table_reservation["MY_TABLE"] = (idb.isc_tpb_protected, idb.isc_tpb_lock_write)
+   # from the interbase.isc_tpb_* family.
+   customTPB = interbase.TPB()
+   customTPB.isolation_level = interbase.isc_tpb_consistency # SERIALIZABLE
+   customTPB.table_reservation["MY_TABLE"] = (interbase.isc_tpb_protected, interbase.isc_tpb_lock_write)
 
    # Explicitly start a transaction with the custom TPB:
    con.begin(tpb=customTPB) 
 
    # For frequent use, it's better to use already assembled version of TPB
-   customTPB = idb.TPB()
-   customTPB.access_mode = idb.isc_tpb_read  # read only
-   customTPB.isolation_level = idb.isc_tpb_concurrency # SNAPSHOT
+   customTPB = interbase.TPB()
+   customTPB.access_mode = interbase.isc_tpb_read  # read only
+   customTPB.isolation_level = interbase.isc_tpb_concurrency # SNAPSHOT
    customTPB = customTPB.render() # Create valid block according to current values of member attributes.
 
    for x in range(1000):
@@ -1467,26 +1467,26 @@ of complex result types.
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
+   con = interbase.connect(dsn='localhost:employee',user='sysdba', password='masterkey')
 
    # Start transaction, so we can get information about it
    con.begin()
 
-   info = con.trans_info([idb.isc_info_tra_id, idb.isc_info_tra_oldest_interesting,
-                          idb.isc_info_tra_oldest_snapshot, idb.isc_info_tra_oldest_active,
-                          idb.isc_info_tra_isolation, idb.isc_info_tra_access,
-                          idb.isc_info_tra_lock_timeout])
+   info = con.trans_info([interbase.isc_info_tra_id, interbase.isc_info_tra_oldest_interesting,
+                          interbase.isc_info_tra_oldest_snapshot, interbase.isc_info_tra_oldest_active,
+                          interbase.isc_info_tra_isolation, interbase.isc_info_tra_access,
+                          interbase.isc_info_tra_lock_timeout])
 
    print info
-   print "TransactionID:", info[idb.isc_info_tra_id]
-   print "Oldest Interesting (OIT):",info[idb.isc_info_tra_oldest_interesting]
-   print "Oldest Snapshot:",info[idb.isc_info_tra_oldest_snapshot]
-   print "Oldest Active (OAT):",info[idb.isc_info_tra_oldest_active]
-   print "Isolation Level:",info[idb.isc_info_tra_isolation]
-   print "Access Mode:",info[idb.isc_info_tra_access]
-   print "Lock Timeout:",info[idb.isc_info_tra_lock_timeout]
+   print "TransactionID:", info[interbase.isc_info_tra_id]
+   print "Oldest Interesting (OIT):",info[interbase.isc_info_tra_oldest_interesting]
+   print "Oldest Snapshot:",info[interbase.isc_info_tra_oldest_snapshot]
+   print "Oldest Active (OAT):",info[interbase.isc_info_tra_oldest_active]
+   print "Isolation Level:",info[interbase.isc_info_tra_isolation]
+   print "Access Mode:",info[interbase.isc_info_tra_access]
+   print "Lock Timeout:",info[interbase.isc_info_tra_lock_timeout]
 
 Output::
 
@@ -1501,12 +1501,12 @@ Output::
 
 .. note::
 
-   Isolation level info values are available as IDB constants `isc_info_tra_consistency`, 
+   Isolation level info values are available as Interbase constants `isc_info_tra_consistency`, 
    `isc_info_tra_concurrency` and `isc_info_tra_read_committed`. For `read committed`, a tuple
    of two values is returned instead single value, where the second value is record version flag
    `isc_info_tra_no_rec_version` or `isc_info_tra_rec_version`.
 
-   Access mode values are available as IDB constants `isc_info_tra_readonly` and `isc_info_tra_readwrite`.
+   Access mode values are available as Interbase constants `isc_info_tra_readonly` and `isc_info_tra_readwrite`.
 
 
 .. index::
@@ -1545,7 +1545,7 @@ back to, without affecting the preceding work. Multiple savepoints can exist wit
 transaction, providing “multi-level undo” functionality.
 
 Although InterBase savepoints are fully supported from SQL alone via the `SAVEPOINT ‘name’` and 
-`ROLLBACK TO ‘name’` statements, IDB also exposes savepoints at the Python API level for the sake 
+`ROLLBACK TO ‘name’` statements, Interbase also exposes savepoints at the Python API level for the sake 
 of convenience.
 
 Call to method :meth:`~Transaction.savepoint` establishes a savepoint with the specified `name`. To roll back 
@@ -1554,13 +1554,13 @@ savepoint) for the optional `savepoint` parameter. If the savepoint parameter of
 specified, the active transaction is cancelled in its entirety, as required by the Python Database API 
 Specification.
 
-The following program demonstrates savepoint manipulation via the IDB API, rather than raw SQL.
+The following program demonstrates savepoint manipulation via the Interbase API, rather than raw SQL.
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='employee', user='sysdba', password='pass')
+   con = interbase.connect(dsn='employee', user='sysdba', password='pass')
    cur = con.cursor()
 
    cur.execute("recreate table test_savepoints (a integer)")
@@ -1637,14 +1637,14 @@ from this `Transaction` instance calling its :meth:`~Transaction.cursor` method,
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
-   con = idb.connect(dsn='employee', user='sysdba', password='pass')
+   con = interbase.connect(dsn='employee', user='sysdba', password='pass')
    # Cursor for main_transaction context
    cur = con.cursor()
 
    # Create new READ ONLY READ COMMITTED transaction
-   ro_transaction = con.trans(idb.ISOLATION_LEVEL_READ_COMMITED_RO)
+   ro_transaction = con.trans(interbase.ISOLATION_LEVEL_READ_COMMITED_RO)
    # and cursor 
    ro_cur = ro_transaction.cursor()
 
@@ -1671,7 +1671,7 @@ from this `Transaction` instance calling its :meth:`~Transaction.cursor` method,
 Distributed Transactions
 ------------------------
 
-Distributed transactions are transactions that span multiple databases. IDB provides this InterBase feature 
+Distributed transactions are transactions that span multiple databases. Interbase provides this InterBase feature 
 through :class:`ConnectionGroup` class. Instances of this class act as managers for :class:`Transaction`
 object that is bound to multiple connections, and to :class:`cursors <Cursor>` bound to it and connections
 participated in group. That's it, distributed transaction is fully independent from all other transactions,
@@ -1709,20 +1709,20 @@ instances acquired through :meth:`ConnectionGroup.cursor` method, or calling
 
 .. code-block:: python
 
-   import idb
+   import interbase
 
    # First database
-   con1 = idb.create_database("CREATE DATABASE 'testdb-1.idb' USER 'SYSDBA' PASSWORD 'masterkey'")
+   con1 = interbase.create_database("CREATE DATABASE 'testdb-1.interbase' USER 'SYSDBA' PASSWORD 'masterkey'")
    con1.execute_immediate("recreate table T (PK integer, C1 integer)")
    con1.commit()
 
    # Second database
-   con2 = idb.create_database("CREATE DATABASE 'testdb-2,idb' USER 'SYSDBA' PASSWORD 'masterkey'")
+   con2 = interbase.create_database("CREATE DATABASE 'testdb-2,interbase' USER 'SYSDBA' PASSWORD 'masterkey'")
    con2.execute_immediate("recreate table T (PK integer, C1 integer)")
    con2.commit()
 
    # Create connection group
-   cg = idb.ConnectionGroup((con1,con2))
+   cg = interbase.ConnectionGroup((con1,con2))
 
    # Prepare Group cursors for each connection
    gc1 = cg.cursor(con1)
@@ -1833,7 +1833,7 @@ Output::
 
 Transaction Context Manager
 ---------------------------
-IDB provides context manager :class:`TransactionContext` that allows automatic transaction
+Interbase provides context manager :class:`TransactionContext` that allows automatic transaction
 management using :ref:`WITH`. It can work with any object that supports `begin()`, `commit()` and 
 `rollback()` methods, i.e. :class:`Connection`, :class:`ConnectionGroup` or :class:`Transaction`.
 
@@ -1844,7 +1844,7 @@ Examples:
 
 .. sourcecode:: python
 
-   con = idb.connect(dsn='employee',user='sysdba',password='masterkey')
+   con = interbase.connect(dsn='employee',user='sysdba',password='masterkey')
 
    # Uses default main transaction
    with TransactionContext(con):
@@ -1857,8 +1857,8 @@ Examples:
       cur.execute("insert into T (PK,C1) values (2,'AAA')")
 
    # Uses connection group (distributed transaction)
-   con2 = idb.connect(dsn='remote:employee',user='sysdba',password='masterkey')
-   cg = idb.ConnectionGroup((con,con2))
+   con2 = interbase.connect(dsn='remote:employee',user='sysdba',password='masterkey')
+   cg = interbase.ConnectionGroup((con,con2))
    with TransactionContext(cg):
       cur1 = cg.cursor(con)
       cur2 = cg.cursor(con2)
@@ -1960,13 +1960,13 @@ How events are exposed
 #. Client Process ("Send me a message when an event occurs.")
 
    .. note:: If you don't care about the gory details of event notification,
-             skip to the section that describes IDB's Python-level event handling 
+             skip to the section that describes Interbase's Python-level event handling 
              API. 
 
    The InterBase C client library offers two forms of event notification.
    The first form is *synchronous* notification, by way of the function
    :c:func:`isc_wait_for_event()`. This form is admirably simple for a C programmer
-   to use, but is inappropriate as a basis for IDB's event support,
+   to use, but is inappropriate as a basis for Interbase's event support,
    chiefly because it's not sophisticated enough to serve as the basis for
    a comfortable Python-level API. The other form of event notification
    offered by the database client library is *asynchronous*, by way of the
@@ -1997,7 +1997,7 @@ How events are exposed
 API for Python developers
 -------------------------
 
-The IDB database event API is comprised of the following: the method :meth:`Connection.event_conduit` 
+The Interbase database event API is comprised of the following: the method :meth:`Connection.event_conduit` 
 and the class :class:`EventConduit`.
 
 The :class:`EventConduit` class serve as "conduit" through which database event notifications will flow 
@@ -2042,12 +2042,12 @@ If you want to drop notifications accumulated so far by conduit, call :meth:`Eve
 
 .. code-block:: python
 
-   import idb
+   import interbase
    import threading
    import time
 
    # Prepare database
-   con = idb.create_database("CREATE DATABASE 'event_test.idb' USER 'SYSDBA' PASSWORD 'masterkey'")
+   con = interbase.create_database("CREATE DATABASE 'event_test.interbase' USER 'SYSDBA' PASSWORD 'masterkey'")
    con.execute_immediate("CREATE TABLE T (PK Integer, C1 Integer)")
    con.execute_immediate("""CREATE TRIGGER EVENTS_AU FOR T ACTIVE
    BEFORE UPDATE POSITION 0
@@ -2151,7 +2151,7 @@ Output::
    Flush events
    {'insert_1': 1}
 
-.. currentModule:: idb.services
+.. currentModule:: interbase.services
 
 .. index:: Services
 
@@ -2171,15 +2171,15 @@ functionality of the traditional command-line tools.
 
 The native Services API, though consistent, is much lower-level than a Pythonic API. If the native version 
 were exposed directly, accomplishing a given task would probably require more Python code than scripting 
-the traditional command-line tools. For this reason, IDB presents its own abstraction over the native API 
-via the :mod:`idb.services` module.
+the traditional command-line tools. For this reason, Interbase presents its own abstraction over the native API 
+via the :mod:`interbase.services` module.
 
 Services API Connections
 ------------------------
 
 All Services API operations are performed in the context of a `connection` to a specific database server, 
-represented by the :class:`idb.services.Connection` class. Similarly to database connections, IDB provides
-:func:`~idb.services.connect()` constructor function to create such connections.
+represented by the :class:`interbase.services.Connection` class. Similarly to database connections, Interbase provides
+:func:`~interbase.services.connect()` constructor function to create such connections.
 
 This constructor has three keyword parameters:
 
@@ -2190,11 +2190,11 @@ This constructor has three keyword parameters:
 Since maintenance operations are most often initiated by an administrative user on the same computer as 
 the database server, `host` defaults to the local computer, and `user` defaults to `SYSDBA`.
 
-The three calls to :func:`idb.services.connect()` in the following program are equivalent:
+The three calls to :func:`interbase.services.connect()` in the following program are equivalent:
 
 .. code-block:: python
 
-   from idb import services
+   from interbase import services
 
    con = services.connect(password='masterkey')
    con = services.connect(user='sysdba', password='masterkey')
@@ -2205,7 +2205,7 @@ The three calls to :func:`idb.services.connect()` in the following program are e
    Like database connections, it's good practice to :meth:`~Connection.close` them when you don't need them
    anymore.
 
-:class:`~idb.services.Connection` object provides number of methods that could be divided into several groups:
+:class:`~interbase.services.Connection` object provides number of methods that could be divided into several groups:
 
 * `Server Configuration and State`_: To get information about server configuration, active attachments or
   users, or to get content of server log.
@@ -2228,12 +2228,12 @@ Server Configuration and State
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> print con.get_service_manager_version()
       2
 
-   `idb.services` is a thick wrapper of the Services API that can shield its users from changes in 
+   `interbase.services` is a thick wrapper of the Services API that can shield its users from changes in 
    the underlying C API, so this method is unlikely to be useful to the typical Python client programmer.
 
 :meth:`~Connection.get_server_version()`
@@ -2242,13 +2242,13 @@ Server Configuration and State
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> print con.get_server_version()
 
    At first glance, this method appears to duplicate the functionality of the 
-   :attr:`idb.Connection.server_version` property, but when working with InterBase, there is a difference. 
-   :attr:`idb.Connection.server_version` is based on a C API call (`isc_database_info()`) that existed long 
+   :attr:`interbase.Connection.server_version` property, but when working with InterBase, there is a difference. 
+   :attr:`interbase.Connection.server_version` is based on a C API call (`isc_database_info()`) that existed long 
    before the introduction of the Services API. Some programs written before the advent of InterBase test 
    the version number in the return value of `isc_database_info()`, and refuse to work if it indicates that 
    the server is too old.
@@ -2258,10 +2258,10 @@ Server Configuration and State
 
    .. code-block:: python
 
-      import idb
-      con = idb.connect(dsn='employee', user='sysdba', password='masterkey')
+      import interbase
+      con = interbase.connect(dsn='employee', user='sysdba', password='masterkey')
       print 'Interbase-compatible version string:', con.server_version
-      svcCon = idb.services.connect(password='masterkey')
+      svcCon = interbase.services.connect(password='masterkey')
       print 'Actual InterBase version string:     ', svcCon.get_server_version()
 
 
@@ -2271,7 +2271,7 @@ Server Configuration and State
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> print con.get_architecture()
       InterBase/linux AMD64
@@ -2282,7 +2282,7 @@ Server Configuration and State
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> print con.get_home_directory()
       /opt/interbase/
@@ -2294,10 +2294,10 @@ Server Configuration and State
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> print con.get_security_database_path()
-      /opt/interbase/security2.idb
+      /opt/interbase/security2.interbase
 
 :meth:`~Connection.get_lock_file_directory()`
 
@@ -2305,7 +2305,7 @@ Server Configuration and State
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> print con.get_lock_file_directory()
       /tmp/interbase/
@@ -2313,7 +2313,7 @@ Server Configuration and State
 :meth:`~Connection.get_server_capabilities()`
 
    Returns tuple of capability info codes for each capability reported by InterBase server. Following
-   constants are defined in :mod:`idb.services` for convenience:
+   constants are defined in :mod:`interbase.services` for convenience:
 
       * :data:`CAPABILITY_MULTI_CLIENT`
       * :data:`CAPABILITY_REMOTE_HOP`
@@ -2324,13 +2324,13 @@ Server Configuration and State
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> print con.get_server_capabilities()
       (2L, 4L, 512L, 256L)
-      >>> idb.services.CAPABILITY_MULTI_CLIENT in con.get_server_capabilities()
+      >>> interbase.services.CAPABILITY_MULTI_CLIENT in con.get_server_capabilities()
       True
-      >>> idb.services.CAPABILITY_QUOTED_FILENAME in con.get_server_capabilities()
+      >>> interbase.services.CAPABILITY_QUOTED_FILENAME in con.get_server_capabilities()
       False
 
 :meth:`~Connection.get_message_file_directory()`
@@ -2340,7 +2340,7 @@ Server Configuration and State
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> print con.get_message_file_directory()
       /opt/interbase/
@@ -2348,15 +2348,15 @@ Server Configuration and State
 :meth:`~Connection.get_connection_count()`
 
    Returns the number of active connections to databases managed by the server. This count only includes 
-   database connections (such as open instances of :class:`idb.Connection`), not services manager connections 
-   (such as open instances of :class:`idb.services.Connection`).
+   database connections (such as open instances of :class:`interbase.Connection`), not services manager connections 
+   (such as open instances of :class:`interbase.services.Connection`).
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
-      >>> db1 = idb.connect(dsn='employee',user='sysdba',password='masterkey')
-      >>> db2 = idb.connect(dsn='employee',user='sysdba',password='masterkey')
+      >>> db1 = interbase.connect(dsn='employee',user='sysdba',password='masterkey')
+      >>> db2 = interbase.connect(dsn='employee',user='sysdba',password='masterkey')
       >>> print con.get_connection_count()
       2
 
@@ -2367,12 +2367,12 @@ Server Configuration and State
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
-      >>> db1 = idb.connect(dsn='employee',user='sysdba',password='masterkey')
-      >>> db2 = idb.connect(dsn='employee',user='sysdba',password='masterkey')
+      >>> db1 = interbase.connect(dsn='employee',user='sysdba',password='masterkey')
+      >>> db2 = interbase.connect(dsn='employee',user='sysdba',password='masterkey')
       >>> print con.get_attached_database_names()
-      ['/opt/interbase/examples/empbuild/employee.idb']
+      ['/opt/interbase/examples/empbuild/employee.interbase']
 
 :meth:`~Connection.get_log()`
 
@@ -2383,7 +2383,7 @@ Server Configuration and State
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> con.get_log()
       >>> log = con.readlines()
@@ -2397,7 +2397,7 @@ Database options
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> con.set_default_page_buffers('employee',100)
       
@@ -2407,7 +2407,7 @@ Database options
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> con.set_sweep_interval('employee',100000)
       
@@ -2417,7 +2417,7 @@ Database options
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       # Use all space
       >>> con.set_reserve_page_space('employee',False)
@@ -2425,14 +2425,14 @@ Database options
 :meth:`~Connection.set_write_mode`
 
    Sets Disk Write Mode: Sync (forced writes) or Async (buffered). Following constants are defined 
-   in :mod:`idb.services` for convenience:
+   in :mod:`interbase.services` for convenience:
 
-   * :data:`~idb.services.WRITE_FORCED`
-   * :data:`~idb.services.WRITE_BUFFERED`
+   * :data:`~interbase.services.WRITE_FORCED`
+   * :data:`~interbase.services.WRITE_BUFFERED`
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       # Disable Forced Writes
       >>> con.set_write_mode('employee',services.WRITE_BUFFERED)
@@ -2440,14 +2440,14 @@ Database options
 :meth:`~Connection.set_access_mode`
 
    Sets Database Access mode: Read Only or Read/Write. Following constants are defined 
-   in :mod:`idb.services` for convenience:
+   in :mod:`interbase.services` for convenience:
 
-   * :data:`~idb.services.ACCESS_READ_WRITE`
-   * :data:`~idb.services.ACCESS_READ_ONLY`
+   * :data:`~interbase.services.ACCESS_READ_WRITE`
+   * :data:`~interbase.services.ACCESS_READ_ONLY`
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       # Set database to R/O mode
       >>> con.set_access_mode('employee',services.ACCESS_READ_ONLY)
@@ -2464,7 +2464,7 @@ Database options
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       # Use SQL dialect 1
       >>> con.set_sql_dialect('employee',1)
@@ -2502,7 +2502,7 @@ Database maintenance
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> con.get_statistics('employee')
       >>> stat_report = con.readlines()
@@ -2522,7 +2522,7 @@ Database maintenance
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> con.backup('employee', '/home/data/employee.ibk', metadata_only=True, collect_garbage=False)
       >>> backup_report = con.readlines()
@@ -2542,25 +2542,25 @@ Database maintenance
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
-      >>> con.restore('/home/data/employee.ibk', '/home/data/empcopy.idb')
+      >>> con.restore('/home/data/employee.ibk', '/home/data/empcopy.interbase')
       >>> restore_report = con.readlines()
 
 :meth:`~Connection.bring_online`
 
    Bring previously shut down database back online. Following constants are defined in 
-   :mod:`idb.services` for convenience:
+   :mod:`interbase.services` for convenience:
 
    For on-line mode:
 
-   * :data:`~idb.services.SHUT_NORMAL`
-   * :data:`~idb.services.SHUT_SINGLE`
-   * :data:`~idb.services.SHUT_MULTI` 
+   * :data:`~interbase.services.SHUT_NORMAL`
+   * :data:`~interbase.services.SHUT_SINGLE`
+   * :data:`~interbase.services.SHUT_MULTI` 
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       # Enable multi-user maintenance
       >>> con.bring_online('employee', services.SHUT_MULTI)
@@ -2581,7 +2581,7 @@ Database maintenance
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> con.sweep('empoyee')
 
@@ -2593,7 +2593,7 @@ Database maintenance
  
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       # Just validate
       >>> con.repair('empoyee', ignore_checksums=True, read_only_validation=True)
@@ -2610,7 +2610,7 @@ User maintenance
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> users = con.get_users()
       >>> for user in users:
@@ -2629,7 +2629,7 @@ User maintenance
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> user = services.User('NewUser')
       >>> user.password = 'secret'
@@ -2650,7 +2650,7 @@ User maintenance
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> user = services.User('SYSDBA')
       # Change pasword
@@ -2664,7 +2664,7 @@ User maintenance
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> con.remove_user('NewUser')
 
@@ -2675,7 +2675,7 @@ User maintenance
 
    .. code-block:: python
 
-      >>> from idb import services
+      >>> from interbase import services
       >>> con = services.connect(host='localhost', user='sysdba', password='masterkey')
       >>> con.user_exists('NewUser')
       False
@@ -2684,7 +2684,7 @@ Text ouput from Services
 ------------------------
 
 Some services like `backup` or `trace` may return significant amount of text. Rather than return the whole
-text as single string value by methods that provide access to these services, IDB isolated the transfer 
+text as single string value by methods that provide access to these services, Interbase isolated the transfer 
 process to separate methods:
 
 * :meth:`~Connection.readline` - Similar to :meth:`file.readline`, returns next line of output from Service.
@@ -2711,8 +2711,8 @@ process to separate methods:
 
 .. code-block:: python
 
-   import idb
-   svc = idb.services.connect(password='masterkey')
+   import interbase
+   svc = interbase.services.connect(password='masterkey')
 
    print "Fetch materialized"
    print "=================="
@@ -2806,22 +2806,22 @@ represent database schema is stored in set of system tables present in every dat
 can query these tables to get information about these objects and their relations. But querying system
 tables is inconvenient, as it requires good knowledge how this information is structured and requires 
 significant amount of Python code. Changes in system tables between InterBase versions further add to this
-complexity. Hence IDB provides set of classes (isolated in separate module :mod:`idb.schema`) that 
+complexity. Hence Interbase provides set of classes (isolated in separate module :mod:`interbase.schema`) that 
 transform information stored in system tables into set of Python objects that surface the vital information
 in meaningful way, and additionally provide set of methods for most commonly used operations or checks.
 
 Database schema could be accessed in three different ways, each suitable for different use case:
 
-- By direct creation of :class:`idb.schema.Schema` instances that are then :meth:`binded <idb.schema.Schema.bind>` 
+- By direct creation of :class:`interbase.schema.Schema` instances that are then :meth:`binded <interbase.schema.Schema.bind>` 
   to particular :class:`Connection` instance. This method is best if you want to work with schema only 
   occasionally, or you want to keep connections as lightweight as possible.
-- Accessing :attr:`idb.Connection.schema` property. This method is more convenient than previous one, and 
-  represents a compromise between convenience and resource consumption because :class:`~idb.schem.Schema` instance is not created until first reference and is managed by connection itself. Individual metadata
+- Accessing :attr:`interbase.Connection.schema` property. This method is more convenient than previous one, and 
+  represents a compromise between convenience and resource consumption because :class:`~interbase.schem.Schema` instance is not created until first reference and is managed by connection itself. Individual metadata
   objects are not loaded from system tables until first reference.
-- Using :class:`~idb.ConnectionWithSchema` instead :class:`Connection` by specifying 
-  `connection_class=ConnectionWithSchema` parameter to :func:`~idb.connect` or :func:`~idb.create_database`.
+- Using :class:`~interbase.ConnectionWithSchema` instead :class:`Connection` by specifying 
+  `connection_class=ConnectionWithSchema` parameter to :func:`~interbase.connect` or :func:`~interbase.create_database`.
   This `Connection` descendant loads all database metadata immediately and provides directly all attributes 
-  and methods provided by :class:`~idb.schema.Schema` class. This method is most suitable in case you want
+  and methods provided by :class:`~interbase.schema.Schema` class. This method is most suitable in case you want
   to work with database metadata extensively.
 
 **Examples:**
@@ -2830,9 +2830,9 @@ Database schema could be accessed in three different ways, each suitable for dif
 
 .. code-block:: python
 
-   >>> import idb
-   >>> con = idb.connect(dsn='employee',user='sysdba', password='masterkey')
-   >>> schema = idb.schema.Schema()
+   >>> import interbase
+   >>> con = interbase.connect(dsn='employee',user='sysdba', password='masterkey')
+   >>> schema = interbase.schema.Schema()
    >>> schema.bind(con)
    >>> [t.name for t in schema.tables]
    ['COUNTRY', 'JOB', 'DEPARTMENT', 'EMPLOYEE', 'SALES', 'PROJECT', 'EMPLOYEE_PROJECT', 'PROJ_DEPT_BUDGET', 
@@ -2842,8 +2842,8 @@ Database schema could be accessed in three different ways, each suitable for dif
 
 .. code-block:: python
 
-   >>> import idb
-   >>> con = idb.connect(dsn='employee',user='sysdba', password='masterkey')
+   >>> import interbase
+   >>> con = interbase.connect(dsn='employee',user='sysdba', password='masterkey')
    >>> [t.name for t in con.schema.tables]
    ['COUNTRY', 'JOB', 'DEPARTMENT', 'EMPLOYEE', 'SALES', 'PROJECT', 'EMPLOYEE_PROJECT', 'PROJ_DEPT_BUDGET', 
     'SALARY_HISTORY', 'CUSTOMER']
@@ -2852,19 +2852,19 @@ Database schema could be accessed in three different ways, each suitable for dif
 
 .. code-block:: python
 
-   >>> import idb
-   >>> con = idb.connect(dsn='employee',user='sysdba', password='masterkey',
-       connection_class=idb.ConnectionWithSchema)
+   >>> import interbase
+   >>> con = interbase.connect(dsn='employee',user='sysdba', password='masterkey',
+       connection_class=interbase.ConnectionWithSchema)
    >>> [t.name for t in con.tables]
    ['COUNTRY', 'JOB', 'DEPARTMENT', 'EMPLOYEE', 'SALES', 'PROJECT', 'EMPLOYEE_PROJECT', 'PROJ_DEPT_BUDGET', 
     'SALARY_HISTORY', 'CUSTOMER']
 
 .. note::
 
-   Individual metadata information (i.e. information about :attr:`domains <idb.schema.Schema.domains>`, :attr:`tables <idb.schema.Schema.tables>` etc.) is loaded on first access and cached for further reference until it's :meth:`cleared <idb.schema.Schema.clear>` or :meth:`reload <idb.schema.Schema.reload>` is
+   Individual metadata information (i.e. information about :attr:`domains <interbase.schema.Schema.domains>`, :attr:`tables <interbase.schema.Schema.tables>` etc.) is loaded on first access and cached for further reference until it's :meth:`cleared <interbase.schema.Schema.clear>` or :meth:`reload <interbase.schema.Schema.reload>` is
    requested.
 
-   Because once loaded information is cached, it's good to :meth:`clear <idb.schema.Schema.clear>` it
+   Because once loaded information is cached, it's good to :meth:`clear <interbase.schema.Schema.clear>` it
    when it's no longer needed to conserve memory.
 
 
@@ -2872,69 +2872,69 @@ Database schema could be accessed in three different ways, each suitable for dif
 Available information
 ---------------------
 
-The :class:`~idb.schema.Schema` provides information about:
+The :class:`~interbase.schema.Schema` provides information about:
 
-- **Database:** :attr:`Owner name <idb.schema.Schema.owner_name>`, 
-  :attr:`default character set <idb.schema.Schema.default_character_set>`, 
-  :attr:`description <idb.schema.Schema.description>`, 
-  :attr:`security class <idb.schema.Schema.security_class>` and whether database consist 
-  from :meth:`single or multiple files <idb.schema.Schema.ismultifile>`.
-- **Facilities:** Available :attr:`character sets <idb.schema.Schema.character_sets>`, 
-  :attr:`collations <idb.schema.Schema.collations>`, database :attr:`files <idb.schema.Schema.files>` and 
-  :attr:`shadows <idb.schema.Schema.shadows>`.
-- **User database objects:** :attr:`exceptions <idb.schema.Schema.exceptions>`, 
-  :attr:`generators <idb.schema.Schema.generators>`, :attr:`domains <idb.schema.Schema.domains>`, 
-  :attr:`tables <idb.schema.Schema.tables>` and their :attr:`constraints <idb.schema.Schema.constraints>`, 
-  :attr:`indices <idb.schema.Schema.indices>`, :attr:`views <idb.schema.Schema.views>`, 
-  :attr:`triggers <idb.schema.Schema.triggers>`, :attr:`procedures <idb.schema.Schema.procedures>`, 
-  user :attr:`roles <idb.schema.Schema.roles>` and :attr:`user defined functions <idb.schema.Schema.functions>`.
-- **System database objects:** :attr:`generators <idb.schema.Schema.sysgenerators>`, 
-  :attr:`domains <idb.schema.Schema.sysdomains>`, :attr:`tables <idb.schema.Schema.systables>` and their 
-  constraints,  :attr:`indices <idb.schema.Schema.sysindices>`, :attr:`views <idb.schema.Schema.sysviews>`, 
-  :attr:`triggers <idb.schema.Schema.systriggers>`, :attr:`procedures <idb.schema.Schema.sysprocedures>` 
-  and :attr:`functions <idb.schema.Schema.sysfunctions>`.
+- **Database:** :attr:`Owner name <interbase.schema.Schema.owner_name>`, 
+  :attr:`default character set <interbase.schema.Schema.default_character_set>`, 
+  :attr:`description <interbase.schema.Schema.description>`, 
+  :attr:`security class <interbase.schema.Schema.security_class>` and whether database consist 
+  from :meth:`single or multiple files <interbase.schema.Schema.ismultifile>`.
+- **Facilities:** Available :attr:`character sets <interbase.schema.Schema.character_sets>`, 
+  :attr:`collations <interbase.schema.Schema.collations>`, database :attr:`files <interbase.schema.Schema.files>` and 
+  :attr:`shadows <interbase.schema.Schema.shadows>`.
+- **User database objects:** :attr:`exceptions <interbase.schema.Schema.exceptions>`, 
+  :attr:`generators <interbase.schema.Schema.generators>`, :attr:`domains <interbase.schema.Schema.domains>`, 
+  :attr:`tables <interbase.schema.Schema.tables>` and their :attr:`constraints <interbase.schema.Schema.constraints>`, 
+  :attr:`indices <interbase.schema.Schema.indices>`, :attr:`views <interbase.schema.Schema.views>`, 
+  :attr:`triggers <interbase.schema.Schema.triggers>`, :attr:`procedures <interbase.schema.Schema.procedures>`, 
+  user :attr:`roles <interbase.schema.Schema.roles>` and :attr:`user defined functions <interbase.schema.Schema.functions>`.
+- **System database objects:** :attr:`generators <interbase.schema.Schema.sysgenerators>`, 
+  :attr:`domains <interbase.schema.Schema.sysdomains>`, :attr:`tables <interbase.schema.Schema.systables>` and their 
+  constraints,  :attr:`indices <interbase.schema.Schema.sysindices>`, :attr:`views <interbase.schema.Schema.sysviews>`, 
+  :attr:`triggers <interbase.schema.Schema.systriggers>`, :attr:`procedures <interbase.schema.Schema.sysprocedures>` 
+  and :attr:`functions <interbase.schema.Schema.sysfunctions>`.
 - **Relations between objects:** Through direct links between metadata objects and 
-  :attr:`dependencies <idb.schema.Schema.dependencies>`.
-- **Privileges:** :attr:`All <idb.schema.Schema.privileges>` privileges, or privileges granted for specific 
-  :attr:`table <idb.schema.Table.privileges>`, :attr:`table column <idb.schema.TableColumn.privileges>`, 
-  :attr:`view <idb.schema.View.privileges>`, :attr:`view column <idb.schema.ViewColumn.privileges>`, 
-  :attr:`procedure <idb.schema.Procedure.privileges>` or :attr:`role <idb.schema.Role.privileges>`. It's also
-  possible to get all privileges :meth:`granted to <idb.schema.Schema.get_privileges_of>` specific user, role, 
+  :attr:`dependencies <interbase.schema.Schema.dependencies>`.
+- **Privileges:** :attr:`All <interbase.schema.Schema.privileges>` privileges, or privileges granted for specific 
+  :attr:`table <interbase.schema.Table.privileges>`, :attr:`table column <interbase.schema.TableColumn.privileges>`, 
+  :attr:`view <interbase.schema.View.privileges>`, :attr:`view column <interbase.schema.ViewColumn.privileges>`, 
+  :attr:`procedure <interbase.schema.Procedure.privileges>` or :attr:`role <interbase.schema.Role.privileges>`. It's also
+  possible to get all privileges :meth:`granted to <interbase.schema.Schema.get_privileges_of>` specific user, role, 
   procedure, trigger or view.
 
 Metadata objects
 ----------------
 
 Schema information is presented as Python objects of various classes with common parent class 
-:class:`~idb.schema.BaseSchemaItem` (except :class:`~idb.schema.Schema` itself), that defines several
+:class:`~interbase.schema.BaseSchemaItem` (except :class:`~interbase.schema.Schema` itself), that defines several
 common attributes and methods:
 
 Attributes:
 
-- :attr:`~idb.schema.BaseSchemaItem.name`: Name of database object or None if object doesn't have a name.
-- :attr:`~idb.schema.BaseSchemaItem.description`: Description (documentation text) for object or None if 
+- :attr:`~interbase.schema.BaseSchemaItem.name`: Name of database object or None if object doesn't have a name.
+- :attr:`~interbase.schema.BaseSchemaItem.description`: Description (documentation text) for object or None if 
   object doesn't have a description.
-- :attr:`~idb.schema.BaseSchemaItem.actions`: List of supported SQL operations on schema object instance.
+- :attr:`~interbase.schema.BaseSchemaItem.actions`: List of supported SQL operations on schema object instance.
 
 Methods:
 
-- :meth:`~idb.schema.BaseSchemaItem.accept_visitor`: :ref:`Visitor Pattern support <visitor-pattern-support>`.
-- :meth:`~idb.schema.BaseSchemaItem.issystemobject`: Returns True if this database object is system object.
-- :meth:`~idb.schema.BaseSchemaItem.get_quoted_name`: Returns quoted (if necessary) name of database object.
-- :meth:`~idb.schema.BaseSchemaItem.get_dependents`: Returns list of all database objects that 
+- :meth:`~interbase.schema.BaseSchemaItem.accept_visitor`: :ref:`Visitor Pattern support <visitor-pattern-support>`.
+- :meth:`~interbase.schema.BaseSchemaItem.issystemobject`: Returns True if this database object is system object.
+- :meth:`~interbase.schema.BaseSchemaItem.get_quoted_name`: Returns quoted (if necessary) name of database object.
+- :meth:`~interbase.schema.BaseSchemaItem.get_dependents`: Returns list of all database objects that 
   :ref:`depend <object-dependencies>` on this one.
-- :meth:`~idb.schema.BaseSchemaItem.get_dependencies`: Returns list of database objects that this object 
+- :meth:`~interbase.schema.BaseSchemaItem.get_dependencies`: Returns list of database objects that this object 
   :ref:`depend <object-dependencies>` on.
-- :meth:`~idb.schema.BaseSchemaItem.get_sql_for`: Returns :ref:`SQL command string <sql-oprations>` for 
+- :meth:`~interbase.schema.BaseSchemaItem.get_sql_for`: Returns :ref:`SQL command string <sql-oprations>` for 
   specified action on database object.
 
-There are next schema objects: :class:`~idb.schema.Collation`, :class:`~idb.schema.CharacterSet`,
-:class:`~idb.schema.DatabaseException`, :class:`~idb.schema.Domain`,
-:class:`~idb.schema.Index`, :class:`~idb.schema.Table`, :class:`~idb.schema.TableColumn`,
-:class:`~idb.schema.Constraint`, :class:`~idb.schema.View`, :class:`~idb.schema.ViewColumn`, 
-:class:`~idb.schema.Trigger`, :class:`~idb.schema.Procedure`, :class:`~idb.schema.ProcedureParameter`,
-:class:`~idb.schema.Function`, :class:`~idb.schema.FunctionArgument`, :class:`~idb.schema.Role`,
-:class:`~idb.schema.Dependency`, :class:`~idb.schema.DatabaseFile` and :class:`~idb.schema.Shadow`.
+There are next schema objects: :class:`~interbase.schema.Collation`, :class:`~interbase.schema.CharacterSet`,
+:class:`~interbase.schema.DatabaseException`, :class:`~interbase.schema.Domain`,
+:class:`~interbase.schema.Index`, :class:`~interbase.schema.Table`, :class:`~interbase.schema.TableColumn`,
+:class:`~interbase.schema.Constraint`, :class:`~interbase.schema.View`, :class:`~interbase.schema.ViewColumn`, 
+:class:`~interbase.schema.Trigger`, :class:`~interbase.schema.Procedure`, :class:`~interbase.schema.ProcedureParameter`,
+:class:`~interbase.schema.Function`, :class:`~interbase.schema.FunctionArgument`, :class:`~interbase.schema.Role`,
+:class:`~interbase.schema.Dependency`, :class:`~interbase.schema.DatabaseFile` and :class:`~interbase.schema.Shadow`.
 
 .. _visitor-pattern-support:
 
@@ -2943,12 +2943,12 @@ Visitor Pattern support
 
 `Visitor Pattern`_ is particularly useful when you need to process various objects that need special handling
 in common algorithm (for example display information about them or generate SQL commands to create them in new 
-database). Each metadata object (including :class:`~idb.schema.Schema`) supports 
-:meth:`~idb.schema.BaseSchemaItem.accept_visitor` method that calls `class-specific` method on object passed 
-to it as parameter. This method name always starts with 'visit'. For example :class:`~idb.schema.Table` object 
+database). Each metadata object (including :class:`~interbase.schema.Schema`) supports 
+:meth:`~interbase.schema.BaseSchemaItem.accept_visitor` method that calls `class-specific` method on object passed 
+to it as parameter. This method name always starts with 'visit'. For example :class:`~interbase.schema.Table` object 
 calls `visitTable`. This 'visit*' method has one parameter - object instance that calls it.
 
-IDB provides skeleton implementation for :class:`schema Visitor object <idb.schema.SchemaVisitor>` that
+Interbase provides skeleton implementation for :class:`schema Visitor object <interbase.schema.SchemaVisitor>` that
 implements all `visit*` methods called by schema classes as call to method `default_action` that does 
 nothing.
 
@@ -2958,9 +2958,9 @@ before it could be dropped.
 
 .. code-block:: python
 
-   import idb
+   import interbase
    # Object dropper
-   class ObjectDropper(idb.schema.SchemaVisitor):
+   class ObjectDropper(interbase.schema.SchemaVisitor):
        def __init__(self):
            self.seen = []
        def drop(self,obj):
@@ -2998,7 +2998,7 @@ before it could be dropped.
  
    # Sample use:
 
-   con = idb.connect(dsn='employee',user='sysdba', password='masterkey')
+   con = interbase.connect(dsn='employee',user='sysdba', password='masterkey')
    table = con.schema.get_table('JOB')
    dropper = ObjectDropper()
    dropper.drop(table)
@@ -3020,11 +3020,11 @@ schema objects. Besides close relations InterBase also uses `dependencies`, that
 dependency between otherwise independent metadata objects. For example stored procedure can call other stored
 procedures, define its parameters using domains or work with tables or views. Removing or changing these
 objects may/will cause the procedure to stop working correctly, so InterBase tracks these dependencies.
-IDB surfaces these dependencies as :class:`~idb.schema.Dependency` schema objects, and all schema objects 
-have :meth:`~idb.schema.BaseSchemaItem.get_dependents` and :meth:`~idb.schema.BaseSchemaItem.get_dependencies` 
-methods to get list of :class:`~idb.schema.Dependency` instances that describe these dependencies.
+Interbase surfaces these dependencies as :class:`~interbase.schema.Dependency` schema objects, and all schema objects 
+have :meth:`~interbase.schema.BaseSchemaItem.get_dependents` and :meth:`~interbase.schema.BaseSchemaItem.get_dependencies` 
+methods to get list of :class:`~interbase.schema.Dependency` instances that describe these dependencies.
 
-:class:`~idb.schema.Dependency` object provides names and types of dependent/depended on database objects,
+:class:`~interbase.schema.Dependency` object provides names and types of dependent/depended on database objects,
 and access to their respective schema Python objects as well.
 
 .. _sql-oprations:
@@ -3032,12 +3032,12 @@ and access to their respective schema Python objects as well.
 SQL operations
 --------------
 
-IDB doesn't allow you to change database metadata directly using schema objects. Instead it supports
-generation of DDL SQL commands from schema objects using :meth:`~idb.schema.BaseSchemaItem.get_sql_for` method
+Interbase doesn't allow you to change database metadata directly using schema objects. Instead it supports
+generation of DDL SQL commands from schema objects using :meth:`~interbase.schema.BaseSchemaItem.get_sql_for` method
 present on all schema objects except Schema itself. DDL commands that could be generated depend on object
 type and context (for example it's not possible to generate DDL commands for system database objects), and 
 list of DDL commands that could be generated for particular schema object could be obtained from its 
-:attr:`~idb.schema.BaseSchemaItem.actions` attribute.
+:attr:`~interbase.schema.BaseSchemaItem.actions` attribute.
 
 Possible `actions` could be: create, recreate, create_or_alter, alter, drop, activate, deactivate, recompute
 and declare. Some actions require/allow additional parameters.
@@ -3051,7 +3051,7 @@ and declare. Some actions require/allow additional parameters.
      - Parameter
      - Required
      - Description
-   * - :class:`~idb.schema.Collation`
+   * - :class:`~interbase.schema.Collation`
      - create
      - 
      - 
@@ -3061,12 +3061,12 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      - 
-   * - :class:`~idb.schema.CharacterSet`
+   * - :class:`~interbase.schema.CharacterSet`
      - alter
      - collation
      - Yes
-     - :class:`~idb.schema.Collation` instance or collation name
-   * - :class:`~idb.schema.DatabaseException`
+     - :class:`~interbase.schema.Collation` instance or collation name
+   * - :class:`~interbase.schema.DatabaseException`
      - create
      - 
      - 
@@ -3091,7 +3091,7 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      -
-   * - :class:`~idb.schema.Domain`
+   * - :class:`~interbase.schema.Domain`
      - create
      - 
      -
@@ -3126,7 +3126,7 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      -
-   * - :class:`~idb.schema.Constraint`
+   * - :class:`~interbase.schema.Constraint`
      - create
      - 
      -
@@ -3136,7 +3136,7 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      -
-   * - :class:`~idb.schema.Index`
+   * - :class:`~interbase.schema.Index`
      - create
      - 
      -
@@ -3161,7 +3161,7 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      -
-   * - :class:`~idb.schema.Table`
+   * - :class:`~interbase.schema.Table`
      - create
      - 
      -
@@ -3176,7 +3176,7 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      -
-   * - :class:`~idb.schema.TableColumn`
+   * - :class:`~interbase.schema.TableColumn`
      - alter
      - 
      - 
@@ -3201,7 +3201,7 @@ and declare. Some actions require/allow additional parameters.
      - expression
      - No
      - string with COMPUTED BY expression
-   * - :class:`~idb.schema.View`
+   * - :class:`~interbase.schema.View`
      - create
      - 
      -
@@ -3236,7 +3236,7 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      -
-   * - :class:`~idb.schema.Trigger`
+   * - :class:`~interbase.schema.Trigger`
      - create
      - 
      -
@@ -3286,7 +3286,7 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      -
-   * - :class:`~idb.schema.Procedure`
+   * - :class:`~interbase.schema.Procedure`
      - create
      - no_code
      - No
@@ -3306,7 +3306,7 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      -
-   * - :class:`~idb.schema.Role`
+   * - :class:`~interbase.schema.Role`
      - create
      - 
      -
@@ -3316,7 +3316,7 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      -
-   * - :class:`~idb.schema.Function`
+   * - :class:`~interbase.schema.Function`
      - declare
      - 
      -
@@ -3326,12 +3326,12 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      -
-   * - :class:`~idb.schema.DatabaseFile`
+   * - :class:`~interbase.schema.DatabaseFile`
      - create
      - 
      -
      -
-   * - :class:`~idb.schema.Shadow`
+   * - :class:`~interbase.schema.Shadow`
      - create
      - 
      -
@@ -3341,7 +3341,7 @@ and declare. Some actions require/allow additional parameters.
      - 
      -
      -
-   * - :class:`~idb.schema.Privilege`
+   * - :class:`~interbase.schema.Privilege`
      - grant
      - grantors
      - No
@@ -3362,8 +3362,8 @@ and declare. Some actions require/allow additional parameters.
 
 .. code-block:: python
 
-   >>> import idb
-   >>> con = idb.connect(dsn='employee',user='sysdba', password='masterkey')
+   >>> import interbase
+   >>> con = interbase.connect(dsn='employee',user='sysdba', password='masterkey')
    >>> t = con.schema.get_table('EMPLOYEE')
    >>> print t.get_sql_for('create')
    CREATE TABLE EMPLOYEE
@@ -3441,28 +3441,28 @@ and declare. Some actions require/allow additional parameters.
 Working with user privileges
 ============================
 
-User or database object privileges are part of database metadata accessible through IDB 
-:class:`~idb.schema.Schema` support.
-Each discrete privilege is represented by :class:`~idb.schema.Privilege` instance. You can access either 
-:attr:`all <idb.schema.Schema.privileges>` privileges, or privileges granted for specific 
-:attr:`table <idb.schema.Table.privileges>`, :attr:`table column <idb.schema.TableColumn.privileges>`, 
-:attr:`view <idb.schema.View.privileges>`, :attr:`view column <idb.schema.ViewColumn.privileges>`, 
-:attr:`procedure <idb.schema.Procedure.privileges>` or :attr:`role <idb.schema.Role.privileges>`. It's also
-possible to get all privileges :meth:`granted to <idb.schema.Schema.get_privileges_of>` specific user, role, 
+User or database object privileges are part of database metadata accessible through Interbase 
+:class:`~interbase.schema.Schema` support.
+Each discrete privilege is represented by :class:`~interbase.schema.Privilege` instance. You can access either 
+:attr:`all <interbase.schema.Schema.privileges>` privileges, or privileges granted for specific 
+:attr:`table <interbase.schema.Table.privileges>`, :attr:`table column <interbase.schema.TableColumn.privileges>`, 
+:attr:`view <interbase.schema.View.privileges>`, :attr:`view column <interbase.schema.ViewColumn.privileges>`, 
+:attr:`procedure <interbase.schema.Procedure.privileges>` or :attr:`role <interbase.schema.Role.privileges>`. It's also
+possible to get all privileges :meth:`granted to <interbase.schema.Schema.get_privileges_of>` specific user, role, 
 procedure, trigger or view.
 
-:class:`~idb.schema.Privilege` class supports :meth:`~idb.schema.Privilege.get_sql_for` method to generate
+:class:`~interbase.schema.Privilege` class supports :meth:`~interbase.schema.Privilege.get_sql_for` method to generate
 GRANT and REVOKE SQL statements for given privilege. If you want to generate grant/revoke statements for
 set of privileges (for example all privileges granted on specific object or grated to specific user), it's
-more convenient to use function :func:`~idb.schema.get_grants` that returns list of minimal set of SQL 
+more convenient to use function :func:`~interbase.schema.get_grants` that returns list of minimal set of SQL 
 commands required to task.
 
 **Examples:**
 
 .. code-block:: python
 
-   >>> import idb
-   >>> con = idb.connect(dsn='employee',user='sysdba', password='masterkey')
+   >>> import interbase
+   >>> con = interbase.connect(dsn='employee',user='sysdba', password='masterkey')
    >>> t = con.schema.get_table('EMPLOYEE')
    >>> for p in t.privileges:
    ...    print p.get_sql_for('grant')
@@ -3477,7 +3477,7 @@ commands required to task.
    GRANT UPDATE ON EMPLOYEE TO PUBLIC WITH GRANT OPTION
    GRANT DELETE ON EMPLOYEE TO PUBLIC WITH GRANT OPTION
    GRANT REFERENCES ON EMPLOYEE TO PUBLIC WITH GRANT OPTION
-   >>> for p in idb.schema.get_grants(t.privileges):
+   >>> for p in interbase.schema.get_grants(t.privileges):
    ...    print p
    ...    
    GRANT DELETE, INSERT, REFERENCES, SELECT, UPDATE ON EMPLOYEE TO PUBLIC WITH GRANT OPTION

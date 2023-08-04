@@ -1,20 +1,19 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Compliance to Python Database API 2.0 &#8212; IDB 1.4.9 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/idbtheme.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <title>Compliance to Python Database API 2.0 &#8212; Interbase 1.4.9 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="_static/interbasetheme.css?v=bda53a8a" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=34e37943"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="IDB Reference" href="reference.html" />
+    <link rel="next" title="Interbase Reference" href="reference.html" />
     <link rel="prev" title="Usage Guide" href="usage-guide.html" />
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
@@ -34,12 +33,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="IDB Reference"
+          <a href="reference.html" title="Interbase Reference"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="usage-guide.html" title="Usage Guide"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">IDB 1.4.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Interbase 1.4.9 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Compliance to Python Database API 2.0</a></li> 
       </ul>
     </div>  
@@ -55,7 +54,7 @@
 <a class="reference external" href="http://www.python.org/dev/peps/pep-0249/">http://www.python.org/dev/peps/pep-0249/</a></p>
 <section id="unsupported-optional-features">
 <h2>Unsupported Optional Features<a class="headerlink" href="#unsupported-optional-features" title="Permalink to this heading">¶</a></h2>
-<p><code class="xref py py-meth docutils literal notranslate"><span class="pre">idb.Cursor.nextset()</span></code></p>
+<p><code class="xref py py-meth docutils literal notranslate"><span class="pre">interbase.Cursor.nextset()</span></code></p>
 <blockquote>
 <div><p>This method is not implemented because the database engine does not support
 opening multiple result sets simultaneously with a single cursor.</p>
@@ -77,7 +76,7 @@ as attributes (in addition to being available at module scope).</p>
 </section>
 <section id="nominally-supported-optional-features">
 <h2>Nominally Supported Optional Features<a class="headerlink" href="#nominally-supported-optional-features" title="Permalink to this heading">¶</a></h2>
-<p><a class="reference internal" href="reference.html#idb.Cursor" title="idb.Cursor"><code class="xref py py-class docutils literal notranslate"><span class="pre">idb.Cursor</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Cursor" title="interbase.Cursor"><code class="xref py py-class docutils literal notranslate"><span class="pre">interbase.Cursor</span></code></a></p>
 <blockquote>
 <div><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">arraysize</span></code></p>
 <blockquote>
@@ -86,11 +85,11 @@ respect to the <cite>fetchmany</cite> method. However, changing the value of thi
 attribute does not make any difference in fetch efficiency because
 the database engine only supports fetching a single row at a time.</p>
 </div></blockquote>
-<p><a class="reference internal" href="reference.html#idb.Cursor.setinputsizes" title="idb.Cursor.setinputsizes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setinputsizes()</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Cursor.setinputsizes" title="interbase.Cursor.setinputsizes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setinputsizes()</span></code></a></p>
 <blockquote>
 <div><p>Although this method is present, it does nothing, as allowed by the spec.</p>
 </div></blockquote>
-<p><a class="reference internal" href="reference.html#idb.Cursor.setoutputsize" title="idb.Cursor.setoutputsize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setoutputsize()</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Cursor.setoutputsize" title="interbase.Cursor.setoutputsize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setoutputsize()</span></code></a></p>
 <blockquote>
 <div><p>Although this method is present, it does nothing, as allowed by the spec.</p>
 </div></blockquote>
@@ -98,11 +97,11 @@ the database engine only supports fetching a single row at a time.</p>
 </section>
 <section id="extensions-and-caveats">
 <h2>Extensions and Caveats<a class="headerlink" href="#extensions-and-caveats" title="Permalink to this heading">¶</a></h2>
-<p>IDB offers a large feature set beyond the minimal requirements
+<p>Interbase offers a large feature set beyond the minimal requirements
 of the Python DB API. This section attempts to document only those
 features that overlap with the DB API, or are too insignificant
 to warrant their own subsection elsewhere.</p>
-<p><a class="reference internal" href="reference.html#idb.connect" title="idb.connect"><code class="xref py py-func docutils literal notranslate"><span class="pre">idb.connect()</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.connect" title="interbase.connect"><code class="xref py py-func docutils literal notranslate"><span class="pre">interbase.connect()</span></code></a></p>
 <blockquote>
 <div><p>This function supports the following optional keyword arguments in addition
 to those required by the spec:</p>
@@ -112,7 +111,7 @@ to those required by the spec:</p>
 </dd>
 </dl>
 <p><em>Example:</em></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">idb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dsn</span><span class="o">=</span><span class="s1">&#39;host:/path/database.db&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;limited_user&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">interbase</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dsn</span><span class="o">=</span><span class="s1">&#39;host:/path/database.db&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;limited_user&#39;</span><span class="p">,</span>
    <span class="n">password</span><span class="o">=</span><span class="s1">&#39;pass&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s1">&#39;MORE_POWERFUL_ROLE&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -120,12 +119,12 @@ to those required by the spec:</p>
 <dt class="field-odd">charset<span class="colon">:</span></dt>
 <dd class="field-odd"><p>For explicitly specifying the character set of the connection.
 See InterBase Documentation for a list of available character sets, and
-<cite>Unicode Fields and IDB</cite> section for information on handling
-extended character sets with IDB.</p>
+<cite>Unicode Fields and Interbase</cite> section for information on handling
+extended character sets with Interbase.</p>
 </dd>
 </dl>
 <p><em>Example:</em></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">idb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dsn</span><span class="o">=</span><span class="s1">&#39;host:/path/database.db&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;sysdba&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">interbase</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dsn</span><span class="o">=</span><span class="s1">&#39;host:/path/database.db&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;sysdba&#39;</span><span class="p">,</span>
     <span class="n">password</span><span class="o">=</span><span class="s1">&#39;pass&#39;</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="s1">&#39;UTF8&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -141,33 +140,33 @@ SQL Dialects.</p>
 </dd>
 </dl>
 <p><em>Example:</em></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">idb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dsn</span><span class="o">=</span><span class="s1">&#39;host:/path/database.db&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;sysdba&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">interbase</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dsn</span><span class="o">=</span><span class="s1">&#39;host:/path/database.db&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;sysdba&#39;</span><span class="p">,</span>
    <span class="n">password</span><span class="o">=</span><span class="s1">&#39;pass&#39;</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
-<p><a class="reference internal" href="reference.html#idb.Connection" title="idb.Connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">idb.Connection</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Connection" title="interbase.Connection"><code class="xref py py-class docutils literal notranslate"><span class="pre">interbase.Connection</span></code></a></p>
 <blockquote>
-<div><p><a class="reference internal" href="reference.html#idb.Connection.charset" title="idb.Connection.charset"><code class="xref py py-attr docutils literal notranslate"><span class="pre">charset</span></code></a></p>
+<div><p><a class="reference internal" href="reference.html#interbase.Connection.charset" title="interbase.Connection.charset"><code class="xref py py-attr docutils literal notranslate"><span class="pre">charset</span></code></a></p>
 <blockquote>
 <div><p><em>(read-only)</em> The character set of the connection (set via the <cite>charset</cite>
-parameter of <a class="reference internal" href="reference.html#idb.connect" title="idb.connect"><code class="xref py py-func docutils literal notranslate"><span class="pre">idb.connect()</span></code></a>). See InterBase Documentation for a list
-of available character sets, and <cite>Unicode Fields and IDB</cite> section
-for information on handling extended character sets with IDB.</p>
+parameter of <a class="reference internal" href="reference.html#interbase.connect" title="interbase.connect"><code class="xref py py-func docutils literal notranslate"><span class="pre">interbase.connect()</span></code></a>). See InterBase Documentation for a list
+of available character sets, and <cite>Unicode Fields and Interbase</cite> section
+for information on handling extended character sets with Interbase.</p>
 </div></blockquote>
-<p><a class="reference internal" href="reference.html#idb.Connection.sql_dialect" title="idb.Connection.sql_dialect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">sql_dialect</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Connection.sql_dialect" title="interbase.Connection.sql_dialect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">sql_dialect</span></code></a></p>
 <blockquote>
 <div><p>This integer attribute indicates which SQL dialect the connection is using.
 You should not change a connection’s dialect; instead, discard the connection
 and establish a new one with the desired dialect. For more information, see
 the documentation of the <cite>sql_dialect</cite> argument of the <cite>connect</cite> function.</p>
 </div></blockquote>
-<p><a class="reference internal" href="reference.html#idb.Connection.server_version" title="idb.Connection.server_version"><code class="xref py py-attr docutils literal notranslate"><span class="pre">server_version</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Connection.server_version" title="interbase.Connection.server_version"><code class="xref py py-attr docutils literal notranslate"><span class="pre">server_version</span></code></a></p>
 <blockquote>
 <div><p><em>(read-only)</em> The version string of the database server to which this connection
 is connected.</p>
 </div></blockquote>
-<p><a class="reference internal" href="reference.html#idb.Connection.execute_immediate" title="idb.Connection.execute_immediate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">execute_immediate()</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Connection.execute_immediate" title="interbase.Connection.execute_immediate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">execute_immediate()</span></code></a></p>
 <blockquote>
 <div><p>Executes a statement without caching its prepared form. The statement must <em>not</em> be
 of a type that returns a result set. In most cases (especially cases in which the same
@@ -194,15 +193,15 @@ savepoint, rather than rolling back entirely. For details, see the
 Advanced Transaction Control: Savepoints section of this document.</p>
 </div></blockquote>
 </div></blockquote>
-<p><a class="reference internal" href="reference.html#idb.Cursor" title="idb.Cursor"><code class="xref py py-class docutils literal notranslate"><span class="pre">idb.Cursor</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Cursor" title="interbase.Cursor"><code class="xref py py-class docutils literal notranslate"><span class="pre">interbase.Cursor</span></code></a></p>
 <blockquote>
-<div><p><a class="reference internal" href="reference.html#idb.Cursor.description" title="idb.Cursor.description"><code class="xref py py-attr docutils literal notranslate"><span class="pre">description</span></code></a></p>
+<div><p><a class="reference internal" href="reference.html#interbase.Cursor.description" title="interbase.Cursor.description"><code class="xref py py-attr docutils literal notranslate"><span class="pre">description</span></code></a></p>
 <blockquote>
-<div><p>IDB makes absolutely no guarantees about <cite>description</cite> except those
+<div><p>Interbase makes absolutely no guarantees about <cite>description</cite> except those
 required by the Python Database API Specification 2.0 (that is, <cite>description</cite>
 is either <cite>None</cite> or a sequence of 7-element sequences). Therefore, client
 programmers should <em>not</em> rely on <cite>description</cite> being an instance of a particular
-class or type. IDB provides several named positional constants to be
+class or type. Interbase provides several named positional constants to be
 used as indices into a given element of <cite>description</cite> . The contents
 of all <cite>description</cite> elements are defined by the DB API spec; these
 constants are provided merely for convenience.</p>
@@ -217,15 +216,15 @@ constants are provided merely for convenience.</p>
 </div>
 <p>Here is an example of accessing the <em>name</em> of the first field in the
 <cite>description</cite> of cursor <cite>cur</cite>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nameOfFirstField</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">idb</span><span class="o">.</span><span class="n">DESCRIPTION_NAME</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nameOfFirstField</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">interbase</span><span class="o">.</span><span class="n">DESCRIPTION_NAME</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>For more information, see the documentation of Cursor.description in
 the <a class="reference external" href="Python-DB-API-2.0.html">DB API Specification</a>.</p>
 </div></blockquote>
-<p><a class="reference internal" href="reference.html#idb.Cursor.rowcount" title="idb.Cursor.rowcount"><code class="xref py py-attr docutils literal notranslate"><span class="pre">rowcount</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Cursor.rowcount" title="interbase.Cursor.rowcount"><code class="xref py py-attr docutils literal notranslate"><span class="pre">rowcount</span></code></a></p>
 <blockquote>
-<div><p>Although IDB’s <cite>Cursor`s implement this
+<div><p>Although Interbase’s <cite>Cursor`s implement this
 attribute, the database engine’s own support for the determination of
 “rows affected”/”rows selected” is quirky. The database engine only
 supports the determination of rowcount for `INSERT</cite>, <cite>UPDATE</cite>,
@@ -243,13 +242,13 @@ the rowcount attribute “is -1 in case no executeXX() has been
 performed on the cursor or the rowcount of the last operation is not
 determinable by the interface”.</p>
 </div></blockquote>
-<p><a class="reference internal" href="reference.html#idb.Cursor.fetchone" title="idb.Cursor.fetchone"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fetchone()</span></code></a></p>
-<p><a class="reference internal" href="reference.html#idb.Cursor.fetchmany" title="idb.Cursor.fetchmany"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fetchmany()</span></code></a></p>
-<p><a class="reference internal" href="reference.html#idb.Cursor.fetchall" title="idb.Cursor.fetchall"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fetchall()</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Cursor.fetchone" title="interbase.Cursor.fetchone"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fetchone()</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Cursor.fetchmany" title="interbase.Cursor.fetchmany"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fetchmany()</span></code></a></p>
+<p><a class="reference internal" href="reference.html#interbase.Cursor.fetchall" title="interbase.Cursor.fetchall"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fetchall()</span></code></a></p>
 <blockquote>
-<div><p>IDB makes absolutely no guarantees about
+<div><p>Interbase makes absolutely no guarantees about
 the return value of the <cite>fetchone</cite> / <cite>fetchmany</cite> / <cite>fetchall</cite> methods
-except that it is a sequence indexed by field position. IDB
+except that it is a sequence indexed by field position. Interbase
 makes absolutely no guarantees about the return value of the
 <cite>fetchonemap</cite> / <cite>fetchmanymap</cite> / <cite>fetchallmap</cite> methods (documented
 below) except that it is a mapping of field name to field value.
@@ -288,7 +287,7 @@ being an instance of a particular class or type.</p>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="reference.html"
-                          title="next chapter">IDB Reference</a></p>
+                          title="next chapter">Interbase Reference</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -321,18 +320,18 @@ being an instance of a particular class or type.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="IDB Reference"
+          <a href="reference.html" title="Interbase Reference"
              >next</a> |</li>
         <li class="right" >
           <a href="usage-guide.html" title="Usage Guide"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">IDB 1.4.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Interbase 1.4.9 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Compliance to Python Database API 2.0</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright Embarcadero Technologies, Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    &#169; Copyright Embarcadero Technologies, Inc..
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
   </body>
 </html>
