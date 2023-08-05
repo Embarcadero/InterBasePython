@@ -24,6 +24,8 @@ Install (32-bit or 64-bit version of python 3.* required)
 
 You can use one of the following ways to do it.
 
+`pip install interbase`
+
 `pip install git+https://github.com/Embarcadero/InterBasePython.git`
 
 `pip install git+ssh://git@github.com/Embarcadero/InterBasePython.git`
