@@ -91,7 +91,7 @@ from interbase.ibase import (
     SHRT_MIN, SHRT_MAX, INT_MIN, INT_MAX, LONG_MIN, LONG_MAX,
     SQL_TEXT, SQL_VARYING, SQL_SHORT, SQL_LONG, SQL_FLOAT, SQL_DOUBLE,
     SQL_D_FLOAT, SQL_TIMESTAMP, SQL_BLOB, SQL_ARRAY, SQL_TYPE_TIME,
-    SQL_TYPE_DATE, SQL_INT64, SUBTYPE_NUMERIC, SUBTYPE_DECIMAL,
+    SQL_TYPE_DATE, SQL_INT64, SQL_BOOL, SUBTYPE_NUMERIC, SUBTYPE_DECIMAL,
 
     SQLIND_NULL, SQLIND_INSERT, SQLIND_UPDATE, SQLIND_DELETE, SQLIND_CHANGE, SQLIND_TRUNCATE, SQLIND_CHANGE_VIEW,
 
@@ -418,6 +418,16 @@ def bytes_to_uint(b):            # Read as little endian.
         fmt = '<L'
     elif len_b == 8:
         fmt = '<Q'
+    else:
+        raise InternalError
+    return struct.unpack(fmt, b)[0]
+
+def bytes_to_bool(b):            # Read as little endian.
+    len_b = len(b)
+    if len(b) == 1:
+        fmt = '<?'
+    elif len(b) == 2:
+        fmt = '<h'
     else:
         raise InternalError
     return struct.unpack(fmt, b)[0]
@@ -2371,6 +2381,9 @@ class PreparedStatement(object):
             elif vartype == SQL_LONG:
                 sqlvar.sqldata = ctypes.cast(ctypes.create_string_buffer(
                     sqlvar.sqllen),buf_pointer)
+            elif vartype == SQL_BOOL:
+                sqlvar.sqldata = ctypes.cast(ctypes.create_string_buffer(
+                    sqlvar.sqllen),buf_pointer)
             elif vartype == SQL_INT64:
                 sqlvar.sqldata = ctypes.cast(ctypes.create_string_buffer(
                     sqlvar.sqllen),buf_pointer)
@@ -2453,6 +2466,8 @@ class PreparedStatement(object):
                 # It's scalled integer?
                 if (sqlvar.sqlsubtype or scale):
                     value = decimal.Decimal(value) / _tenTo[abs(scale)]
+            elif vartype == SQL_BOOL:
+                value = bool(bytes_to_bool(sqlvar.sqldata[:sqlvar.sqllen]))
             elif vartype == SQL_TYPE_DATE:
                 yyyy, mm, dd = self._parse_date(sqlvar.sqldata[:sqlvar.sqllen])
                 value = datetime.date(yyyy, mm, dd)
