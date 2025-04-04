@@ -91,7 +91,7 @@ from interbase.ibase import (
     SHRT_MIN, SHRT_MAX, INT_MIN, INT_MAX, LONG_MIN, LONG_MAX,
     SQL_TEXT, SQL_VARYING, SQL_SHORT, SQL_LONG, SQL_FLOAT, SQL_DOUBLE,
     SQL_D_FLOAT, SQL_TIMESTAMP, SQL_BLOB, SQL_ARRAY, SQL_TYPE_TIME,
-    SQL_TYPE_DATE, SQL_INT64, SQL_BOOL, SUBTYPE_NUMERIC, SUBTYPE_DECIMAL,
+    SQL_TYPE_DATE, SQL_INT64, SQL_BOOLEAN, SUBTYPE_NUMERIC, SUBTYPE_DECIMAL,
 
     SQLIND_NULL, SQLIND_INSERT, SQLIND_UPDATE, SQLIND_DELETE, SQLIND_CHANGE, SQLIND_TRUNCATE, SQLIND_CHANGE_VIEW,
 
@@ -2154,7 +2154,7 @@ class PreparedStatement(object):
             return 'SMALLINT'
         elif data_type == SQL_LONG:
             return 'INTEGER'
-        elif data_type == SQL_BOOL:
+        elif data_type == SQL_BOOLEAN:
             return 'BOOLEAN'
         elif data_type == SQL_INT64:
             return 'BIGINT'
@@ -2181,8 +2181,8 @@ class PreparedStatement(object):
             return 'SQL_SHORT'
         elif data_type == SQL_LONG:
             return 'SQL_LONG'
-        elif data_type == SQL_BOOL:
-            return 'SQL_BOOL'
+        elif data_type == SQL_BOOLEAN:
+            return 'SQL_BOOLEAN'
         elif data_type == SQL_INT64:
             return 'SQL_INT64'
         elif data_type == SQL_FLOAT:
@@ -2231,7 +2231,7 @@ class PreparedStatement(object):
                     elif vartype == SQL_LONG:
                         vtype = IntType
                         dispsize = 11
-                    elif vartype == SQL_BOOL:
+                    elif vartype == SQL_BOOLEAN:
                         vtype = bool
                         dispsize = 5
                     elif vartype == SQL_INT64:
@@ -2398,7 +2398,7 @@ class PreparedStatement(object):
             elif vartype == SQL_LONG:
                 sqlvar.sqldata = ctypes.cast(ctypes.create_string_buffer(
                     sqlvar.sqllen),buf_pointer)
-            elif vartype == SQL_BOOL:
+            elif vartype == SQL_BOOLEAN:
                 sqlvar.sqldata = ctypes.cast(ctypes.create_string_buffer(
                     sqlvar.sqllen),buf_pointer)
             elif vartype == SQL_INT64:
@@ -2483,7 +2483,7 @@ class PreparedStatement(object):
                 # It's scalled integer?
                 if (sqlvar.sqlsubtype or scale):
                     value = decimal.Decimal(value) / _tenTo[abs(scale)]
-            elif vartype == SQL_BOOL:
+            elif vartype == SQL_BOOLEAN:
                 value = bool(bytes_to_bool(sqlvar.sqldata[:sqlvar.sqllen]))
             elif vartype == SQL_TYPE_DATE:
                 yyyy, mm, dd = self._parse_date(sqlvar.sqldata[:sqlvar.sqllen])
@@ -2921,7 +2921,7 @@ class PreparedStatement(object):
                     sqlvar.sqldata = ctypes.cast(ctypes.pointer(
                         ctypes.create_string_buffer(
                             int_to_bytes(value, sqlvar.sqllen))), buf_pointer)
-                elif vartype == SQL_BOOL:
+                elif vartype == SQL_BOOLEAN:
                     sqlvar.sqldata = ctypes.cast(ctypes.pointer(
                         ctypes.create_string_buffer(
                             bool_to_bytes(value, sqlvar.sqllen))), buf_pointer)
