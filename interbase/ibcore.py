@@ -423,14 +423,10 @@ def bytes_to_uint(b):            # Read as little endian.
     return struct.unpack(fmt, b)[0]
 
 def bytes_to_bool(b):            # Read as little endian.
-    len_b = len(b)
-    if len(b) == 1:
-        fmt = '<?'
-    elif len(b) == 2:
-        fmt = '<h'
+    if len(b) == 2:
+        return struct.unpack('<h', b)[0]
     else:
         raise InternalError
-    return struct.unpack(fmt, b)[0]
 
 def bint_to_bytes(val, nbytes):  # Convert int value to big endian bytes.
     if nbytes == 1:
@@ -473,13 +469,10 @@ def uint_to_bytes(val, nbytes):  # Convert int value to little endian bytes.
 
 def bool_to_bytes(val, nbytes):  # Convert bool value to little endian bytes.
     int_val = int(bool(val))  # Ensure it's 0 or 1
-    if nbytes == 1:
-        fmt = '<?'
-    elif nbytes == 2:
-        fmt = '<h'
+    if nbytes == 2:
+        return struct.pack('<h', int_val)
     else:
         raise InternalError
-    return struct.pack(fmt, int_val)
 
 def db_api_error(status_vector):
     return status_vector[0] == 1 and status_vector[1] > 0
