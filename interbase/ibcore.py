@@ -91,7 +91,7 @@ from interbase.ibase import (
     SHRT_MIN, SHRT_MAX, INT_MIN, INT_MAX, LONG_MIN, LONG_MAX,
     SQL_TEXT, SQL_VARYING, SQL_SHORT, SQL_LONG, SQL_FLOAT, SQL_DOUBLE,
     SQL_D_FLOAT, SQL_TIMESTAMP, SQL_BLOB, SQL_ARRAY, SQL_TYPE_TIME,
-    SQL_TYPE_DATE, SQL_INT64, SUBTYPE_NUMERIC, SUBTYPE_DECIMAL,
+    SQL_TYPE_DATE, SQL_INT64, SQL_BOOLEAN, SUBTYPE_NUMERIC, SUBTYPE_DECIMAL,
 
     SQLIND_NULL, SQLIND_INSERT, SQLIND_UPDATE, SQLIND_DELETE, SQLIND_CHANGE, SQLIND_TRUNCATE, SQLIND_CHANGE_VIEW,
 
@@ -422,6 +422,12 @@ def bytes_to_uint(b):            # Read as little endian.
         raise InternalError
     return struct.unpack(fmt, b)[0]
 
+def bytes_to_bool(b):            # Read as little endian.
+    if len(b) == 2:
+        return struct.unpack('<h', b)[0]
+    else:
+        raise InternalError
+
 def bint_to_bytes(val, nbytes):  # Convert int value to big endian bytes.
     if nbytes == 1:
         fmt = 'b'
@@ -460,6 +466,13 @@ def uint_to_bytes(val, nbytes):  # Convert int value to little endian bytes.
     else:
         raise InternalError
     return struct.pack(fmt, val)
+
+def bool_to_bytes(val, nbytes):  # Convert bool value to little endian bytes.
+    int_val = int(bool(val))  # Ensure it's 0 or 1
+    if nbytes == 2:
+        return struct.pack('<h', int_val)
+    else:
+        raise InternalError
 
 def db_api_error(status_vector):
     return status_vector[0] == 1 and status_vector[1] > 0
@@ -2134,6 +2147,8 @@ class PreparedStatement(object):
             return 'SMALLINT'
         elif data_type == SQL_LONG:
             return 'INTEGER'
+        elif data_type == SQL_BOOLEAN:
+            return 'BOOLEAN'
         elif data_type == SQL_INT64:
             return 'BIGINT'
         elif data_type == SQL_FLOAT:
@@ -2159,6 +2174,8 @@ class PreparedStatement(object):
             return 'SQL_SHORT'
         elif data_type == SQL_LONG:
             return 'SQL_LONG'
+        elif data_type == SQL_BOOLEAN:
+            return 'SQL_BOOLEAN'
         elif data_type == SQL_INT64:
             return 'SQL_INT64'
         elif data_type == SQL_FLOAT:
@@ -2207,6 +2224,9 @@ class PreparedStatement(object):
                     elif vartype == SQL_LONG:
                         vtype = IntType
                         dispsize = 11
+                    elif vartype == SQL_BOOLEAN:
+                        vtype = bool
+                        dispsize = 5
                     elif vartype == SQL_INT64:
                         vtype = LongType
                         dispsize = 20
@@ -2371,6 +2391,9 @@ class PreparedStatement(object):
             elif vartype == SQL_LONG:
                 sqlvar.sqldata = ctypes.cast(ctypes.create_string_buffer(
                     sqlvar.sqllen),buf_pointer)
+            elif vartype == SQL_BOOLEAN:
+                sqlvar.sqldata = ctypes.cast(ctypes.create_string_buffer(
+                    sqlvar.sqllen),buf_pointer)
             elif vartype == SQL_INT64:
                 sqlvar.sqldata = ctypes.cast(ctypes.create_string_buffer(
                     sqlvar.sqllen),buf_pointer)
@@ -2453,6 +2476,8 @@ class PreparedStatement(object):
                 # It's scalled integer?
                 if (sqlvar.sqlsubtype or scale):
                     value = decimal.Decimal(value) / _tenTo[abs(scale)]
+            elif vartype == SQL_BOOLEAN:
+                value = bool(bytes_to_bool(sqlvar.sqldata[:sqlvar.sqllen]))
             elif vartype == SQL_TYPE_DATE:
                 yyyy, mm, dd = self._parse_date(sqlvar.sqldata[:sqlvar.sqllen])
                 value = datetime.date(yyyy, mm, dd)
@@ -2889,6 +2914,10 @@ class PreparedStatement(object):
                     sqlvar.sqldata = ctypes.cast(ctypes.pointer(
                         ctypes.create_string_buffer(
                             int_to_bytes(value, sqlvar.sqllen))), buf_pointer)
+                elif vartype == SQL_BOOLEAN:
+                    sqlvar.sqldata = ctypes.cast(ctypes.pointer(
+                        ctypes.create_string_buffer(
+                            bool_to_bytes(value, sqlvar.sqllen))), buf_pointer)
                 elif vartype == SQL_TYPE_DATE:
                     sqlvar.sqldata = ctypes.cast(ctypes.pointer(
                         ctypes.create_string_buffer(

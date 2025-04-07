@@ -120,7 +120,7 @@ __all__ = (
            'SQL_ARRAY', 'SQL_BLOB', 'SQL_DOUBLE', 'SQL_D_FLOAT', 'SQL_FLOAT',
            'SQL_INT64', 'SQL_LONG', 'SQL_QUAD', 'SQL_SHORT', 'SQL_TEXT',
            'SQL_TIMESTAMP', 'SQL_TYPE_DATE', 'SQL_TYPE_TIME', 'SQL_VARYING',
-           'SUBTYPE_DECIMAL', 'SUBTYPE_NUMERIC', 'build_dpb',
+           'SQL_BOOLEAN', 'SUBTYPE_DECIMAL', 'SUBTYPE_NUMERIC', 'build_dpb',
            'charset_map',
            'isc_info_end', 'isc_sqlcode', 'bs',
            )
