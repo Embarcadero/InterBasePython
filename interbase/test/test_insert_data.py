@@ -28,8 +28,8 @@ import interbase
 import decimal
 import datetime
 
-from core import InterBaseTestBase
-from constants import IBTEST_USER, IBTEST_HOST, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
+from .core import InterBaseTestBase
+from .constants import IBTEST_USER, IBTEST_HOST, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 

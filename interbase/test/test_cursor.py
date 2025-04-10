@@ -26,8 +26,8 @@
 
 import interbase
 
-from core import InterBaseTestBase
-from constants import IBTEST_PASSWORD, IBTEST_USER, IBTEST_HOST, \
+from .core import InterBaseTestBase
+from .constants import IBTEST_PASSWORD, IBTEST_USER, IBTEST_HOST, \
     IBTEST_DB_PATH, IBTEST_USE_EMBEDDED, IBTEST_SQL_DIALECT, IBTEST_SERVER_PUBLIC_FILE
 
 

@@ -30,9 +30,9 @@ import interbase
 
 from sys import platform
 from unittest import skipUnless, skip
-from core import InterBaseTestBase
+from .core import InterBaseTestBase
 from contextlib import closing
-from constants import IBTEST_HOST, IBTEST_PASSWORD, IBTEST_DB_PATH, \
+from .constants import IBTEST_HOST, IBTEST_PASSWORD, IBTEST_DB_PATH, \
     IBTEST_USER, IBTEST_DB_DIR_PATH, IBTEST_USE_EMBEDDED, IBTEST_SQL_DIALECT, IBTEST_SERVER_PUBLIC_FILE
 
 

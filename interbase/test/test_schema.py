@@ -29,8 +29,8 @@ import interbase
 from unittest import skip
 from interbase import schema as sm
 from contextlib import closing
-from core import InterBaseTestBase, SchemaVisitor
-from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
+from .core import InterBaseTestBase, SchemaVisitor
+from .constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 
