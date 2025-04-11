@@ -226,3 +226,17 @@ class TestInsertData(InterBaseTestBase):
             ]
         )
 
+    def test_insert_boolean(self):
+        cur = self.con.cursor()
+        cur.execute('insert into T2 (C1, C17) values (?, ?)', (0, False))
+        cur.execute('insert into T2 (C1, C17) values (?, ?)', (1, True))
+        self.con.commit()
+
+        cur.execute('select C1, C17 from T2 where C17 = ?', (False,))
+        row = cur.fetchone()
+        self.assertFalse(row is None or len(row) != 2)
+        self.assertEqual(row[1], False)
+
+        cur.execute('select C1, C17 from T2 where C17 = ?', (True,))
+        rows = cur.fetchall()
+        self.assertListEqual(rows, [(1, True)])
