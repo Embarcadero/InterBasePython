@@ -26,8 +26,8 @@
 
 import interbase
 
-from core import InterBaseTestBase
-from constants import IBTEST_PASSWORD, IBTEST_USER, IBTEST_HOST, \
+from .core import InterBaseTestBase
+from .constants import IBTEST_PASSWORD, IBTEST_USER, IBTEST_HOST, \
     IBTEST_DB_PATH, IBTEST_USE_EMBEDDED, IBTEST_SQL_DIALECT, IBTEST_SERVER_PUBLIC_FILE
 
 
@@ -136,7 +136,8 @@ class TestCursor(InterBaseTestBase):
             "('MAX_SALARY', <class 'decimal.Decimal'>, " +
             ("20, 8, 10" if IBTEST_SQL_DIALECT == 3 else "17, 8, None") + ", -2, False), "
             "('JOB_REQUIREMENT', <class 'str'>, 0, 8, 0, 1, True), "
-            "('LANGUAGE_REQ', <class 'list'>, -1, 8, 0, 0, True))"
+            "('LANGUAGE_REQ', <class 'list'>, -1, 8, 0, 0, True), "
+            "('IS_TEMPORARY', <class 'bool'>, 5, 2, 0, 0, True))"
         )
 
         cursor.execute('select * from proj_dept_budget')

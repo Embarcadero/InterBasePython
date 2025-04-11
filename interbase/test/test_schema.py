@@ -29,8 +29,8 @@ import interbase
 from unittest import skip
 from interbase import schema as sm
 from contextlib import closing
-from core import InterBaseTestBase, SchemaVisitor
-from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
+from .core import InterBaseTestBase, SchemaVisitor
+from .constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_PATH, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 
@@ -152,7 +152,7 @@ class TestSchema(InterBaseTestBase):
         self.assertEqual(len(s.generators),2)
         self.assertEqual(len(s.sysgenerators),10)
         self.assertEqual(len(s.domains),15)
-        self.assertEqual(len(s.sysdomains), 256)
+        self.assertEqual(len(s.sysdomains), 258)
         self.assertEqual(len(s.indices),28)
         self.assertEqual(len(s.sysindices),77)
         self.assertEqual(len(s.tables),15)
@@ -1006,7 +1006,7 @@ class TestSchema(InterBaseTestBase):
         #
         self.assertEqual(c.procedure.name,'GET_EMP_PROJ')
         self.assertEqual(c.sequence,0)
-        self.assertEqual(c.domain.name,'RDB$94')
+        self.assertEqual(c.domain.name,'RDB$96')
         self.assertEqual(c.datatype,'SMALLINT')
         self.assertEqual(c.type_from,interbase.schema.PROCPAR_DATATYPE)
         self.assertIsNone(c.default)
@@ -2337,6 +2337,7 @@ MODULE_NAME 'ibudf'""")
                  "MAX_SALARY SALARY NOT NULL,\n  " \
                  "JOB_REQUIREMENT BLOB SUB_TYPE TEXT SEGMENT SIZE 80,\n  " \
                  "LANGUAGE_REQ VARCHAR(255)[5],\n  " \
+                 "IS_TEMPORARY BOOLEAN DEFAULT FALSE,\n  " \
                  "CONSTRAINT RDB$PRIMARY2\n  PRIMARY KEY (JOB_CODE,JOB_GRADE,JOB_COUNTRY)\n)\n" \
                  "CREATE PROCEDURE SHOW_LANGS (\n  CODE VARCHAR(5),\n  " \
                  "GRADE SMALLINT,\n  CTY VARCHAR(15)\n)\nRETURNS (LANGUAGES VARCHAR(15))\nAS\n\n" \

@@ -20,7 +20,7 @@ import sys
 from unittest import skip, skipUnless
 
 import interbase
-from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB, IBTEST_SERVER_PUBLIC_FILE
+from .constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB, IBTEST_SERVER_PUBLIC_FILE
 
 if sys.version[0] >= '3': #python 3.x
     _BaseException = Exception

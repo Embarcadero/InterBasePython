@@ -27,9 +27,9 @@
 import os
 import interbase
 
-from core import InterBaseTestBase
+from .core import InterBaseTestBase
 from contextlib import closing
-from constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_DIR_PATH,\
+from .constants import IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_DB_DIR_PATH,\
     IBTEST_SQL_DIALECT, IBTEST_SERVER_PUBLIC_FILE
 
 

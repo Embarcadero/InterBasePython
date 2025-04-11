@@ -30,8 +30,8 @@ import time
 import threading
 
 from unittest import skip
-from core import InterBaseTestBase
-from constants import IBTEST_DB_DIR_PATH, IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_SQL_DIALECT,\
+from .core import InterBaseTestBase
+from .constants import IBTEST_DB_DIR_PATH, IBTEST_HOST, IBTEST_USER, IBTEST_PASSWORD, IBTEST_SQL_DIALECT,\
     IBTEST_SERVER_PUBLIC_FILE
 
 
